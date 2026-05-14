@@ -1,0 +1,26 @@
+---
+import Container from './Container.astro';
+import Section from './Section.astro';
+import AppStoreButton from './AppStoreButton.astro';
+import Reveal from './Reveal.astro';
+import { getDict, type Locale } from '../i18n';
+
+interface Props {
+  lang: Locale;
+}
+
+const { lang } = Astro.props;
+const t = getDict(lang);
+---
+
+<Section variant="aurora-soft">
+  <Container>
+    <Reveal class="mx-auto max-w-2xl text-center">
+      <h2 class="h2 text-balance">{t.finalCta.title}</h2>
+      <p class="lead mt-4 text-pretty">{t.finalCta.subtitle}</p>
+      <div class="mt-8 flex justify-center">
+        <AppStoreButton label={t.cta.appStore} size="lg" />
+      </div>
+    </Reveal>
+  </Container>
+</Section>

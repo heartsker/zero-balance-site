@@ -1,0 +1,28 @@
+---
+interface Props {
+  class?: string;
+  id?: string;
+  variant?: 'plain' | 'surface' | 'aurora' | 'aurora-soft';
+  bleed?: boolean;
+}
+
+const { class: className = '', id, variant = 'plain', bleed = false } = Astro.props;
+
+const bg =
+  variant === 'surface' ? 'bg-[var(--surface)]'
+  : variant === 'aurora' ? 'bg-aurora'
+  : variant === 'aurora-soft' ? 'bg-aurora-soft'
+  : '';
+---
+
+<section
+  id={id}
+  class:list={[
+    'relative',
+    bg,
+    bleed ? 'py-12 md:py-16' : 'py-16 md:py-24',
+    className,
+  ]}
+>
+  <slot />
+</section>

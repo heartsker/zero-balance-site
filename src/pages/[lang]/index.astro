@@ -1,0 +1,65 @@
+---
+import PageLayout from '../../layouts/PageLayout.astro';
+import Hero from '../../components/Hero.astro';
+import HowItWorks from '../../components/HowItWorks.astro';
+import FeatureGrid from '../../components/FeatureGrid.astro';
+import TrustBand from '../../components/TrustBand.astro';
+import Container from '../../components/Container.astro';
+import Section from '../../components/Section.astro';
+import FAQ from '../../components/FAQ.astro';
+import FinalCta from '../../components/FinalCta.astro';
+import Reveal from '../../components/Reveal.astro';
+import { getDict, localizedPath, LOCALES, type Locale } from '../../i18n';
+import { softwareApplicationSchema, faqSchema } from '../../lib/schema';
+
+export function getStaticPaths() {
+  return LOCALES.map((lang) => ({ params: { lang } }));
+}
+
+const lang = Astro.params.lang as Locale;
+const t = getDict(lang);
+const path = `/${lang}/`;
+
+const title = t.meta.defaultTitle;
+const description = t.meta.defaultDescription;
+
+const teaserItems = t.faq.items.slice(0, 4);
+
+const schemas = [
+  softwareApplicationSchema({ description, lang }),
+  faqSchema(teaserItems),
+];
+---
+
+<PageLayout {title} {description} {lang} {path} schema={schemas}>
+  <Hero {lang} />
+  <TrustBand {lang} />
+  <HowItWorks {lang} />
+  <FeatureGrid {lang} />
+
+  <Section id="faq" variant="surface">
+    <Container>
+      <div class="mx-auto max-w-2xl text-center">
+        <Reveal>
+          <h2 class="h2 text-balance">{t.faqTeaser.title}</h2>
+        </Reveal>
+        <Reveal delay={80}>
+          <p class="lead mt-4 text-pretty">{t.faqTeaser.subtitle}</p>
+        </Reveal>
+      </div>
+      <Reveal class="mx-auto mt-10 max-w-3xl md:mt-14">
+        <FAQ items={teaserItems} />
+        <div class="mt-6 text-center">
+          <a
+            href={localizedPath(lang, 'faq')}
+            class="text-sm font-medium text-[var(--brand)] underline-offset-4 hover:underline"
+          >
+            {t.cta.seeAllFaq} &rarr;
+          </a>
+        </div>
+      </Reveal>
+    </Container>
+  </Section>
+
+  <FinalCta {lang} />
+</PageLayout>

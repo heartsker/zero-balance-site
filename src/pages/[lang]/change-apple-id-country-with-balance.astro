@@ -1,0 +1,151 @@
+---
+import PageLayout from '../../layouts/PageLayout.astro';
+import PageHeader from '../../components/PageHeader.astro';
+import Container from '../../components/Container.astro';
+import Section from '../../components/Section.astro';
+import FAQ from '../../components/FAQ.astro';
+import Reveal from '../../components/Reveal.astro';
+import FinalCta from '../../components/FinalCta.astro';
+import { LOCALES, type Locale } from '../../i18n';
+import { faqSchema } from '../../lib/schema';
+
+export function getStaticPaths() {
+  return LOCALES.map((lang) => ({ params: { lang } }));
+}
+
+const lang = Astro.params.lang as Locale;
+const path = `/${lang}/change-apple-id-country-with-balance/`;
+
+const copy = lang === 'ru'
+  ? {
+      title: 'Как сменить страну Apple ID, если на балансе остались деньги',
+      description:
+        'Apple требует нулевого баланса перед сменой страны Apple ID. Вот пошаговый план: что обязательно делает Apple, а где помогает Zero Balance.',
+      eyebrow: 'Гайд',
+      tldrTitle: 'Коротко',
+      tldr:
+        'Apple не разрешит сменить страну Apple ID, пока на балансе хоть что-то есть. Apple не возвращает баланс деньгами. Единственный способ - потратить остаток внутри App Store. Zero Balance подбирает покупки, которые точно совпадают с остатком, чтобы вы могли быстро уйти к нулю и переключить страну.',
+      sections: [
+        {
+          h: 'Правило Apple про нулевой баланс',
+          p: 'В справке Apple явно написано: чтобы сменить страну или регион Apple ID, баланс на счёте должен быть нулевым, активные подписки отменены, остатки членств в Apple One завершены. Это техническое требование - кнопка смены страны в Настройках будет недоступна, пока баланс не нулевой.',
+        },
+        {
+          h: 'Что нужно сделать до смены страны',
+          p: '1) Отмените все подписки (App Store, Apple Music, iCloud+, Apple One).\n2) Завершите членства в семье, где вы организатор.\n3) Потратьте остаток баланса до нуля.\n4) Дождитесь, чтобы все ваши покупки и возвраты успели обработаться - это может занять несколько дней.\n5) Только после этого пробуйте сменить страну в Настройках.',
+        },
+        {
+          h: 'Где помогает Zero Balance',
+          p: 'Шаг 3 - самый раздражающий. Если у вас осталось $1.42 или ₽79, ни одна стандартная подписка под это не подходит. Zero Balance собирает план из восьми ценовых тиров, который ложится в остаток с минимальным превышением. Вы тратите его за минуту, баланс уходит к нулю - и кнопка смены страны разблокируется.',
+        },
+        {
+          h: 'А что если после оплаты осталось ещё несколько копеек',
+          p: 'Бывает. Покупка прошла, но Apple показывает что-то вроде $0.04 на балансе - и кнопка смены страны всё ещё неактивна. Просто запустите Zero Balance ещё раз с этой суммой. Приложение подберёт ещё один маленький план специально под остаток.',
+        },
+      ],
+      faqLead: 'Связанные вопросы',
+      faqItems: [
+        {
+          q: 'А если Apple вернёт деньги после смены страны?',
+          a: 'Не вернёт. Apple явно говорит, что баланс не переносится между странами и не выплачивается. Поэтому нужно тратить до нуля перед сменой страны.',
+        },
+        {
+          q: 'Можно ли просто игнорировать пару центов?',
+          a: 'Нельзя. Пока на балансе любая ненулевая сумма, кнопка смены страны заблокирована.',
+        },
+        {
+          q: 'Это законно/безопасно?',
+          a: 'Полностью. Zero Balance ничего не делает с Apple ID - вы сами совершаете обычные покупки в App Store. Это разрешённый путь, который описан в самой справке Apple.',
+        },
+      ],
+    }
+  : {
+      title: 'How to change Apple ID country with a balance left',
+      description:
+        'Apple requires a zero balance before you can change Apple ID country. Here is the exact checklist - what Apple makes you do, and where Zero Balance helps.',
+      eyebrow: 'Guide',
+      tldrTitle: 'TL;DR',
+      tldr:
+        'Apple will not let you change your Apple ID country while you have any balance left. Apple does not refund the balance to cash. The only path forward is to spend the leftover inside the App Store. Zero Balance picks a combination of small purchases that matches your exact remainder, so you can hit zero fast and unlock the switch.',
+      sections: [
+        {
+          h: 'Apple\'s zero-balance rule',
+          p: 'Apple\'s help page explicitly says: to change your Apple ID country or region, your balance must be zero, active subscriptions must be cancelled, and any Apple One memberships must be wound down. This is a hard technical requirement - the change-country button in Settings is greyed out until your balance is at zero.',
+        },
+        {
+          h: 'What you have to do before switching country',
+          p: '1) Cancel all subscriptions (App Store, Apple Music, iCloud+, Apple One).\n2) Wind down any Family Sharing memberships where you are the organizer.\n3) Spend your remaining balance down to zero.\n4) Wait for any pending purchases and refunds to settle - this can take a few days.\n5) Only then attempt to change country in Settings.',
+        },
+        {
+          h: 'Where Zero Balance helps',
+          p: 'Step 3 is the annoying one. If you have $1.42 or €0.79 left, no standard subscription cleanly matches that. Zero Balance assembles a plan from eight in-app price tiers that fits your remainder with minimal overage. You burn it down in under a minute, the balance hits zero, and the change-country button unlocks.',
+        },
+        {
+          h: 'And if a few cents remain after the purchases',
+          p: 'It happens. The purchases go through but Apple shows something like $0.04 left, and the change-country button is still locked. Just run Zero Balance again with the new amount. It will assemble another tiny plan tuned specifically to that remainder.',
+        },
+      ],
+      faqLead: 'Related questions',
+      faqItems: [
+        {
+          q: 'Will Apple refund the balance after I change country?',
+          a: 'No. Apple explicitly states the balance does not transfer between storefronts and is not refundable. So you must spend it down to zero before switching.',
+        },
+        {
+          q: 'Can I just ignore a couple of cents?',
+          a: 'No. As long as your balance is any non-zero amount, the change-country button is disabled.',
+        },
+        {
+          q: 'Is this legitimate / safe?',
+          a: 'Completely. Zero Balance does nothing to your Apple ID - you make regular App Store purchases yourself. This is the path Apple\'s own help describes.',
+        },
+      ],
+    };
+---
+
+<PageLayout
+  title={`${copy.title} - Zero Balance`}
+  description={copy.description}
+  {lang}
+  {path}
+  schema={faqSchema(copy.faqItems)}
+>
+  <PageHeader eyebrow={copy.eyebrow} title={copy.title} description={copy.description} />
+
+  <Section>
+    <Container>
+      <Reveal class="mx-auto max-w-3xl">
+        <div class="rounded-2xl border border-[var(--border)] bg-[var(--brand-soft)]/40 p-6 md:p-8">
+          <p class="text-sm font-semibold tracking-wide text-[var(--brand-strong)] uppercase">
+            {copy.tldrTitle}
+          </p>
+          <p class="mt-3 text-lg leading-relaxed text-[var(--fg)]">{copy.tldr}</p>
+        </div>
+      </Reveal>
+
+      <div class="mx-auto mt-10 max-w-3xl prose-zb">
+        {
+          copy.sections.map((s, i) => (
+            <Reveal delay={i * 40}>
+              <h2>{s.h}</h2>
+              {s.p.split('\n\n').map((para) => (
+                <p>{para.split('\n').map((line, j, arr) => (
+                  <>{line}{j < arr.length - 1 && <br />}</>
+                ))}</p>
+              ))}
+            </Reveal>
+          ))
+        }
+
+        <Reveal>
+          <h2>{copy.faqLead}</h2>
+        </Reveal>
+        <Reveal>
+          <FAQ items={copy.faqItems} />
+        </Reveal>
+      </div>
+    </Container>
+  </Section>
+
+  <FinalCta {lang} />
+</PageLayout>

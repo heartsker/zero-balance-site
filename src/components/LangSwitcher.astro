@@ -1,0 +1,63 @@
+---
+import { LOCALES, type Locale } from '../i18n';
+import { localizedPath, stripLocale } from '../i18n';
+
+interface Props {
+  current: Locale;
+  path: string;
+  compact?: boolean;
+}
+
+const { current, path, compact = false } = Astro.props;
+const baseRoute = stripLocale(path);
+
+const labels: Record<Locale, string> = {
+  en: 'EN',
+  ru: 'RU',
+};
+---
+
+<div
+  class:list={[
+    'inline-flex items-center rounded-full border border-[var(--border)] bg-[var(--surface)] p-1 text-sm',
+    compact ? '' : '',
+  ]}
+  role="group"
+  aria-label="Language"
+>
+  {
+    LOCALES.map((loc) => {
+      const isActive = loc === current;
+      return (
+        <a
+          href={localizedPath(loc, baseRoute)}
+          hreflang={loc}
+          data-lang={loc}
+          aria-current={isActive ? 'true' : undefined}
+          class:list={[
+            'rounded-full px-3 py-1 font-medium transition',
+            isActive
+              ? 'bg-[var(--fg)] text-[var(--bg)]'
+              : 'text-[var(--muted)] hover:text-[var(--fg)]',
+          ]}
+        >
+          {labels[loc]}
+        </a>
+      );
+    })
+  }
+</div>
+
+<script is:inline>
+  document.addEventListener('click', function (e) {
+    var target = e.target;
+    if (!(target instanceof Element)) return;
+    var link = target.closest('a[data-lang]');
+    if (!link) return;
+    var lang = link.getAttribute('data-lang');
+    if (!lang) return;
+    try {
+      document.cookie = 'zb_locale=' + lang + '; path=/; max-age=31536000; samesite=lax';
+    } catch (_) { /* no-op */ }
+  });
+</script>

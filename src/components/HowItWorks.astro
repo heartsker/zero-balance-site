@@ -1,0 +1,40 @@
+---
+import Container from './Container.astro';
+import Section from './Section.astro';
+import Reveal from './Reveal.astro';
+import { getDict, type Locale } from '../i18n';
+
+interface Props {
+  lang: Locale;
+}
+
+const { lang } = Astro.props;
+const t = getDict(lang);
+---
+
+<Section id="how-it-works" variant="surface">
+  <Container>
+    <div class="mx-auto max-w-2xl text-center">
+      <Reveal>
+        <h2 class="h2 text-balance">{t.howItWorks.title}</h2>
+      </Reveal>
+      <Reveal delay={80}>
+        <p class="lead mt-4 text-pretty">{t.howItWorks.subtitle}</p>
+      </Reveal>
+    </div>
+
+    <ol class="mt-12 grid gap-5 md:mt-16 md:grid-cols-3 md:gap-7">
+      {
+        t.howItWorks.steps.map((step, i) => (
+          <Reveal delay={i * 80} as="li" class="card relative">
+            <span class="absolute -top-3 left-6 inline-flex h-7 min-w-7 items-center justify-center rounded-full bg-[var(--brand)] px-2 text-sm font-semibold text-white shadow">
+              {String(i + 1).padStart(2, '0')}
+            </span>
+            <h3 class="h3 mt-3">{step.title}</h3>
+            <p class="mt-2 text-[var(--muted)]">{step.body}</p>
+          </Reveal>
+        ))
+      }
+    </ol>
+  </Container>
+</Section>

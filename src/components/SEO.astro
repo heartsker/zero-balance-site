@@ -1,0 +1,48 @@
+---
+import { DOMAIN, LOCALES } from '../lib/siteConfig';
+import { localizedPath, stripLocale, type Locale } from '../i18n';
+
+interface Props {
+  title: string;
+  description: string;
+  lang: Locale;
+  path: string;
+  image?: string;
+  noindex?: boolean;
+}
+
+const { title, description, lang, path, image = '/og-image.png', noindex = false } = Astro.props;
+
+const normalizedPath = path.startsWith('/') ? path : `/${path}`;
+const canonicalUrl = `${DOMAIN}${normalizedPath}`;
+const ogImageUrl = image.startsWith('http') ? image : `${DOMAIN}${image}`;
+const localePath = stripLocale(normalizedPath);
+---
+
+<title>{title}</title>
+<meta name="description" content={description} />
+<link rel="canonical" href={canonicalUrl} />
+{noindex && <meta name="robots" content="noindex" />}
+
+{
+  LOCALES.map((l) => (
+    <link rel="alternate" hreflang={l} href={`${DOMAIN}${localizedPath(l, localePath)}`} />
+  ))
+}
+<link rel="alternate" hreflang="x-default" href={`${DOMAIN}${localizedPath('en', localePath)}`} />
+
+<meta property="og:type" content="website" />
+<meta property="og:site_name" content="Zero Balance" />
+<meta property="og:title" content={title} />
+<meta property="og:description" content={description} />
+<meta property="og:url" content={canonicalUrl} />
+<meta property="og:image" content={ogImageUrl} />
+<meta property="og:locale" content={lang === 'ru' ? 'ru_RU' : 'en_US'} />
+
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content={title} />
+<meta name="twitter:description" content={description} />
+<meta name="twitter:image" content={ogImageUrl} />
+
+<meta name="theme-color" content="#C32DAC" />
+<meta name="apple-mobile-web-app-title" content="Zero Balance" />

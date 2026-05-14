@@ -1,0 +1,75 @@
+---
+import PageLayout from '../../layouts/PageLayout.astro';
+import PageHeader from '../../components/PageHeader.astro';
+import Container from '../../components/Container.astro';
+import Section from '../../components/Section.astro';
+import Reveal from '../../components/Reveal.astro';
+import FinalCta from '../../components/FinalCta.astro';
+import { getDict, LOCALES, type Locale } from '../../i18n';
+import { howToSchema } from '../../lib/schema';
+
+export function getStaticPaths() {
+  return LOCALES.map((lang) => ({ params: { lang } }));
+}
+
+const lang = Astro.params.lang as Locale;
+const t = getDict(lang);
+const path = `/${lang}/help/`;
+
+const schema = howToSchema({
+  name: t.help.pageTitle,
+  description: t.help.pageDescription,
+  steps: t.help.steps,
+});
+---
+
+<PageLayout
+  title={`${t.help.pageTitle} - Zero Balance`}
+  description={t.help.pageDescription}
+  {lang}
+  {path}
+  {schema}
+>
+  <PageHeader
+    eyebrow={lang === 'ru' ? 'Инструкция' : 'Step-by-step guide'}
+    title={t.help.pageTitle}
+    description={t.help.intro}
+  />
+
+  <Section>
+    <Container>
+      <ol class="mx-auto max-w-3xl space-y-5 md:space-y-7">
+        {
+          t.help.steps.map((step, i) => (
+            <Reveal as="li" delay={i * 60} class="card flex gap-5">
+              <div class="shrink-0">
+                <div class="flex h-11 w-11 items-center justify-center rounded-full bg-[var(--brand)] text-base font-semibold text-white shadow">
+                  {i + 1}
+                </div>
+              </div>
+              <div>
+                <h2 class="h3">{step.title}</h2>
+                <p class="mt-2 text-[var(--muted)]">{step.body}</p>
+              </div>
+            </Reveal>
+          ))
+        }
+      </ol>
+
+      <Reveal class="mx-auto mt-10 max-w-3xl">
+        <div class="rounded-2xl border border-[var(--border)] bg-[var(--brand-soft)]/40 p-6">
+          <h3 class="h3">
+            {lang === 'ru' ? 'Где найти баланс Apple Account?' : 'Where to find your Apple Account balance'}
+          </h3>
+          <p class="mt-2 text-[var(--muted)]">
+            {lang === 'ru'
+              ? 'Настройки -> ваше имя -> Медиаматериалы и покупки -> Просмотреть учётную запись. Баланс показан в самом верху.'
+              : 'Settings -> your name -> Media & Purchases -> View Account. Your balance is shown at the very top.'}
+          </p>
+        </div>
+      </Reveal>
+    </Container>
+  </Section>
+
+  <FinalCta {lang} />
+</PageLayout>

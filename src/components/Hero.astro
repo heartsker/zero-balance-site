@@ -1,0 +1,92 @@
+---
+import AppStoreButton from './AppStoreButton.astro';
+import Container from './Container.astro';
+import { getDict, type Locale } from '../i18n';
+
+interface Props {
+  lang: Locale;
+}
+
+const { lang } = Astro.props;
+const t = getDict(lang);
+
+const screenshotSrc = `/screenshots/${lang}/1.png`;
+const screenshotSrc2 = `/screenshots/${lang}/2.png`;
+---
+
+<section class="relative overflow-hidden bg-aurora pt-12 pb-16 md:pt-24 md:pb-28">
+  <Container>
+    <div class="grid items-center gap-12 md:grid-cols-12 md:gap-10">
+      <div class="md:col-span-7">
+        <p class="hero-rise hero-rise-1 inline-flex items-center gap-2 rounded-full border border-[var(--border)] bg-[var(--surface)]/70 px-3 py-1 text-xs font-medium tracking-wide text-[var(--muted)] backdrop-blur">
+          <span class="h-1.5 w-1.5 rounded-full bg-[var(--brand)]" />
+          {t.hero.eyebrow}
+        </p>
+        <h1 class="hero-rise hero-rise-2 mt-5 h1 text-balance">
+          {t.hero.title}
+        </h1>
+        <p class="hero-rise hero-rise-3 mt-5 lead max-w-xl text-pretty">
+          {t.hero.subtitle}
+        </p>
+
+        <ul class="hero-rise hero-rise-3 mt-6 flex flex-wrap gap-x-5 gap-y-2 text-sm text-[var(--muted)]">
+          {
+            t.hero.bullets.map((b) => (
+              <li class="flex items-center gap-2">
+                <svg width="16" height="16" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+                  <path d="M4 10l4 4 8-9" stroke="var(--brand)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                {b}
+              </li>
+            ))
+          }
+        </ul>
+
+        <div class="hero-rise hero-rise-4 mt-8 flex flex-wrap items-center gap-3">
+          <AppStoreButton label={t.cta.appStore} size="lg" />
+          <a
+            href="#how-it-works"
+            class="text-sm font-medium text-[var(--muted)] transition-colors hover:text-[var(--fg)]"
+          >
+            {t.cta.learnMore} &rarr;
+          </a>
+        </div>
+      </div>
+
+      <div class="md:col-span-5">
+        <div class="relative mx-auto max-w-sm md:max-w-none">
+          <div
+            class="absolute -inset-8 -z-10 rounded-full bg-[radial-gradient(closest-side,rgba(195,45,172,0.22),transparent)] blur-2xl"
+            aria-hidden="true"
+          />
+          <div class="hero-rise hero-rise-3 float-y relative">
+            <img
+              src={screenshotSrc}
+              alt={t.hero.screenshotAlt}
+              width="430"
+              height="932"
+              loading="eager"
+              fetchpriority="high"
+              decoding="async"
+              class="mx-auto block rounded-[2.5rem] shadow-[0_30px_80px_-20px_rgba(20,16,26,0.45)] ring-1 ring-black/5"
+            />
+          </div>
+          <div
+            class="hero-rise hero-rise-4 absolute -bottom-6 -left-6 hidden w-40 rotate-[-6deg] md:block"
+            aria-hidden="true"
+          >
+            <img
+              src={screenshotSrc2}
+              alt=""
+              width="170"
+              height="368"
+              loading="lazy"
+              decoding="async"
+              class="rounded-2xl shadow-xl ring-1 ring-black/5"
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+  </Container>
+</section>

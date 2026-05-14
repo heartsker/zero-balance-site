@@ -1,0 +1,40 @@
+---
+import PageLayout from '../../layouts/PageLayout.astro';
+import PageHeader from '../../components/PageHeader.astro';
+import Container from '../../components/Container.astro';
+import Section from '../../components/Section.astro';
+import FAQ from '../../components/FAQ.astro';
+import FinalCta from '../../components/FinalCta.astro';
+import Reveal from '../../components/Reveal.astro';
+import { getDict, LOCALES, type Locale } from '../../i18n';
+import { faqSchema } from '../../lib/schema';
+
+export function getStaticPaths() {
+  return LOCALES.map((lang) => ({ params: { lang } }));
+}
+
+const lang = Astro.params.lang as Locale;
+const t = getDict(lang);
+const path = `/${lang}/faq/`;
+const eyebrow = lang === 'ru' ? 'Вопросы и ответы' : 'Questions and answers';
+---
+
+<PageLayout
+  title={`${t.faq.pageTitle} - Zero Balance`}
+  description={t.faq.pageDescription}
+  {lang}
+  {path}
+  schema={faqSchema(t.faq.items)}
+>
+  <PageHeader eyebrow={eyebrow} title={t.faq.pageTitle} description={t.faq.pageDescription} />
+
+  <Section>
+    <Container>
+      <Reveal class="mx-auto max-w-3xl">
+        <FAQ items={t.faq.items} />
+      </Reveal>
+    </Container>
+  </Section>
+
+  <FinalCta {lang} />
+</PageLayout>

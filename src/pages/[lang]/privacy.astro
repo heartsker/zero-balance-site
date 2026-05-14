@@ -1,0 +1,112 @@
+---
+import PageLayout from '../../layouts/PageLayout.astro';
+import PageHeader from '../../components/PageHeader.astro';
+import Container from '../../components/Container.astro';
+import Section from '../../components/Section.astro';
+import Reveal from '../../components/Reveal.astro';
+import { LOCALES, type Locale } from '../../i18n';
+import { SUPPORT_EMAIL } from '../../lib/siteConfig';
+
+export function getStaticPaths() {
+  return LOCALES.map((lang) => ({ params: { lang } }));
+}
+
+const lang = Astro.params.lang as Locale;
+const path = `/${lang}/privacy/`;
+const updated = '2026-05-14';
+
+const copy = lang === 'ru'
+  ? {
+      title: 'Политика конфиденциальности',
+      description: 'Что Zero Balance собирает, чего не собирает и куда уходят ваши данные. Короткий ответ - почти никуда.',
+      eyebrow: 'Конфиденциальность',
+      updatedLabel: 'Обновлено',
+      sections: [
+        {
+          h: 'Коротко',
+          html: `<p>Zero Balance не собирает персональные данные. У нас нет аккаунтов, нет рекламы, нет аналитики, идентифицирующей вас. Ваш инвентарь и история покупок хранятся в вашем собственном приватном контейнере iCloud, привязанном к вашему Apple ID.</p>`,
+        },
+        {
+          h: 'Что собирается',
+          html: `<ul><li>Apple собирает то, что обычно собирает при покупках в App Store: подтверждение покупки, статус подписок, диагностику. Это происходит на уровне Apple, не у нас.</li><li>Apple предоставляет нам обезличенную статистику (загрузки, версии iOS, регионы) через App Store Connect.</li></ul>`,
+        },
+        {
+          h: 'Что не собирается',
+          html: `<ul><li>Имя, email, телефон.</li><li>Точный или приблизительный геолокационный сигнал.</li><li>Данные карты, баланса, банка.</li><li>Контакты, фото, история приложений.</li><li>Идентификаторы для трекинга между приложениями (Apple App Tracking Transparency не используется, потому что мы ничего не трекаем).</li></ul>`,
+        },
+        {
+          h: 'Где хранятся ваши покупки',
+          html: `<p>Покупки и инвентарь синхронизируются через CloudKit в ваш собственный приватный iCloud-контейнер. Это значит: данные доступны только вам, шифруются и хранятся у Apple, не у нас. Если вы выходите из iCloud, локальные данные остаются на устройстве; если удаляете приложение - удаляется и локальная копия. Контейнер iCloud Apple удаляет по своим политикам.</p>`,
+        },
+        {
+          h: 'Сторонние сервисы',
+          html: `<p>Внутри приложения нет SDK третьих сторон, кроме фреймворков Apple (StoreKit, CloudKit, GameKit). Сайт zerobalance.pro раздаётся со статического хостинга, использует шрифты Google Fonts. Cookies сайт ставит только один - <code>zb_locale</code> для сохранения выбранного языка, без идентификации пользователя.</p>`,
+        },
+        {
+          h: 'Контакт',
+          html: `<p>Вопросы по конфиденциальности: <a href="mailto:${SUPPORT_EMAIL}">${SUPPORT_EMAIL}</a>.</p>`,
+        },
+      ],
+    }
+  : {
+      title: 'Privacy policy',
+      description:
+        'What Zero Balance collects, what it does not collect, and where your data goes. Short answer - almost nowhere.',
+      eyebrow: 'Privacy',
+      updatedLabel: 'Updated',
+      sections: [
+        {
+          h: 'TL;DR',
+          html: `<p>Zero Balance does not collect personal data. There are no accounts, no ads, no analytics that identify you. Your inventory and purchase history live in your own private iCloud container, tied to your Apple ID.</p>`,
+        },
+        {
+          h: 'What is collected',
+          html: `<ul><li>Apple collects what it normally collects during App Store purchases: purchase receipts, subscription status, diagnostics. That happens at Apple\'s level, not ours.</li><li>Apple provides us with anonymized aggregate stats (downloads, iOS versions, regions) via App Store Connect.</li></ul>`,
+        },
+        {
+          h: 'What is not collected',
+          html: `<ul><li>Name, email, phone number.</li><li>Precise or approximate location signal.</li><li>Card, balance, or bank data.</li><li>Contacts, photos, app history.</li><li>Cross-app tracking identifiers (Apple App Tracking Transparency is not used because we do not track).</li></ul>`,
+        },
+        {
+          h: 'Where your purchases live',
+          html: `<p>Purchases and inventory sync via CloudKit into your own private iCloud container. That means: the data is accessible only to you, encrypted, and stored by Apple - not by us. If you sign out of iCloud, local data stays on the device; if you delete the app, the local copy is removed. Apple deletes the iCloud container per its own policies.</p>`,
+        },
+        {
+          h: 'Third-party services',
+          html: `<p>The app contains no third-party SDKs beyond Apple\'s own frameworks (StoreKit, CloudKit, GameKit). The website zerobalance.pro is served from a static host and uses Google Fonts. The site sets only one cookie - <code>zb_locale</code> - to remember your language choice. No personal identification.</p>`,
+        },
+        {
+          h: 'Contact',
+          html: `<p>Privacy questions: <a href="mailto:${SUPPORT_EMAIL}">${SUPPORT_EMAIL}</a>.</p>`,
+        },
+      ],
+    };
+---
+
+<PageLayout
+  title={`${copy.title} - Zero Balance`}
+  description={copy.description}
+  {lang}
+  {path}
+>
+  <PageHeader eyebrow={copy.eyebrow} title={copy.title} description={copy.description} />
+
+  <Section>
+    <Container>
+      <Reveal class="mx-auto max-w-3xl">
+        <p class="text-sm text-[var(--muted)]">{copy.updatedLabel}: {updated}</p>
+      </Reveal>
+
+      <div class="mx-auto mt-6 max-w-3xl prose-zb">
+        {
+          copy.sections.map((s, i) => (
+            <Reveal delay={i * 30}>
+              <h2>{s.h}</h2>
+              <div set:html={s.html} />
+            </Reveal>
+          ))
+        }
+      </div>
+    </Container>
+  </Section>
+</PageLayout>

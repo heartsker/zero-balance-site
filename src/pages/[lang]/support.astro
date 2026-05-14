@@ -1,0 +1,143 @@
+---
+import PageLayout from '../../layouts/PageLayout.astro';
+import PageHeader from '../../components/PageHeader.astro';
+import Container from '../../components/Container.astro';
+import Section from '../../components/Section.astro';
+import Reveal from '../../components/Reveal.astro';
+import { LOCALES, type Locale, localizedPath } from '../../i18n';
+import { SUPPORT_EMAIL } from '../../lib/siteConfig';
+
+export function getStaticPaths() {
+  return LOCALES.map((lang) => ({ params: { lang } }));
+}
+
+const lang = Astro.params.lang as Locale;
+const path = `/${lang}/support/`;
+
+const copy = lang === 'ru'
+  ? {
+      title: 'Поддержка',
+      description:
+        'Самый быстрый способ что-то починить - написать на email. Обычно отвечаем в течение одного рабочего дня.',
+      eyebrow: 'Поддержка',
+      contactLabel: 'Связаться',
+      contactBody: 'Лучший канал - email. Опишите проблему и приложите скриншот, если это уместно.',
+      faqLabel: 'Сначала загляните в инструкцию и FAQ',
+      faqBody: 'Большинство вопросов закрываются короткой инструкцией.',
+      issuesLabel: 'Частые проблемы',
+      issues: [
+        {
+          h: 'План превышает мой остаток на несколько копеек',
+          p: 'Это ожидаемо: если остаток меньше суммы любой комбинации тиров, минимальное превышение - 1-3 копейки. Экран проверки плана покажет точную цифру до подтверждения.',
+        },
+        {
+          h: 'Покупка не проходит',
+          p: 'Чаще всего причина у Apple, не у приложения: устарела платёжная информация, нужна повторная авторизация, нет интернета. Откройте Настройки -> Apple Account -> Способ оплаты, проверьте данные и повторите.',
+        },
+        {
+          h: 'Инвентарь не синхронизируется между устройствами',
+          p: 'Убедитесь, что на обоих устройствах вы вошли в один и тот же Apple ID и iCloud Drive включён. Синхронизация может занять минуту.',
+        },
+        {
+          h: 'Хочу вернуть деньги за покупку',
+          p: 'Возврат оформляет Apple, не мы. Откройте reportaproblem.apple.com в браузере, войдите в Apple ID и выберите нужную покупку.',
+        },
+      ],
+      slaLabel: 'Ответ',
+      slaBody: 'Обычно в течение одного рабочего дня. На сложные вопросы может уйти больше - но мы напишем, что разбираемся.',
+    }
+  : {
+      title: 'Support',
+      description:
+        'Fastest way to get something fixed is to email. We usually reply within one business day.',
+      eyebrow: 'Support',
+      contactLabel: 'Contact',
+      contactBody: 'Best channel is email. Describe the issue and attach a screenshot if relevant.',
+      faqLabel: 'Check the help guide and FAQ first',
+      faqBody: 'Most questions are answered in a short walkthrough.',
+      issuesLabel: 'Common issues',
+      issues: [
+        {
+          h: 'The plan overshoots my balance by a few cents',
+          p: 'Expected behaviour: if your leftover is below the cheapest tier combination, the minimum overage is a few cents. The plan-review screen shows the exact number before you confirm.',
+        },
+        {
+          h: 'A purchase will not go through',
+          p: 'Usually an Apple-side issue, not the app: stale payment info, re-authentication needed, no network. Open Settings -> Apple Account -> Payment Method, check the details, and retry.',
+        },
+        {
+          h: 'My inventory is not syncing between devices',
+          p: 'Make sure both devices are signed into the same Apple ID and iCloud Drive is on. Sync can take up to a minute.',
+        },
+        {
+          h: 'I want a refund',
+          p: 'Refunds are issued by Apple, not us. Open reportaproblem.apple.com in a browser, sign in with your Apple ID, and pick the purchase.',
+        },
+      ],
+      slaLabel: 'Response time',
+      slaBody: 'Usually within one business day. Complex questions may take longer - in that case we will reply to acknowledge.',
+    };
+---
+
+<PageLayout
+  title={`${copy.title} - Zero Balance`}
+  description={copy.description}
+  {lang}
+  {path}
+>
+  <PageHeader eyebrow={copy.eyebrow} title={copy.title} description={copy.description} />
+
+  <Section>
+    <Container>
+      <div class="mx-auto grid max-w-4xl gap-5 md:grid-cols-2">
+        <Reveal class="card">
+          <h2 class="h3">{copy.contactLabel}</h2>
+          <p class="mt-2 text-[var(--muted)]">{copy.contactBody}</p>
+          <a
+            href={`mailto:${SUPPORT_EMAIL}`}
+            class="mt-4 inline-flex items-center gap-2 font-semibold text-[var(--brand)] hover:text-[var(--brand-strong)]"
+          >
+            {SUPPORT_EMAIL}
+            <span aria-hidden="true">&rarr;</span>
+          </a>
+        </Reveal>
+
+        <Reveal delay={60} class="card">
+          <h2 class="h3">{copy.faqLabel}</h2>
+          <p class="mt-2 text-[var(--muted)]">{copy.faqBody}</p>
+          <div class="mt-4 flex flex-wrap gap-3">
+            <a href={localizedPath(lang, 'help')} class="cta cta--ghost">
+              {lang === 'ru' ? 'Инструкция' : 'Help guide'}
+            </a>
+            <a href={localizedPath(lang, 'faq')} class="cta cta--ghost">
+              {lang === 'ru' ? 'Вопросы' : 'FAQ'}
+            </a>
+          </div>
+        </Reveal>
+      </div>
+
+      <div class="mx-auto mt-12 max-w-3xl">
+        <Reveal>
+          <h2 class="h2">{copy.issuesLabel}</h2>
+        </Reveal>
+        <div class="mt-6 space-y-4">
+          {
+            copy.issues.map((issue, i) => (
+              <Reveal as="article" delay={i * 50} class="card">
+                <h3 class="h3">{issue.h}</h3>
+                <p class="mt-2 text-[var(--muted)]">{issue.p}</p>
+              </Reveal>
+            ))
+          }
+        </div>
+
+        <Reveal class="mt-10">
+          <div class="rounded-2xl border border-[var(--border)] bg-[var(--brand-soft)]/40 p-6">
+            <h3 class="h3">{copy.slaLabel}</h3>
+            <p class="mt-2 text-[var(--muted)]">{copy.slaBody}</p>
+          </div>
+        </Reveal>
+      </div>
+    </Container>
+  </Section>
+</PageLayout>

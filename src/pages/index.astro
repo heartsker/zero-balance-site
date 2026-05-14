@@ -1,0 +1,43 @@
+---
+import { DOMAIN } from '../lib/siteConfig';
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Zero Balance - Spend leftover Apple Account balance</title>
+    <meta
+      name="description"
+      content="Got leftover Apple Account balance or store credit you cannot shake? Zero Balance picks the closest pack of small App Store items to clear it."
+    />
+    <link rel="canonical" href={`${DOMAIN}/en/`} />
+    <link rel="alternate" hreflang="en" href={`${DOMAIN}/en/`} />
+    <link rel="alternate" hreflang="ru" href={`${DOMAIN}/ru/`} />
+    <link rel="alternate" hreflang="x-default" href={`${DOMAIN}/en/`} />
+    <meta http-equiv="refresh" content="0; url=/en/" />
+    <script is:inline>
+      (function () {
+        try {
+          var path = location.pathname;
+          if (path !== '/' && path !== '/index.html') return;
+          var cookie = (document.cookie.match(/(?:^|; )zb_locale=(en|ru)/) || [])[1];
+          var lang = cookie;
+          if (!lang) {
+            var nav = (navigator.languages && navigator.languages[0]) || navigator.language || 'en';
+            lang = /^ru\b/i.test(nav) ? 'ru' : 'en';
+          }
+          location.replace('/' + lang + '/');
+        } catch (_) {
+          location.replace('/en/');
+        }
+      })();
+    </script>
+  </head>
+  <body>
+    <p style="font-family: system-ui, sans-serif; padding: 2rem;">
+      Redirecting to <a href="/en/">/en/</a>...
+    </p>
+  </body>
+</html>

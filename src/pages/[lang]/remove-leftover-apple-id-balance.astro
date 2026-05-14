@@ -1,0 +1,149 @@
+---
+import PageLayout from '../../layouts/PageLayout.astro';
+import PageHeader from '../../components/PageHeader.astro';
+import Container from '../../components/Container.astro';
+import Section from '../../components/Section.astro';
+import FAQ from '../../components/FAQ.astro';
+import Reveal from '../../components/Reveal.astro';
+import FinalCta from '../../components/FinalCta.astro';
+import { LOCALES, type Locale } from '../../i18n';
+import { faqSchema } from '../../lib/schema';
+
+export function getStaticPaths() {
+  return LOCALES.map((lang) => ({ params: { lang } }));
+}
+
+const lang = Astro.params.lang as Locale;
+const path = `/${lang}/remove-leftover-apple-id-balance/`;
+
+const copy = lang === 'ru'
+  ? {
+      title: 'Как убрать остаток баланса Apple ID',
+      description:
+        'Остался копеечный остаток на Apple ID, который не получается потратить? Восемь ценовых тиров Zero Balance подбирают точную комбинацию покупок и сводят остаток к нулю.',
+      eyebrow: 'Решение',
+      tldrTitle: 'Коротко',
+      tldr:
+        'Маленький остаток (например, ₽47 или $0.47) не покрывает ни одну стандартную подписку и не вкладывается в обычные приложения. Zero Balance даёт восемь ценовых тиров - небольших расходуемых и постоянных предметов - чтобы можно было собрать набор, который ложится в остаток с минимальным превышением.',
+      sections: [
+        {
+          h: 'Почему остаток так трудно потратить',
+          p: 'Большинство приложений в App Store стоит круглые суммы - $0.99, $1.99, $4.99. Если у вас остался $0.47, ни одно из них вам не подойдёт без переплаты больше, чем сам остаток. Apple-подписки тоже идут целыми ценами. В итоге остаток лежит мёртвым грузом и блокирует, например, смену страны Apple ID.',
+        },
+        {
+          h: 'Восемь ценовых тиров Zero Balance',
+          p: 'Внутри приложения предложены восемь разных in-app purchase\'ов с тщательно подобранными ценами - от очень маленьких до средних. Это даёт алгоритму гибкость подобрать почти любой остаток. Каждая покупка - либо расходуемая (еда, тепло), либо постоянная (предметы инвентаря).',
+        },
+        {
+          h: 'Пример: $0.47',
+          p: 'Допустим, у вас осталось $0.47. Алгоритм может предложить, например, набор из мелкого расходуемого предмета за $0.29 и ещё одного за $0.19 - итого $0.48, превышение $0.01. Экран проверки плана покажет это до подтверждения, и вы решаете, нажимать или нет.',
+        },
+        {
+          h: 'Что попадает к вам после',
+          p: 'Купленные предметы хранятся в вашем приватном iCloud-инвентаре в приложении. Расходуемые можно использовать прямо там. Никто другой их не видит - даже мы.',
+        },
+      ],
+      faqLead: 'Связанные вопросы',
+      faqItems: [
+        {
+          q: 'Это превышение точно минимальное?',
+          a: 'Да. Алгоритм перебирает комбинации тиров и выбирает ближайшую сумму, не меньшую, чем целевая. На остатках в несколько копеек превышение часто составляет 1-3 копейки.',
+        },
+        {
+          q: 'А если у меня остался ровно один из тиров - например, $0.99?',
+          a: 'Тогда план будет ровно одна покупка, без превышения. Идеальный случай.',
+        },
+        {
+          q: 'Это вообще официально?',
+          a: 'Полностью. Zero Balance - обычное приложение в App Store, и покупки внутри - обычные In-App Purchase\'ы Apple. Никаких обходов, никаких сторонних оплат.',
+        },
+      ],
+    }
+  : {
+      title: 'How to remove leftover Apple ID balance',
+      description:
+        'Stuck with a few cents on your Apple ID that you cannot spend? Zero Balance\'s eight price tiers assemble an exact combination of small purchases and clear the leftover.',
+      eyebrow: 'Solution',
+      tldrTitle: 'TL;DR',
+      tldr:
+        'A small leftover (like $0.47 or €0.79) does not cover any standard subscription and does not fit a typical app price. Zero Balance offers eight in-app price tiers - small consumables and non-consumables - so you can assemble a combination that fits your leftover with minimal overage.',
+      sections: [
+        {
+          h: 'Why a leftover is so hard to spend',
+          p: 'Most App Store apps are priced at round numbers - $0.99, $1.99, $4.99. If you have $0.47 left, none of those work without overshooting by more than the leftover itself. Apple subscriptions are also priced whole. The leftover just sits there, blocking things like an Apple ID country switch.',
+        },
+        {
+          h: 'Eight price tiers inside Zero Balance',
+          p: 'Inside the app, you are offered eight in-app purchases with carefully chosen prices - from very small to moderate. This gives the matching algorithm enough flexibility to fit almost any leftover. Each tier is either consumable (food, warmth) or non-consumable (inventory items).',
+        },
+        {
+          h: 'Worked example: $0.47',
+          p: 'Say you have $0.47 left. The algorithm might propose, for example, one tiny consumable at $0.29 plus another at $0.19 - total $0.48, overage $0.01. The plan-review screen shows this before you confirm, so you decide whether to tap through.',
+        },
+        {
+          h: 'What ends up in your account',
+          p: 'Purchased items live in your private iCloud-synced inventory inside the app. Consumables can be used right there. No one else sees them - not even us.',
+        },
+      ],
+      faqLead: 'Related questions',
+      faqItems: [
+        {
+          q: 'Is the overage really minimal?',
+          a: 'Yes. The algorithm searches combinations of tiers and picks the closest sum at or above your target. For leftovers of a few cents, overage is typically a few cents at most.',
+        },
+        {
+          q: 'What if I have exactly one tier worth (e.g. $0.99)?',
+          a: 'Then the plan is a single purchase with zero overage. Ideal case.',
+        },
+        {
+          q: 'Is this official / legitimate?',
+          a: 'Completely. Zero Balance is a regular App Store app, and the purchases inside are regular Apple In-App Purchases. No workarounds, no third-party payments.',
+        },
+      ],
+    };
+---
+
+<PageLayout
+  title={`${copy.title} - Zero Balance`}
+  description={copy.description}
+  {lang}
+  {path}
+  schema={faqSchema(copy.faqItems)}
+>
+  <PageHeader eyebrow={copy.eyebrow} title={copy.title} description={copy.description} />
+
+  <Section>
+    <Container>
+      <Reveal class="mx-auto max-w-3xl">
+        <div class="rounded-2xl border border-[var(--border)] bg-[var(--brand-soft)]/40 p-6 md:p-8">
+          <p class="text-sm font-semibold tracking-wide text-[var(--brand-strong)] uppercase">
+            {copy.tldrTitle}
+          </p>
+          <p class="mt-3 text-lg leading-relaxed text-[var(--fg)]">{copy.tldr}</p>
+        </div>
+      </Reveal>
+
+      <div class="mx-auto mt-10 max-w-3xl prose-zb">
+        {
+          copy.sections.map((s, i) => (
+            <Reveal delay={i * 40}>
+              <h2>{s.h}</h2>
+              {s.p.split('\n\n').map((para) => (
+                <p>{para}</p>
+              ))}
+            </Reveal>
+          ))
+        }
+
+        <Reveal>
+          <h2>{copy.faqLead}</h2>
+        </Reveal>
+        <Reveal>
+          <FAQ items={copy.faqItems} />
+        </Reveal>
+      </div>
+    </Container>
+  </Section>
+
+  <FinalCta {lang} />
+</PageLayout>

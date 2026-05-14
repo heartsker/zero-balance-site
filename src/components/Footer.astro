@@ -1,0 +1,126 @@
+---
+import { getDict, localizedPath, type Locale } from '../i18n';
+import { SUPPORT_EMAIL } from '../lib/siteConfig';
+import LangSwitcher from './LangSwitcher.astro';
+
+interface Props {
+  lang: Locale;
+  path: string;
+}
+
+const { lang, path } = Astro.props;
+const t = getDict(lang);
+const year = new Date().getFullYear();
+
+const productLinks = [
+  { label: t.nav.home, href: localizedPath(lang, '') },
+  { label: t.nav.faq, href: localizedPath(lang, 'faq') },
+  { label: t.nav.help, href: localizedPath(lang, 'help') },
+];
+
+const helpLinks = [
+  {
+    label: lang === 'ru' ? 'Потратить баланс Apple Account' : 'Spend Apple Account balance',
+    href: localizedPath(lang, 'spend-apple-account-balance'),
+  },
+  {
+    label: lang === 'ru' ? 'Сменить страну Apple ID' : 'Change Apple ID country',
+    href: localizedPath(lang, 'change-apple-id-country-with-balance'),
+  },
+  {
+    label: lang === 'ru' ? 'Убрать остаток баланса' : 'Remove leftover balance',
+    href: localizedPath(lang, 'remove-leftover-apple-id-balance'),
+  },
+];
+
+const legalLinks = [
+  { label: t.nav.privacy, href: localizedPath(lang, 'privacy') },
+  { label: t.nav.support, href: localizedPath(lang, 'support') },
+];
+---
+
+<footer class="border-t border-[var(--border)] bg-[var(--surface)]">
+  <div class="mx-auto w-full max-w-6xl px-5 py-12 md:px-8 md:py-16">
+    <div class="grid grid-cols-2 gap-10 md:grid-cols-4">
+      <div class="col-span-2 md:col-span-1">
+        <a
+          href={localizedPath(lang, '')}
+          class="inline-flex items-center gap-2 font-semibold tracking-tight"
+        >
+          <img
+            src="/icon.png"
+            alt=""
+            width="32"
+            height="32"
+            class="h-8 w-8 rounded-lg shadow-sm"
+            loading="lazy"
+            decoding="async"
+          />
+          <span>Zero Balance</span>
+        </a>
+        <p class="mt-3 max-w-xs text-sm text-[var(--muted)]">{t.footer.tagline}</p>
+        <div class="mt-5">
+          <LangSwitcher current={lang} path={path} />
+        </div>
+      </div>
+
+      <div>
+        <h3 class="text-sm font-semibold tracking-wide text-[var(--fg)] uppercase">{t.footer.columns.product}</h3>
+        <ul class="mt-4 space-y-2.5 text-sm">
+          {
+            productLinks.map((l) => (
+              <li>
+                <a href={l.href} class="text-[var(--muted)] transition-colors hover:text-[var(--fg)]">
+                  {l.label}
+                </a>
+              </li>
+            ))
+          }
+        </ul>
+      </div>
+
+      <div>
+        <h3 class="text-sm font-semibold tracking-wide text-[var(--fg)] uppercase">{t.footer.columns.help}</h3>
+        <ul class="mt-4 space-y-2.5 text-sm">
+          {
+            helpLinks.map((l) => (
+              <li>
+                <a href={l.href} class="text-[var(--muted)] transition-colors hover:text-[var(--fg)]">
+                  {l.label}
+                </a>
+              </li>
+            ))
+          }
+        </ul>
+      </div>
+
+      <div>
+        <h3 class="text-sm font-semibold tracking-wide text-[var(--fg)] uppercase">{t.footer.columns.legal}</h3>
+        <ul class="mt-4 space-y-2.5 text-sm">
+          {
+            legalLinks.map((l) => (
+              <li>
+                <a href={l.href} class="text-[var(--muted)] transition-colors hover:text-[var(--fg)]">
+                  {l.label}
+                </a>
+              </li>
+            ))
+          }
+          <li>
+            <a
+              href={`mailto:${SUPPORT_EMAIL}`}
+              class="text-[var(--muted)] transition-colors hover:text-[var(--fg)]"
+            >
+              {SUPPORT_EMAIL}
+            </a>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="mt-12 flex flex-col items-start justify-between gap-3 border-t border-[var(--border)] pt-6 text-xs text-[var(--muted)] md:flex-row md:items-center">
+      <p>&copy; {year} Daniel Pustotin. {t.footer.rights}</p>
+      <p>{t.footer.builtBy}</p>
+    </div>
+  </div>
+</footer>

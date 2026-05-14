@@ -1,0 +1,7 @@
+# Cloudflare Pages locale routing for the root path.
+# Cookie wins, then Accept-Language, then default English.
+
+/    /ru/    302    Cookie: zb_locale=ru
+/    /en/    302    Cookie: zb_locale=en
+/    /ru/    302    Accept-Language: ru*
+/    /en/    302

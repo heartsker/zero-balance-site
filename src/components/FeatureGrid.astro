@@ -1,0 +1,51 @@
+---
+import Container from './Container.astro';
+import Section from './Section.astro';
+import Reveal from './Reveal.astro';
+import { getDict, type Locale } from '../i18n';
+
+interface Props {
+  lang: Locale;
+}
+
+const { lang } = Astro.props;
+const t = getDict(lang);
+
+const icons = [
+  // Target / pin
+  '<path d="M12 2v3M12 19v3M2 12h3M19 12h3" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><circle cx="12" cy="12" r="6.5" stroke="currentColor" stroke-width="1.6"/><circle cx="12" cy="12" r="2" fill="currentColor"/>',
+  // Checklist
+  '<rect x="3.5" y="3.5" width="17" height="17" rx="3" stroke="currentColor" stroke-width="1.6"/><path d="M8 12l2.5 2.5L16 9" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/>',
+  // Sliders
+  '<path d="M4 7h11M4 12h6M4 17h14" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/><circle cx="17" cy="7" r="2" fill="currentColor"/><circle cx="13" cy="12" r="2" fill="currentColor"/><circle cx="7" cy="17" r="2" fill="currentColor"/>',
+  // iCloud
+  '<path d="M7 17h10a4 4 0 0 0 .8-7.9 6 6 0 0 0-11.6.6A3.5 3.5 0 0 0 7 17z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/>',
+];
+---
+
+<Section id="features">
+  <Container>
+    <div class="mx-auto max-w-2xl text-center">
+      <Reveal>
+        <h2 class="h2 text-balance">{t.features.title}</h2>
+      </Reveal>
+      <Reveal delay={80}>
+        <p class="lead mt-4 text-pretty">{t.features.subtitle}</p>
+      </Reveal>
+    </div>
+
+    <div class="mt-12 grid gap-5 md:mt-16 md:grid-cols-2 lg:grid-cols-4 lg:gap-6">
+      {
+        t.features.items.map((f, i) => (
+          <Reveal delay={i * 70} class="card flex flex-col">
+            <div class="inline-flex h-11 w-11 items-center justify-center rounded-xl bg-[var(--brand-soft)] text-[var(--brand-strong)]">
+              <svg width="22" height="22" viewBox="0 0 24 24" aria-hidden="true" set:html={icons[i]} />
+            </div>
+            <h3 class="h3 mt-4">{f.title}</h3>
+            <p class="mt-2 text-sm text-[var(--muted)]">{f.body}</p>
+          </Reveal>
+        ))
+      }
+    </div>
+  </Container>
+</Section>
