@@ -85,3 +85,27 @@ export function breadcrumbSchema(items: { name: string; url: string }[]) {
     })),
   };
 }
+
+export function qaPageSchema(opts: {
+  question: string;
+  answer: string;
+  url: string;
+  lang: 'en' | 'ru';
+}) {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'QAPage',
+    inLanguage: opts.lang,
+    mainEntity: {
+      '@type': 'Question',
+      name: opts.question,
+      url: opts.url,
+      answerCount: 1,
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: opts.answer,
+        url: opts.url,
+      },
+    },
+  };
+}

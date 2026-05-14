@@ -48,7 +48,11 @@ const schemas = [
         </Reveal>
       </div>
       <Reveal class="mx-auto mt-10 max-w-3xl md:mt-14">
-        <FAQ items={teaserItems} />
+        <FAQ
+          items={teaserItems}
+          detailHrefBase={localizedPath(lang, 'faq')}
+          detailLabel={t.faq.readFullAnswer}
+        />
         <div class="mt-6 text-center">
           <a
             href={localizedPath(lang, 'faq')}

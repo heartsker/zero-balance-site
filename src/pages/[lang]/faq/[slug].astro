@@ -1,0 +1,137 @@
+---
+import PageLayout from '../../../layouts/PageLayout.astro';
+import PageHeader from '../../../components/PageHeader.astro';
+import Container from '../../../components/Container.astro';
+import Section from '../../../components/Section.astro';
+import Reveal from '../../../components/Reveal.astro';
+import FinalCta from '../../../components/FinalCta.astro';
+import { getDict, LOCALES, localizedPath, type Locale } from '../../../i18n';
+import { qaPageSchema, breadcrumbSchema } from '../../../lib/schema';
+import { DOMAIN } from '../../../lib/siteConfig';
+
+export function getStaticPaths() {
+  const en = (getDict('en') as any).faq.items as { slug: string }[];
+  return LOCALES.flatMap((lang) =>
+    en.map(({ slug }) => ({
+      params: { lang, slug },
+    })),
+  );
+}
+
+const { lang, slug } = Astro.params as { lang: Locale; slug: string };
+const t = getDict(lang);
+const items = t.faq.items as {
+  slug: string;
+  q: string;
+  a: string;
+  long: string;
+}[];
+const item = items.find((i) => i.slug === slug);
+if (!item) {
+  throw new Error(`FAQ slug not found: ${slug}`);
+}
+
+const path = `/${lang}/faq/${slug}/`;
+const canonicalUrl = `${DOMAIN}${path}`;
+
+const homeLabel = lang === 'ru' ? 'Главная' : 'Home';
+const faqLabel = lang === 'ru' ? 'Вопросы' : 'FAQ';
+
+const schemas = [
+  qaPageSchema({
+    question: item.q,
+    answer: item.long,
+    url: canonicalUrl,
+    lang,
+  }),
+  breadcrumbSchema([
+    { name: homeLabel, url: `${DOMAIN}${localizedPath(lang, '')}` },
+    { name: faqLabel, url: `${DOMAIN}${localizedPath(lang, 'faq')}` },
+    { name: item.q, url: canonicalUrl },
+  ]),
+];
+
+const related = items
+  .filter((i) => i.slug !== slug)
+  .slice(0, 3);
+---
+
+<PageLayout
+  title={`${item.q} - Zero Balance`}
+  description={item.a}
+  {lang}
+  {path}
+  schema={schemas}
+>
+  <PageHeader eyebrow={faqLabel} title={item.q} />
+
+  <Section>
+    <Container>
+      <Reveal class="mx-auto max-w-3xl">
+        <nav aria-label="Breadcrumb" class="mb-6 text-sm text-[var(--muted)]">
+          <a href={localizedPath(lang, '')} class="hover:text-[var(--fg)]">{homeLabel}</a>
+          <span class="mx-2" aria-hidden="true">/</span>
+          <a href={localizedPath(lang, 'faq')} class="hover:text-[var(--fg)]">{faqLabel}</a>
+        </nav>
+      </Reveal>
+
+      <Reveal class="mx-auto max-w-3xl">
+        <div class="rounded-2xl border border-[var(--border)] bg-[var(--brand-soft)]/40 p-6 md:p-8">
+          <p class="text-sm font-semibold tracking-wide text-[var(--brand-strong)] uppercase">
+            {lang === 'ru' ? 'Короткий ответ' : 'Short answer'}
+          </p>
+          <p class="mt-3 text-lg leading-relaxed text-[var(--fg)]">{item.a}</p>
+        </div>
+      </Reveal>
+
+      <div class="mx-auto mt-8 max-w-3xl prose-zb">
+        <Reveal>
+          <h2>{lang === 'ru' ? 'Подробнее' : 'In more detail'}</h2>
+          <p>{item.long}</p>
+        </Reveal>
+      </div>
+
+      <Reveal class="mx-auto mt-10 max-w-3xl">
+        <a
+          href={localizedPath(lang, 'faq')}
+          class="inline-flex items-center gap-2 text-sm font-medium text-[var(--brand)] hover:text-[var(--brand-strong)]"
+        >
+          <span aria-hidden="true">&larr;</span>
+          {t.faq.backToList}
+        </a>
+      </Reveal>
+
+      <div class="mx-auto mt-16 max-w-3xl">
+        <Reveal>
+          <h2 class="h2">{t.faq.relatedTitle}</h2>
+        </Reveal>
+        <ul class="mt-6 grid gap-3 md:grid-cols-2">
+          {
+            related.map((r, i) => (
+              <Reveal as="li" delay={i * 50}>
+                <a
+                  href={localizedPath(lang, `faq/${r.slug}`)}
+                  class="group flex h-full items-start justify-between gap-4 rounded-2xl border border-[var(--border)] bg-[var(--surface)] p-5 transition hover:border-[color-mix(in_srgb,var(--brand)_30%,var(--border))] hover:shadow-sm"
+                >
+                  <span class="font-medium text-[var(--fg)]">{r.q}</span>
+                  <svg
+                    width="20"
+                    height="20"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    aria-hidden="true"
+                    class="mt-0.5 shrink-0 text-[var(--brand)] transition-transform group-hover:translate-x-0.5"
+                  >
+                    <path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" />
+                  </svg>
+                </a>
+              </Reveal>
+            ))
+          }
+        </ul>
+      </div>
+    </Container>
+  </Section>
+
+  <FinalCta {lang} />
+</PageLayout>
