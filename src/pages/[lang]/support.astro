@@ -4,7 +4,7 @@ import PageHeader from '../../components/PageHeader.astro';
 import Container from '../../components/Container.astro';
 import Section from '../../components/Section.astro';
 import Reveal from '../../components/Reveal.astro';
-import { LOCALES, type Locale, localizedPath } from '../../i18n';
+import { getDict, LOCALES, type Locale, localizedPath } from '../../i18n';
 import { SUPPORT_EMAIL } from '../../lib/siteConfig';
 
 export function getStaticPaths() {
@@ -12,6 +12,7 @@ export function getStaticPaths() {
 }
 
 const lang = Astro.params.lang as Locale;
+const t = getDict(lang);
 const path = `/${lang}/support/`;
 
 const copy = lang === 'ru'
@@ -84,6 +85,7 @@ const copy = lang === 'ru'
   description={copy.description}
   {lang}
   {path}
+  keywords={[...t.keywords.support, ...t.keywords.site]}
 >
   <PageHeader eyebrow={copy.eyebrow} title={copy.title} description={copy.description} />
 

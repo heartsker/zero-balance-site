@@ -1,28 +1,67 @@
 import { APP_STORE_URL, DOMAIN, APP_NAME, SUPPORT_EMAIL } from './siteConfig';
 
+const PUBLISHER = {
+  '@type': 'Person',
+  name: 'Daniel Pustotin',
+  url: DOMAIN,
+};
+
 export function softwareApplicationSchema(opts: {
   description: string;
   lang: 'en' | 'ru';
+  featureList?: string[];
+  screenshots?: string[];
 }) {
   return {
     '@context': 'https://schema.org',
     '@type': 'SoftwareApplication',
+    '@id': `${DOMAIN}/#software`,
     name: APP_NAME,
-    operatingSystem: 'iOS',
+    alternateName: 'Zero Balance: Spend Credit',
+    operatingSystem: 'iOS 26',
     applicationCategory: 'UtilitiesApplication',
+    applicationSubCategory: 'PaymentApplication',
     description: opts.description,
     inLanguage: opts.lang,
     url: DOMAIN,
+    sameAs: [APP_STORE_URL],
+    image: `${DOMAIN}/icon.png`,
+    softwareVersion: '1.0',
+    isAccessibleForFree: true,
     offers: {
       '@type': 'Offer',
       price: '0',
       priceCurrency: 'USD',
       url: APP_STORE_URL,
+      availability: 'https://schema.org/InStock',
     },
-    publisher: {
-      '@type': 'Person',
-      name: 'Daniel Pustotin',
-    },
+    publisher: PUBLISHER,
+    author: PUBLISHER,
+    featureList: opts.featureList ?? [
+      'Manual target helper for any leftover Apple Account balance',
+      'Plan review with total, overage and confirmation count',
+      'Eight in-app price tiers for precise matching',
+      'Private iCloud-synced inventory',
+      'No ads, no tracking, no subscriptions',
+    ],
+    screenshot: (opts.screenshots ?? [
+      `${DOMAIN}/screenshots/${opts.lang}/1.png`,
+      `${DOMAIN}/screenshots/${opts.lang}/2.png`,
+      `${DOMAIN}/screenshots/${opts.lang}/3.png`,
+    ]),
+  };
+}
+
+export function websiteSchema(opts: { lang: 'en' | 'ru' }) {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'WebSite',
+    '@id': `${DOMAIN}/#website`,
+    name: APP_NAME,
+    alternateName: 'zerobalance.pro',
+    url: DOMAIN,
+    inLanguage: opts.lang,
+    publisher: PUBLISHER,
   };
 }
 
@@ -65,11 +104,19 @@ export function organizationSchema() {
   return {
     '@context': 'https://schema.org',
     '@type': 'Organization',
+    '@id': `${DOMAIN}/#org`,
     name: APP_NAME,
     url: DOMAIN,
     logo: `${DOMAIN}/icon.png`,
     email: SUPPORT_EMAIL,
     sameAs: [APP_STORE_URL],
+    founder: PUBLISHER,
+    contactPoint: {
+      '@type': 'ContactPoint',
+      contactType: 'customer support',
+      email: SUPPORT_EMAIL,
+      availableLanguage: ['en', 'ru'],
+    },
   };
 }
 
@@ -105,7 +152,9 @@ export function qaPageSchema(opts: {
         '@type': 'Answer',
         text: opts.answer,
         url: opts.url,
+        author: PUBLISHER,
       },
+      author: PUBLISHER,
     },
   };
 }

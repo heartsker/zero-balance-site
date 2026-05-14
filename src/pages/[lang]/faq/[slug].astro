@@ -62,6 +62,8 @@ const related = items
   {lang}
   {path}
   schema={schemas}
+  ogType="article"
+  keywords={[item.q, ...t.keywords.faq, ...t.keywords.site]}
 >
   <PageHeader eyebrow={faqLabel} title={item.q} />
 

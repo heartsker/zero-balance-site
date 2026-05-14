@@ -6,7 +6,7 @@ import Section from '../../components/Section.astro';
 import FAQ from '../../components/FAQ.astro';
 import Reveal from '../../components/Reveal.astro';
 import FinalCta from '../../components/FinalCta.astro';
-import { LOCALES, type Locale } from '../../i18n';
+import { getDict, LOCALES, type Locale } from '../../i18n';
 import { faqSchema } from '../../lib/schema';
 
 export function getStaticPaths() {
@@ -14,6 +14,7 @@ export function getStaticPaths() {
 }
 
 const lang = Astro.params.lang as Locale;
+const t = getDict(lang);
 const path = `/${lang}/spend-apple-account-balance/`;
 
 const copy = lang === 'ru'
@@ -109,6 +110,8 @@ const copy = lang === 'ru'
   {lang}
   {path}
   schema={faqSchema(copy.faqItems)}
+  ogType="article"
+  keywords={[...t.keywords.spend, ...t.keywords.site]}
 >
   <PageHeader eyebrow={copy.eyebrow} title={copy.title} description={copy.description} />
 

@@ -31,7 +31,14 @@ const schemas = [
 ];
 ---
 
-<PageLayout {title} {description} {lang} {path} schema={schemas}>
+<PageLayout
+  {title}
+  {description}
+  {lang}
+  {path}
+  schema={schemas}
+  keywords={[...t.keywords.home, ...t.keywords.site]}
+>
   <Hero {lang} />
   <TrustBand {lang} />
   <HowItWorks {lang} />

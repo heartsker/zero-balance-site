@@ -26,6 +26,7 @@ const detailHrefBase = localizedPath(lang, 'faq');
   {lang}
   {path}
   schema={faqSchema(t.faq.items)}
+  keywords={[...t.keywords.faq, ...t.keywords.site]}
 >
   <PageHeader eyebrow={eyebrow} title={t.faq.pageTitle} description={t.faq.pageDescription} />
 

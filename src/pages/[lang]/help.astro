@@ -29,6 +29,7 @@ const schema = howToSchema({
   {lang}
   {path}
   {schema}
+  keywords={[...t.keywords.help, ...t.keywords.site]}
 >
   <PageHeader
     eyebrow={lang === 'ru' ? 'Инструкция' : 'Step-by-step guide'}

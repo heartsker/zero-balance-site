@@ -11,13 +11,41 @@ interface Props {
   path: string;
   image?: string;
   noindex?: boolean;
+  keywords?: string[];
+  ogType?: 'website' | 'article';
+  publishedTime?: string;
+  modifiedTime?: string;
   schema?: Record<string, unknown> | Record<string, unknown>[];
 }
 
-const { title, description, lang, path, image, noindex, schema } = Astro.props;
+const {
+  title,
+  description,
+  lang,
+  path,
+  image,
+  noindex,
+  keywords,
+  ogType,
+  publishedTime,
+  modifiedTime,
+  schema,
+} = Astro.props;
 ---
 
-<BaseLayout {title} {description} {lang} {path} {image} {noindex} {schema}>
+<BaseLayout
+  {title}
+  {description}
+  {lang}
+  {path}
+  {image}
+  {noindex}
+  {keywords}
+  {ogType}
+  {publishedTime}
+  {modifiedTime}
+  {schema}
+>
   <Header {lang} {path} />
   <main id="main">
     <slot />

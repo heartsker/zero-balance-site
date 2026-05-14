@@ -1,0 +1,47 @@
+---
+import Container from './Container.astro';
+import AppStoreButton from './AppStoreButton.astro';
+import { getDict, type Locale } from '../i18n';
+
+interface Props {
+  lang: Locale;
+  variant?: 'full' | 'compact';
+}
+
+const { lang, variant = 'full' } = Astro.props;
+const t = getDict(lang);
+
+const compact = variant === 'compact';
+---
+
+<aside
+  class:list={[
+    'border-y border-[var(--border)] bg-[var(--surface)]',
+  ]}
+  aria-labelledby="about-zero-balance"
+>
+  <Container class={compact ? 'py-8 md:py-10' : 'py-12 md:py-16'}>
+    <div class="mx-auto grid max-w-5xl gap-6 md:grid-cols-[1fr_auto] md:items-center md:gap-10">
+      <div>
+        <p
+          id="about-zero-balance"
+          class="text-xs font-semibold uppercase tracking-wide text-[var(--brand-strong)]"
+        >
+          {t.about.label}
+        </p>
+        <p
+          class:list={[
+            'mt-2 text-pretty text-[var(--fg)]',
+            compact ? 'text-base leading-relaxed' : 'text-lg leading-relaxed',
+          ]}
+          itemprop="description"
+        >
+          {compact ? t.about.short : t.about.long}
+        </p>
+      </div>
+      <div class="md:justify-self-end">
+        <AppStoreButton label={t.cta.appStore} />
+      </div>
+    </div>
+  </Container>
+</aside>

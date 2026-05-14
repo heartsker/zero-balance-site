@@ -2,13 +2,15 @@
 import { getDict, localizedPath, type Locale } from '../i18n';
 import { SUPPORT_EMAIL } from '../lib/siteConfig';
 import LangSwitcher from './LangSwitcher.astro';
+import AboutBoilerplate from './AboutBoilerplate.astro';
 
 interface Props {
   lang: Locale;
   path: string;
+  showAbout?: boolean;
 }
 
-const { lang, path } = Astro.props;
+const { lang, path, showAbout = true } = Astro.props;
 const t = getDict(lang);
 const year = new Date().getFullYear();
 
@@ -39,6 +41,7 @@ const legalLinks = [
 ];
 ---
 
+{showAbout && <AboutBoilerplate {lang} variant="compact" />}
 <footer class="border-t border-[var(--border)] bg-[var(--surface)]">
   <div class="mx-auto w-full max-w-6xl px-5 py-12 md:px-8 md:py-16">
     <div class="grid grid-cols-2 gap-10 md:grid-cols-4">
