@@ -1,7 +1,4 @@
-# Cloudflare Pages locale routing for the root path.
-# Cookie wins, then Accept-Language, then default English.
-
-/    /ru/    302    Cookie: zb_locale=ru
-/    /en/    302    Cookie: zb_locale=en
-/    /ru/    302    Accept-Language: ru*
-/    /en/    302
+# Cloudflare Pages _redirects only supports plain redirects (source/destination/status).
+# Locale detection (cookie + Accept-Language) is handled at the edge by
+# /functions/index.ts. If that function fails to run, the static /index.html
+# falls back to client-side JS detection in src/pages/index.astro.
