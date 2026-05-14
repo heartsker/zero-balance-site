@@ -2,3 +2,5 @@
 # Locale detection (cookie + Accept-Language) is handled at the edge by
 # /functions/index.ts. If that function fails to run, the static /index.html
 # falls back to client-side JS detection in src/pages/index.astro.
+
+/sitemap.xml  /sitemap-index.xml  200

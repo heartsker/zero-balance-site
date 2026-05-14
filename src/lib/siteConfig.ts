@@ -2,7 +2,7 @@ export const APP_STORE_URL =
   'https://apps.apple.com/app/apple-store/id6761912988?pt=128302223&ct=zerobalance-pro-site&mt=8';
 
 export const DOMAIN = 'https://zerobalance.pro';
-export const SUPPORT_EMAIL = 'daniel.pustotin@gmail.com';
+export const SUPPORT_EMAIL = 'developer.ios.dp@proton.me';
 export const ACCENT = '#C32DAC';
 
 export const LOCALES = ['en', 'ru'] as const;

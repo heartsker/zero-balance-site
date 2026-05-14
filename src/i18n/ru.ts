@@ -123,7 +123,8 @@ const ru: Dict = {
       'Без доступа к Apple ID',
       'Без рекламы и слежки',
     ],
-    screenshotAlt: 'Приложение Zero Balance на iPhone - главный экран для ввода остатка баланса Apple Account, который нужно обнулить',
+    screenshotAlt: 'Приложение Zero Balance на iPhone - экран успеха All Set, баланс Apple Account обнулён за счёт подобранного набора небольших покупок в App Store',
+    screenshotAlt2: 'Приложение Zero Balance на iPhone - экран с подсказками: смена страны App Store требует нулевого баланса, а баланс подарочных карт привязан к региону',
   },
   howItWorks: {
     title: 'Как это работает',

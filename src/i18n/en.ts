@@ -131,7 +131,8 @@ const en = {
       'No access to your Apple ID',
       'No ads, no tracking',
     ],
-    screenshotAlt: 'Zero Balance iOS app on iPhone - home screen where you enter the leftover Apple Account balance you want to clear',
+    screenshotAlt: 'Zero Balance iOS app on iPhone - All Set success screen showing the Apple Account balance cleared to $0.00 with the chosen pack of small App Store items',
+    screenshotAlt2: 'Zero Balance iOS app on iPhone - Pro tips screen explaining that switching App Store country requires a zero balance and that gift-card balance is region-locked',
   },
   howItWorks: {
     title: 'How it works',
