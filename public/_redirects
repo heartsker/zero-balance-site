@@ -4,3 +4,8 @@
 # falls back to client-side JS detection in src/pages/index.astro.
 
 /sitemap.xml  /sitemap-index.xml  200
+
+# Feature flags API: keep the URL extensionless while serving a static JSON file.
+# Two lines so both /api/feature_flags and /api/feature_flags/ work.
+/api/feature_flags   /api/feature_flags.json  200
+/api/feature_flags/  /api/feature_flags.json  200

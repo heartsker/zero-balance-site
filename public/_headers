@@ -24,3 +24,15 @@
   Content-Type: application/json
   Cache-Control: public, max-age=3600
   X-Robots-Tag: noindex
+
+/api/feature_flags.json
+  Content-Type: application/json; charset=utf-8
+  Cache-Control: public, max-age=300
+  X-Robots-Tag: noindex, nofollow
+  Access-Control-Allow-Origin: *
+
+/api/feature_flags
+  Content-Type: application/json; charset=utf-8
+  Cache-Control: public, max-age=300
+  X-Robots-Tag: noindex, nofollow
+  Access-Control-Allow-Origin: *
