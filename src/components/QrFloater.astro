@@ -1,0 +1,75 @@
+---
+import QRCode from 'qrcode';
+import { APP_STORE_URL, type Locale } from '../lib/siteConfig';
+import { getDict } from '../i18n';
+
+interface Props {
+  lang: Locale;
+}
+
+const { lang } = Astro.props;
+const t = getDict(lang);
+
+const qrSvg = await QRCode.toString(APP_STORE_URL, {
+  type: 'svg',
+  margin: 1,
+  width: 256,
+  color: { dark: '#14101a', light: '#ffffff' },
+});
+---
+
+<button
+  type="button"
+  popovertarget="qr-popover"
+  class="qr-floater-btn fixed bottom-6 right-6 z-40 hidden h-14 w-14 items-center justify-center rounded-xl border border-[var(--border)] bg-white p-1.5 shadow-xl ring-2 ring-[var(--brand)]/40 transition-transform hover:scale-110 focus:outline-none focus-visible:ring-4 focus-visible:ring-[var(--brand)] md:flex"
+  aria-label={t.hero.qrAlt}
+  title={t.hero.qrCaption}
+  data-qr-floater
+>
+  <div class="block h-full w-full" set:html={qrSvg} />
+</button>
+
+<div
+  id="qr-popover"
+  popover
+  class="qr-popover-content m-auto rounded-2xl border border-[var(--border)] bg-[var(--surface)] p-6 shadow-2xl"
+  data-qr-popover
+>
+  <div class="flex flex-col items-center gap-4">
+    <div class="rounded-xl bg-white p-3" set:html={qrSvg} />
+    <p class="text-center text-sm font-medium text-[var(--fg)]">{t.hero.qrCaption}</p>
+    <button
+      type="button"
+      popovertarget="qr-popover"
+      popovertargetaction="hide"
+      class="text-xs font-medium text-[var(--muted)] underline-offset-4 hover:text-[var(--fg)] hover:underline"
+    >
+      {t.nav.close}
+    </button>
+  </div>
+</div>
+
+<style>
+  .qr-popover-content {
+    width: min(20rem, calc(100vw - 2rem));
+  }
+  .qr-popover-content::backdrop {
+    background: rgba(20, 16, 26, 0.5);
+    backdrop-filter: blur(4px);
+  }
+  .qr-popover-content :global(svg) {
+    width: 100%;
+    height: auto;
+    display: block;
+  }
+  .qr-floater-btn {
+    animation: qr-floater-pulse 2.8s ease-in-out infinite;
+  }
+  @keyframes qr-floater-pulse {
+    0%, 100% { box-shadow: 0 10px 30px -10px rgba(195, 45, 172, 0.35), 0 0 0 0 rgba(195, 45, 172, 0); }
+    50% { box-shadow: 0 14px 36px -10px rgba(195, 45, 172, 0.55), 0 0 0 8px rgba(195, 45, 172, 0); }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .qr-floater-btn { animation: none; }
+  }
+</style>

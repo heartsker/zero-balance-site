@@ -9,8 +9,9 @@ import Section from '../../components/Section.astro';
 import FAQ from '../../components/FAQ.astro';
 import FinalCta from '../../components/FinalCta.astro';
 import Reveal from '../../components/Reveal.astro';
+import Reviews from '../../components/Reviews.astro';
 import { getDict, localizedPath, LOCALES, type Locale } from '../../i18n';
-import { softwareApplicationSchema, faqSchema } from '../../lib/schema';
+import { softwareApplicationSchema, faqSchema, aggregateRatingSchema } from '../../lib/schema';
 
 export function getStaticPaths() {
   return LOCALES.map((lang) => ({ params: { lang } }));
@@ -28,6 +29,7 @@ const teaserItems = t.faq.items.slice(0, 4);
 const schemas = [
   softwareApplicationSchema({ description, lang }),
   faqSchema(teaserItems),
+  aggregateRatingSchema(),
 ];
 ---
 
@@ -43,6 +45,7 @@ const schemas = [
   <TrustBand {lang} />
   <HowItWorks {lang} />
   <FeatureGrid {lang} />
+  <Reviews {lang} />
 
   <Section id="faq" variant="surface">
     <Container>

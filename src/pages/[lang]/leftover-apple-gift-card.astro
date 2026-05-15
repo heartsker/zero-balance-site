@@ -1,0 +1,197 @@
+---
+import PageLayout from '../../layouts/PageLayout.astro';
+import PageHeader from '../../components/PageHeader.astro';
+import Container from '../../components/Container.astro';
+import Section from '../../components/Section.astro';
+import FAQ from '../../components/FAQ.astro';
+import Reveal from '../../components/Reveal.astro';
+import FinalCta from '../../components/FinalCta.astro';
+import AppStoreButton from '../../components/AppStoreButton.astro';
+import { getDict, localizedPath, LOCALES, type Locale } from '../../i18n';
+import { faqSchema } from '../../lib/schema';
+
+export function getStaticPaths() {
+  return LOCALES.map((lang) => ({ params: { lang } }));
+}
+
+const lang = Astro.params.lang as Locale;
+const t = getDict(lang);
+const path = `/${lang}/leftover-apple-gift-card/`;
+
+const copy = lang === 'ru'
+  ? {
+      title: 'Остаток на подарочной карте Apple: как потратить последние копейки',
+      description:
+        'Подарочная карта Apple почти закончилась, но несколько копеек не уходят? После активации баланс ведёт себя как обычный кредит Apple Account. Zero Balance собирает крошечную комбинацию покупок и обнуляет остаток.',
+      eyebrow: 'Тактика',
+      tldrTitle: 'Коротко',
+      tldr:
+        'Активированная подарочная карта Apple сливается с балансом Apple Account и теряет свою идентичность. Её нельзя разделить обратно или перенести. Классический остаток - несколько копеек, под которые ничто не подходит по цене. Zero Balance подбирает точную комбинацию маленьких покупок и обнуляет.',
+      sections: [
+        {
+          h: 'Что происходит при активации',
+          p:
+            'После активации подарочной карты её сумма прибавляется к балансу Apple Account и перестаёт быть отдельной. Нет отдельного кошелька подарочных карт, нет даты сгорания кредита, нет способа перенести остаток на новую карту. Баланс привязан к региону того магазина, в котором был активирован.',
+        },
+        {
+          h: 'Почему остаток - обычное дело',
+          p:
+            'Приложения, песни, встроенные покупки и подписки идут в целых, часто круглых ценах. Подарочные карты обычно бывают круглыми ($25, €50 и т.д.). После нескольких покупок разной цены небольшой остаток практически гарантирован - и он по определению меньше всего, что осталось в магазине.',
+        },
+        {
+          h: 'Тратим последние копейки',
+          p:
+            'Zero Balance создан именно под это. Восемь in-app тиров - расходуемые и постоянные - дают алгоритму достаточно гибкости, чтобы покрыть большинство остатков с превышением максимум в пару копеек. Экран проверки плана показывает итог, превышение и количество подтверждений Apple до того, как вы что-то нажмёте.',
+        },
+        {
+          h: 'Советы',
+          p:
+            'Не активируйте несколько карт подряд, если планируете скоро менять страну - баланс объединяется, а смена страны требует ноль. Если копите на конкретное приложение, цена которого выше баланса, можно пополнить ещё одной картой; суммы складываются. Если хотите быстро убрать остаток - откройте Zero Balance, введите сумму, подтвердите. Готово.',
+        },
+      ],
+      faqLead: 'Частые вопросы',
+      faqItems: [
+        {
+          q: 'Можно ли перенести остаток обратно на новую подарочную карту?',
+          a: 'Нет. После активации остаток живёт как обычный кредит Apple Account. Извлечь его обратно на gift card нельзя.',
+        },
+        {
+          q: 'Сгорает ли остаток?',
+          a: 'Нет, баланс Apple Account не сгорает. Он просто лежит - про это и эта страница.',
+        },
+        {
+          q: 'Можно ли отправить остаток другу?',
+          a: 'Apple не поддерживает передачу баланса между аккаунтами. Семейный доступ делит купленные предметы, но не баланс.',
+        },
+      ],
+      seeAlsoTitle: 'См. также',
+      seeAlsoLinks: [
+        { href: 'apple-id-balance-wont-go-to-zero', label: 'Баланс Apple ID не уходит в ноль' },
+        { href: 'convert-apple-id-balance-to-cash', label: 'Можно ли вывести баланс в деньги?' },
+        { href: 'remove-leftover-apple-id-balance', label: 'Как убрать остаток баланса Apple ID' },
+      ],
+      ctaTitle: 'Обнулить за минуту',
+    }
+  : {
+      title: 'Leftover Apple gift card balance: how to spend the last few cents',
+      description:
+        "Apple gift card almost done but a few cents won't budge? Once redeemed, gift card balance behaves like regular Apple Account credit. Zero Balance assembles a tiny combination of purchases to clear the remainder.",
+      eyebrow: 'Tactic',
+      tldrTitle: 'TL;DR',
+      tldr:
+        "Redeemed Apple gift card balance merges into your Apple Account credit. You can't split it back out or move it elsewhere. The classic leftover is a few cents that no whole-number app fits. Zero Balance picks a precise combination of small purchases to clear it.",
+      sections: [
+        {
+          h: 'What happens when you redeem a gift card',
+          p:
+            "Once you redeem an Apple gift card, the value adds to your Apple Account balance and loses its identity. There is no separate gift card wallet, no expiration date for the credit, no way to roll the leftover back onto a new card. The balance is region-locked to the storefront where it was redeemed.",
+        },
+        {
+          h: 'Why leftovers are common',
+          p:
+            'Apps, songs, in-app purchases and subscriptions are priced in whole, often round, currency units. Gift cards usually arrive in round amounts ($25, €50, etc.). After a few mixed-price purchases, a small remainder is almost guaranteed - and that remainder is by definition smaller than everything left for sale.',
+        },
+        {
+          h: 'Spending the last cents',
+          p:
+            "Zero Balance was built for exactly this. Eight in-app price tiers - small consumables and non-consumables - give the matching algorithm enough granularity to fit most leftovers with a few cents of overage at most. The plan-review screen shows the total, the overage, and how many Apple confirmations you'll need before you commit.",
+        },
+        {
+          h: 'Tips',
+          p:
+            "Don't redeem multiple gift cards back-to-back if you plan to switch country soon - the balance combines and country-switching needs zero. If you're saving for a specific app priced above your balance, you can top up with another gift card; the totals add. If you want the balance gone fast (for any reason), open Zero Balance, type the leftover, confirm. Done.",
+        },
+      ],
+      faqLead: 'Common questions',
+      faqItems: [
+        {
+          q: 'Can I move leftover gift card balance back onto a new card?',
+          a: "No. Once redeemed, the balance lives in your Apple Account as undifferentiated credit. There is no way to extract it back to a gift card.",
+        },
+        {
+          q: 'Does the leftover expire?',
+          a: 'No, Apple Account balance does not expire. It just sits - which is the problem this page is about.',
+        },
+        {
+          q: 'Can I send the leftover to a friend?',
+          a: 'Apple does not support transferring balance between accounts. Family Sharing shares purchased items, not balance.',
+        },
+      ],
+      seeAlsoTitle: 'See also',
+      seeAlsoLinks: [
+        { href: 'apple-id-balance-wont-go-to-zero', label: "Apple ID balance won't go to zero" },
+        { href: 'convert-apple-id-balance-to-cash', label: 'Convert Apple ID balance to cash?' },
+        { href: 'remove-leftover-apple-id-balance', label: 'How to remove leftover Apple ID balance' },
+      ],
+      ctaTitle: 'Clear yours in under a minute',
+    };
+---
+
+<PageLayout
+  title={`${copy.title} - Zero Balance`}
+  description={copy.description}
+  {lang}
+  {path}
+  schema={faqSchema(copy.faqItems)}
+  ogType="article"
+  keywords={[...t.keywords.leftoverGiftCard, ...t.keywords.site]}
+>
+  <PageHeader eyebrow={copy.eyebrow} title={copy.title} description={copy.description} />
+
+  <Section>
+    <Container>
+      <Reveal class="mx-auto max-w-3xl">
+        <div class="rounded-2xl border border-[var(--border)] bg-[var(--brand-soft)]/40 p-6 md:p-8">
+          <p class="text-sm font-semibold tracking-wide text-[var(--brand-strong)] uppercase">
+            {copy.tldrTitle}
+          </p>
+          <p class="mt-3 text-lg leading-relaxed text-[var(--fg)]">{copy.tldr}</p>
+        </div>
+      </Reveal>
+
+      <div class="mx-auto mt-10 max-w-3xl prose-zb">
+        {
+          copy.sections.map((s, i) => (
+            <Reveal delay={i * 40}>
+              <h2>{s.h}</h2>
+              {s.p.split('\n\n').map((para) => (
+                <p>{para}</p>
+              ))}
+            </Reveal>
+          ))
+        }
+
+        <Reveal>
+          <h2>{copy.faqLead}</h2>
+        </Reveal>
+        <Reveal>
+          <FAQ items={copy.faqItems} />
+        </Reveal>
+
+        <Reveal>
+          <div class="mt-12 rounded-2xl border border-[var(--border)] bg-[var(--surface)] p-6 md:p-8 text-center">
+            <p class="text-lg font-semibold text-[var(--fg)]">{copy.ctaTitle}</p>
+            <div class="mt-4 flex justify-center">
+              <AppStoreButton label={t.cta.appStore} size="lg" />
+            </div>
+          </div>
+        </Reveal>
+
+        <Reveal>
+          <h2>{copy.seeAlsoTitle}</h2>
+          <ul>
+            {
+              copy.seeAlsoLinks.map((link) => (
+                <li>
+                  <a href={localizedPath(lang, link.href)}>{link.label}</a>
+                </li>
+              ))
+            }
+          </ul>
+        </Reveal>
+      </div>
+    </Container>
+  </Section>
+
+  <FinalCta {lang} />
+</PageLayout>

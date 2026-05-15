@@ -1,9 +1,9 @@
 @import "tailwindcss";
 
 @theme {
-  --color-brand: #C32DAC;
-  --color-brand-strong: #A8208F;
-  --color-brand-soft: #F8D9F1;
+  --color-brand: #7A4DE6;
+  --color-brand-strong: #5F33CC;
+  --color-brand-soft: #EBE4FB;
   --color-bg: #FFFFFF;
   --color-surface: #FAF7FA;
   --color-fg: #14101A;
@@ -20,11 +20,11 @@
   --fg: #14101A;
   --muted: #6B6075;
   --border: #ECE6EE;
-  --brand: #C32DAC;
-  --brand-strong: #A8208F;
-  --brand-soft: #F8D9F1;
+  --brand: #7A4DE6;
+  --brand-strong: #5F33CC;
+  --brand-soft: #EBE4FB;
   --shadow-1: 0 1px 2px rgba(20,16,26,.06), 0 8px 24px rgba(20,16,26,.06);
-  --shadow-2: 0 4px 12px rgba(195,45,172,.18), 0 16px 48px rgba(20,16,26,.10);
+  --shadow-2: 0 4px 12px rgba(122,77,230,.18), 0 16px 48px rgba(20,16,26,.10);
   color-scheme: light;
 }
 
@@ -35,9 +35,9 @@
     --fg: #F4EEF7;
     --muted: #9C8FA8;
     --border: #2A2233;
-    --brand-soft: #2A1226;
+    --brand-soft: #1F1338;
     --shadow-1: 0 1px 2px rgba(0,0,0,.40), 0 8px 24px rgba(0,0,0,.40);
-    --shadow-2: 0 4px 12px rgba(195,45,172,.30), 0 16px 48px rgba(0,0,0,.45);
+    --shadow-2: 0 4px 12px rgba(122,77,230,.30), 0 16px 48px rgba(0,0,0,.45);
     color-scheme: dark;
   }
 }
@@ -96,14 +96,14 @@ a {
 /* Brand gradient backgrounds */
 .bg-aurora {
   background:
-    radial-gradient(60% 50% at 80% 0%, rgba(195,45,172,.18), transparent 60%),
+    radial-gradient(60% 50% at 80% 0%, rgba(122,77,230,.18), transparent 60%),
     radial-gradient(50% 40% at 0% 20%, rgba(99,102,241,.10), transparent 60%),
-    radial-gradient(40% 30% at 100% 80%, rgba(195,45,172,.10), transparent 60%);
+    radial-gradient(40% 30% at 100% 80%, rgba(122,77,230,.10), transparent 60%);
 }
 
 .bg-aurora-soft {
   background:
-    radial-gradient(40% 30% at 70% 10%, rgba(195,45,172,.10), transparent 60%);
+    radial-gradient(40% 30% at 70% 10%, rgba(122,77,230,.10), transparent 60%);
 }
 
 /* App Store CTA button */

@@ -1,0 +1,197 @@
+---
+import PageLayout from '../../layouts/PageLayout.astro';
+import PageHeader from '../../components/PageHeader.astro';
+import Container from '../../components/Container.astro';
+import Section from '../../components/Section.astro';
+import FAQ from '../../components/FAQ.astro';
+import Reveal from '../../components/Reveal.astro';
+import FinalCta from '../../components/FinalCta.astro';
+import AppStoreButton from '../../components/AppStoreButton.astro';
+import { getDict, localizedPath, LOCALES, type Locale } from '../../i18n';
+import { faqSchema } from '../../lib/schema';
+
+export function getStaticPaths() {
+  return LOCALES.map((lang) => ({ params: { lang } }));
+}
+
+const lang = Astro.params.lang as Locale;
+const t = getDict(lang);
+const path = `/${lang}/apple-id-balance-wont-go-to-zero/`;
+
+const copy = lang === 'ru'
+  ? {
+      title: 'Баланс Apple ID не уходит в ноль: что делать',
+      description:
+        'Застряли копейки на Apple ID, и ничего их не списывает? Apple не возвращает остаток и не переводит его в деньги - но Zero Balance может обнулить его маленькой комбинацией недорогих покупок.',
+      eyebrow: 'Диагноз',
+      tldrTitle: 'Коротко',
+      tldr:
+        'Баланс Apple Account можно тратить только внутри App Store, его нельзя вывести или перевести. Если остаток меньше любой целой цены приложения, обычная покупка его не уберёт. Восемь точных ценовых тиров Zero Balance позволяют собрать комбинацию под почти любой остаток.',
+      sections: [
+        {
+          h: 'Почему баланс застрял',
+          p:
+            'Кредит Apple Account можно тратить только на контент App Store - приложения, встроенные покупки, подписки, музыку, книги. Его нельзя вывести на банковский счёт, вернуть на карту или передать на другой Apple ID. Если оставшаяся сумма меньше цены любого приложения или подписки, которую вы могли бы купить, баланс просто лежит. Самая частая причина - округление: пополнили подарочной картой, сделали несколько мелких покупок, и осталось несколько копеек, которые ничему в магазине не соответствуют по цене.',
+        },
+        {
+          h: 'Что НЕ работает',
+          p:
+            'Попытка использовать остаток на подписку Apple не помогает - они в круглых ценах. Покупка стандартного приложения переплатит больше, чем сам остаток. Кнопки "потратить остаток" у Apple нет. Поддержка не вернёт баланс деньгами; возвраты (если одобрят) возвращаются на тот же баланс, что задачу не решает. Смена страны в Настройках заблокирована, пока баланс не строго ноль - поэтому люди часто обнаруживают проблему только когда пытаются сменить магазин.',
+        },
+        {
+          h: 'Что работает: мелкие точные покупки',
+          p:
+            'Zero Balance предлагает восемь in-app тиров с маленькими ценами - расходуемые и постоянные предметы. Алгоритм подбирает ближайшую комбинацию под вашу сумму. Для типичных копеечных остатков превышение обычно одна-две копейки и показывается до подтверждения.',
+        },
+        {
+          h: 'По шагам',
+          p:
+            '1. Откройте Настройки > Apple Account > Медиаматериалы и покупки > Просмотреть учётную запись и посмотрите точный баланс. 2. Откройте Zero Balance и введите эту сумму. 3. Проверьте предложенный план - итог, превышение, количество подтверждений. 4. Подтвердите каждую покупку обычным способом (Face ID, Touch ID, пароль). 5. Перепроверьте в Настройках; если осталось пару копеек - повторите с новой суммой.',
+        },
+      ],
+      faqLead: 'Связанные вопросы',
+      faqItems: [
+        {
+          q: 'Это работает в любой стране?',
+          a: 'Да - тиры локализуются магазином, та же логика работает для USD, EUR, GBP, RUB и т.д. Превышение указывается в вашей валюте.',
+        },
+        {
+          q: 'Бывают случаи, когда обнулить нельзя?',
+          a: 'Только если остаток меньше самого мелкого тира в вашем магазине. Тогда план превысит на несколько копеек - точная сумма видна до подтверждения.',
+        },
+        {
+          q: 'С меня спишут реальные деньги?',
+          a: 'Нет, пока итог плана не больше баланса Apple Account. Apple сначала тянет с баланса и идёт в платёжный метод только если баланса не хватает.',
+        },
+      ],
+      seeAlsoTitle: 'См. также',
+      seeAlsoLinks: [
+        { href: 'convert-apple-id-balance-to-cash', label: 'Можно ли вывести баланс Apple ID в деньги?' },
+        { href: 'leftover-apple-gift-card', label: 'Остаток на подарочной карте Apple' },
+        { href: 'remove-leftover-apple-id-balance', label: 'Как убрать остаток баланса Apple ID' },
+      ],
+      ctaTitle: 'Обнулить за минуту',
+    }
+  : {
+      title: "Apple ID balance won't go to zero? Here's what to do",
+      description:
+        "Stuck with a few cents on your Apple ID that nothing seems to spend? Apple won't refund or transfer the balance - but Zero Balance can zero it out with a tiny combination of small in-app purchases.",
+      eyebrow: 'Diagnosis',
+      tldrTitle: 'TL;DR',
+      tldr:
+        "Apple Account balance can only be spent inside the App Store, never withdrawn or transferred. If your balance is smaller than any whole-number app price, no normal purchase will clear it. Eight precise in-app price tiers inside Zero Balance let you assemble a combination that matches almost any leftover.",
+      sections: [
+        {
+          h: 'Why your balance is stuck',
+          p:
+            "Apple Account credit can only be spent on App Store content - apps, in-app purchases, subscriptions, music, books. It cannot be withdrawn to a bank account, refunded to a card, or transferred between Apple IDs. If what's left on your account is smaller than the price of any app or in-app purchase you'd normally buy, the balance just sits there. The most common cause is currency rounding: you topped up with a gift card, made a few small purchases, and a few cents remain that nothing in the store costs exactly.",
+        },
+        {
+          h: 'What does NOT work',
+          p:
+            "Trying to use the balance on an Apple subscription doesn't help - those are priced in whole dollars and euros. Buying any standard app overshoots by far more than the leftover itself. Apple has no \"use up balance\" button. Contacting support won't release the balance to cash; refunds (if approved) go back to the balance, which doesn't solve the problem. The change-country flow in Settings is locked until the balance is exactly zero, so people often discover the issue only when they try to switch storefronts.",
+        },
+        {
+          h: 'What does work: small, granular purchases',
+          p:
+            'Zero Balance offers eight in-app purchase tiers spread across small price points - small consumables and non-consumables. The matching algorithm picks the closest combination to your target. For typical leftovers of a few cents, the overage is usually one or two cents at most, shown before you confirm anything.',
+        },
+        {
+          h: 'Step by step',
+          p:
+            '1. Open Settings > Apple Account > Media & Purchases > View Account on your iPhone and read the exact balance. 2. Open Zero Balance and type that amount in. 3. Review the suggested plan - total, overage, number of confirmations. 4. Confirm each purchase the usual Apple way (Face ID, Touch ID, password). 5. Recheck Settings; if a few cents remain, repeat with the new amount.',
+        },
+      ],
+      faqLead: 'Common follow-ups',
+      faqItems: [
+        {
+          q: 'Does this work in any country?',
+          a: 'Yes - the price tiers are localized by App Store, so the same logic applies to USD, EUR, GBP, RUB, etc. The overage is in your local currency.',
+        },
+        {
+          q: "Is there ever a case where the balance can't be zeroed?",
+          a: 'Only if your remaining balance is smaller than the smallest available tier in your storefront. In that case the plan will overshoot by a few cents - the screen shows exactly how much before you confirm.',
+        },
+        {
+          q: 'Will I get charged real money?',
+          a: 'No, as long as the plan total is at or below your Apple Account balance. Apple draws from balance first, only falling back to your payment method if the balance runs out.',
+        },
+      ],
+      seeAlsoTitle: 'See also',
+      seeAlsoLinks: [
+        { href: 'convert-apple-id-balance-to-cash', label: 'Can you convert Apple ID balance to cash?' },
+        { href: 'leftover-apple-gift-card', label: 'Leftover Apple gift card balance' },
+        { href: 'remove-leftover-apple-id-balance', label: 'How to remove leftover Apple ID balance' },
+      ],
+      ctaTitle: 'Clear yours in under a minute',
+    };
+---
+
+<PageLayout
+  title={`${copy.title} - Zero Balance`}
+  description={copy.description}
+  {lang}
+  {path}
+  schema={faqSchema(copy.faqItems)}
+  ogType="article"
+  keywords={[...t.keywords.wontGoToZero, ...t.keywords.site]}
+>
+  <PageHeader eyebrow={copy.eyebrow} title={copy.title} description={copy.description} />
+
+  <Section>
+    <Container>
+      <Reveal class="mx-auto max-w-3xl">
+        <div class="rounded-2xl border border-[var(--border)] bg-[var(--brand-soft)]/40 p-6 md:p-8">
+          <p class="text-sm font-semibold tracking-wide text-[var(--brand-strong)] uppercase">
+            {copy.tldrTitle}
+          </p>
+          <p class="mt-3 text-lg leading-relaxed text-[var(--fg)]">{copy.tldr}</p>
+        </div>
+      </Reveal>
+
+      <div class="mx-auto mt-10 max-w-3xl prose-zb">
+        {
+          copy.sections.map((s, i) => (
+            <Reveal delay={i * 40}>
+              <h2>{s.h}</h2>
+              {s.p.split('\n\n').map((para) => (
+                <p>{para}</p>
+              ))}
+            </Reveal>
+          ))
+        }
+
+        <Reveal>
+          <h2>{copy.faqLead}</h2>
+        </Reveal>
+        <Reveal>
+          <FAQ items={copy.faqItems} />
+        </Reveal>
+
+        <Reveal>
+          <div class="mt-12 rounded-2xl border border-[var(--border)] bg-[var(--surface)] p-6 md:p-8 text-center">
+            <p class="text-lg font-semibold text-[var(--fg)]">{copy.ctaTitle}</p>
+            <div class="mt-4 flex justify-center">
+              <AppStoreButton label={t.cta.appStore} size="lg" />
+            </div>
+          </div>
+        </Reveal>
+
+        <Reveal>
+          <h2>{copy.seeAlsoTitle}</h2>
+          <ul>
+            {
+              copy.seeAlsoLinks.map((link) => (
+                <li>
+                  <a href={localizedPath(lang, link.href)}>{link.label}</a>
+                </li>
+              ))
+            }
+          </ul>
+        </Reveal>
+      </div>
+    </Container>
+  </Section>
+
+  <FinalCta {lang} />
+</PageLayout>

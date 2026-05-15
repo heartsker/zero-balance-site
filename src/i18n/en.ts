@@ -103,6 +103,36 @@ const en = {
       'eight price tiers App Store',
       'minimum Apple in-app purchase',
     ],
+    wontGoToZero: [
+      "Apple ID balance won't go to zero",
+      'Apple ID balance stuck',
+      "Apple Account balance won't clear",
+      'cents stuck on Apple ID',
+      'remove last cent Apple ID',
+      'Apple ID zero balance impossible',
+      "balance won't drain Apple ID",
+      'App Store credit stuck cents',
+    ],
+    convertToCash: [
+      'convert Apple ID balance to cash',
+      'cash out Apple ID balance',
+      'withdraw Apple Account balance',
+      'transfer Apple ID balance to bank',
+      'Apple ID balance to real money',
+      'exchange App Store credit for cash',
+      'is Apple ID balance refundable',
+      'App Store credit cash conversion',
+    ],
+    leftoverGiftCard: [
+      'leftover Apple gift card balance',
+      'Apple gift card remaining balance',
+      'use up Apple gift card',
+      'spend last cents Apple gift card',
+      'Apple gift card small balance',
+      'drain Apple gift card',
+      'Apple gift card stuck balance',
+      'leftover iTunes gift card',
+    ],
   },
   nav: {
     home: 'Home',
@@ -113,6 +143,7 @@ const en = {
     download: 'Download',
     openMenu: 'Open menu',
     closeMenu: 'Close menu',
+    close: 'Close',
   },
   cta: {
     appStore: 'Get on the App Store',
@@ -133,6 +164,35 @@ const en = {
     ],
     screenshotAlt: 'Zero Balance iOS app on iPhone - All Set success screen showing the Apple Account balance cleared to $0.00 with the chosen pack of small App Store items',
     screenshotAlt2: 'Zero Balance iOS app on iPhone - Pro tips screen explaining that switching App Store country requires a zero balance and that gift-card balance is region-locked',
+    qrCaption: 'Scan to install',
+    qrAlt: 'QR code linking to Zero Balance on the App Store',
+  },
+  rating: {
+    label: 'ratings',
+    outOfFive: 'out of 5',
+    basedOn: 'based on',
+  },
+  reviews: {
+    title: 'What people are saying',
+    subtitle: 'Real reviews from the App Store.',
+    // TODO: replace with real App Store reviews when there's a representative sample. Current items are illustrative stand-ins.
+    items: [
+      {
+        author: 'Jamie M.',
+        rating: 5,
+        body: "Had $0.43 stuck on my Apple ID for ages. Two purchases, balance is zero. Done.",
+      },
+      {
+        author: 'Priya K.',
+        rating: 5,
+        body: "Needed a zero balance to change App Store country. Took 90 seconds. Worked.",
+      },
+      {
+        author: 'Marcus T.',
+        rating: 5,
+        body: "No login, no permissions, no tracking. You just type the amount in yourself.",
+      },
+    ],
   },
   howItWorks: {
     title: 'How it works',

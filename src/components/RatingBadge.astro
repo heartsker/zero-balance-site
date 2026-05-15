@@ -1,0 +1,63 @@
+---
+import { APP_RATING, APP_RATING_COUNT, type Locale } from '../lib/siteConfig';
+import { getDict } from '../i18n';
+
+interface Props {
+  lang: Locale;
+  class?: string;
+}
+
+const { lang, class: className = '' } = Astro.props;
+const t = getDict(lang);
+
+const rating = APP_RATING;
+const count = APP_RATING_COUNT;
+
+const localeTag = lang === 'ru' ? 'ru-RU' : 'en-US';
+const countFormatted = new Intl.NumberFormat(localeTag).format(count);
+const ratingFormatted = rating.toLocaleString(localeTag, {
+  minimumFractionDigits: 1,
+  maximumFractionDigits: 1,
+});
+
+const rounded = Math.round(rating * 2) / 2;
+const full = Math.floor(rounded);
+const hasHalf = rounded - full === 0.5;
+const totalStars = 5;
+
+const ariaLabel = `${ratingFormatted} ${t.rating.outOfFive}, ${t.rating.basedOn} ${countFormatted} ${t.rating.label}`;
+---
+
+<div
+  class:list={['inline-flex items-center gap-2 text-sm text-[var(--muted)]', className]}
+  role="img"
+  aria-label={ariaLabel}
+  data-rating-badge
+>
+  <div class="flex items-center gap-0.5 text-[var(--brand)]" aria-hidden="true">
+    {
+      Array.from({ length: totalStars }).map((_, i) => {
+        const isFull = i < full;
+        const isHalf = !isFull && hasHalf && i === full;
+        return (
+          <svg width="16" height="16" viewBox="0 0 20 20" fill="none">
+            <defs>
+              <linearGradient id={`star-half-${i}`} x1="0" x2="1" y1="0" y2="0">
+                <stop offset="50%" stop-color="currentColor" />
+                <stop offset="50%" stop-color="currentColor" stop-opacity="0.25" />
+              </linearGradient>
+            </defs>
+            <path
+              d="M10 1.6l2.6 5.3 5.8.8-4.2 4.1 1 5.8L10 14.9l-5.2 2.7 1-5.8L1.6 7.7l5.8-.8L10 1.6z"
+              fill={isFull ? 'currentColor' : isHalf ? `url(#star-half-${i})` : 'currentColor'}
+              opacity={isFull || isHalf ? 1 : 0.25}
+            />
+          </svg>
+        );
+      })
+    }
+  </div>
+  <span class="font-semibold text-[var(--fg)]">{ratingFormatted}</span>
+  <span aria-hidden="true">·</span>
+  <span>{countFormatted} {t.rating.label}</span>
+</div>

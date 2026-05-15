@@ -1,4 +1,11 @@
-import { APP_STORE_URL, DOMAIN, APP_NAME, SUPPORT_EMAIL } from './siteConfig';
+import {
+  APP_STORE_URL,
+  DOMAIN,
+  APP_NAME,
+  SUPPORT_EMAIL,
+  APP_RATING,
+  APP_RATING_COUNT,
+} from './siteConfig';
 
 const PUBLISHER = {
   '@type': 'Person',
@@ -116,6 +123,30 @@ export function organizationSchema() {
       contactType: 'customer support',
       email: SUPPORT_EMAIL,
       availableLanguage: ['en', 'ru'],
+    },
+  };
+}
+
+export function aggregateRatingSchema() {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'MobileApplication',
+    '@id': `${DOMAIN}/#mobileapp`,
+    name: APP_NAME,
+    operatingSystem: 'iOS 26',
+    applicationCategory: 'UtilitiesApplication',
+    url: APP_STORE_URL,
+    offers: {
+      '@type': 'Offer',
+      price: '0',
+      priceCurrency: 'USD',
+    },
+    aggregateRating: {
+      '@type': 'AggregateRating',
+      ratingValue: APP_RATING.toFixed(1),
+      ratingCount: String(APP_RATING_COUNT),
+      bestRating: '5',
+      worstRating: '1',
     },
   };
 }

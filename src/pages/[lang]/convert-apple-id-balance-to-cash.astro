@@ -1,0 +1,197 @@
+---
+import PageLayout from '../../layouts/PageLayout.astro';
+import PageHeader from '../../components/PageHeader.astro';
+import Container from '../../components/Container.astro';
+import Section from '../../components/Section.astro';
+import FAQ from '../../components/FAQ.astro';
+import Reveal from '../../components/Reveal.astro';
+import FinalCta from '../../components/FinalCta.astro';
+import AppStoreButton from '../../components/AppStoreButton.astro';
+import { getDict, localizedPath, LOCALES, type Locale } from '../../i18n';
+import { faqSchema } from '../../lib/schema';
+
+export function getStaticPaths() {
+  return LOCALES.map((lang) => ({ params: { lang } }));
+}
+
+const lang = Astro.params.lang as Locale;
+const t = getDict(lang);
+const path = `/${lang}/convert-apple-id-balance-to-cash/`;
+
+const copy = lang === 'ru'
+  ? {
+      title: 'Можно ли вывести баланс Apple ID в деньги? Честный ответ',
+      description:
+        'Хотите обналичить остаток баланса Apple ID? Apple не разрешает выводить, передавать или возвращать его на карту. Реальный выход - потратить остаток до нуля. Рассказываем, как и почему.',
+      eyebrow: 'Реальность',
+      tldrTitle: 'Коротко',
+      tldr:
+        'Нет, баланс Apple Account нельзя обналичить, передать, продать или вернуть на банковскую карту. Условия Apple это запрещают. Реальный путь - потратить баланс до нуля на контент App Store, и Zero Balance создан как раз для неудобного случая с последними копейками.',
+      sections: [
+        {
+          h: 'Почему обналичить нельзя',
+          p:
+            'Баланс Apple Account (он же баланс Apple ID, кредит магазина, iTunes-кредит) - это привязанный к магазину кредит, а не деньги. Его можно потратить только в магазине Apple - App Store, iTunes Store, Apple Books, подписках Apple Music, встроенных покупках. Правила Apple прямо запрещают передавать его другому человеку, продавать или конвертировать в валюту. Сервисы, которые "выкупают баланс Apple gift card", работают в серой зоне и обычно нарушают правила Apple - на свой страх и риск.',
+        },
+        {
+          h: 'А возврат?',
+          p:
+            'Возврат отдельной покупки можно запросить на reportaproblem.apple.com, но возврат возвращает сумму на баланс Apple Account - на банковскую карту он не идёт. То есть возврат лишь перекладывает деньги внутри системы Apple, не выводя их. Само пополнение (например, погашение подарочной карты) Apple откатить не может.',
+        },
+        {
+          h: 'Что реально работает: обнулить баланс',
+          p:
+            'Если вывести нельзя, остаётся использовать. Подписки и стандартные приложения не помогают, когда осталось несколько копеек - они в круглых ценах. У Zero Balance восемь маленьких ценовых тиров, специально под этот случай: вводите остаток, приложение собирает ближайшую комбинацию, подтверждаете, баланс уходит в ноль (или близко к нему - превышение показано до подтверждения).',
+        },
+        {
+          h: 'Когда обнуление особенно важно',
+          p:
+            'Самая частая причина искать "обналичить" - желание сменить страну Apple ID. Apple включает кнопку смены страны только при строго нулевом балансе, баланс не переносится и не возвращается. Обнуление через Zero Balance - общепринятый обходной путь.',
+        },
+      ],
+      faqLead: 'Частые вопросы',
+      faqItems: [
+        {
+          q: 'Можно ли продать баланс Apple ID кому-то другому?',
+          a: 'Правила Apple запрещают передачу баланса между аккаунтами. Сторонние сервисы, которые предлагают купить баланс, обычно работают на серых схемах и рискуют блокировкой аккаунта.',
+        },
+        {
+          q: 'Есть ли вообще официальный способ вернуть деньги?',
+          a: 'Со стороны Apple - нет. Самое близкое - возврат конкретной покупки, но он возвращается на баланс, а не на карту.',
+        },
+        {
+          q: 'Потеряю ли я баланс при смене страны?',
+          a: 'Да - поэтому Apple и требует ноль перед сменой. Баланс привязан к региону и не переезжает с вами.',
+        },
+      ],
+      seeAlsoTitle: 'См. также',
+      seeAlsoLinks: [
+        { href: 'apple-id-balance-wont-go-to-zero', label: 'Баланс Apple ID не уходит в ноль' },
+        { href: 'leftover-apple-gift-card', label: 'Остаток на подарочной карте Apple' },
+        { href: 'change-apple-id-country-with-balance', label: 'Сменить страну Apple ID с балансом' },
+      ],
+      ctaTitle: 'Обнулить за минуту',
+    }
+  : {
+      title: 'Can you convert Apple ID balance to cash? Honest answer',
+      description:
+        'Looking to cash out leftover Apple ID balance? Apple does not allow withdrawals, transfers, or refunds to a bank account. The realistic move is to spend it down to zero - here is how, and why.',
+      eyebrow: 'Reality check',
+      tldrTitle: 'TL;DR',
+      tldr:
+        "No, Apple Account balance cannot be converted to cash, transferred, sold, or refunded to a bank account. Apple's terms forbid it. The realistic alternative is to spend the balance down to zero on App Store content - and Zero Balance is built for the awkward last-cents case where nothing else fits.",
+      sections: [
+        {
+          h: 'Why cashing out is not allowed',
+          p:
+            "Apple Account balance (sometimes called Apple ID balance, store credit, or iTunes credit) is a store-locked credit, not money. It can only be redeemed against Apple's storefront - App Store, iTunes Store, Apple Books, Apple Music subscriptions, in-app purchases. The terms of service explicitly disallow transferring it to another person, selling it, or converting it to currency. Marketplaces that claim to \"buy your Apple gift card balance\" operate in a grey zone and generally violate Apple's terms - proceed at your own risk.",
+        },
+        {
+          h: 'What about a refund?',
+          p:
+            "Refunds for individual purchases are possible via reportaproblem.apple.com, but the refund returns the credit to your Apple Account balance - it does not go back to your bank card. So a refund moves money around within Apple's system without releasing it. For the original top-up itself (e.g., a gift card you redeemed), Apple does not reverse the redemption.",
+        },
+        {
+          h: 'The realistic alternative: zero it out',
+          p:
+            "If you can't extract the balance, the next best thing is to use it. Subscriptions and standard apps don't help when only a few cents are left - they're priced in whole units. Zero Balance has eight small price tiers chosen specifically for this case: you enter your remaining balance, the app picks the closest combination, you tap confirm, and the balance drops to zero (or very close to it, with the overage shown before you commit).",
+        },
+        {
+          h: 'When zeroing out matters most',
+          p:
+            'The most common reason people search for cash-out is they want to switch their Apple ID country. Apple only enables the change-country control when the balance is exactly zero, the balance does not migrate, and is not refundable. Zeroing it out via Zero Balance is the recognized workaround.',
+        },
+      ],
+      faqLead: 'Frequently asked',
+      faqItems: [
+        {
+          q: 'Can I sell my Apple ID balance to someone else?',
+          a: "Apple's terms forbid transferring balance between accounts. Third-party services that offer to buy it usually rely on grey-market workarounds and risk locking your account.",
+        },
+        {
+          q: 'Is there ANY official way to get cash back?',
+          a: 'Not from Apple. The closest you can get is requesting a refund on a specific purchase, but the refund returns to your balance, not your bank.',
+        },
+        {
+          q: 'Will I lose the balance if I change country?',
+          a: "Yes - that is why Apple requires zero balance before the change. The balance is region-locked and does not move with you.",
+        },
+      ],
+      seeAlsoTitle: 'See also',
+      seeAlsoLinks: [
+        { href: 'apple-id-balance-wont-go-to-zero', label: "Apple ID balance won't go to zero" },
+        { href: 'leftover-apple-gift-card', label: 'Leftover Apple gift card balance' },
+        { href: 'change-apple-id-country-with-balance', label: 'Change Apple ID country with balance' },
+      ],
+      ctaTitle: 'Clear yours in under a minute',
+    };
+---
+
+<PageLayout
+  title={`${copy.title} - Zero Balance`}
+  description={copy.description}
+  {lang}
+  {path}
+  schema={faqSchema(copy.faqItems)}
+  ogType="article"
+  keywords={[...t.keywords.convertToCash, ...t.keywords.site]}
+>
+  <PageHeader eyebrow={copy.eyebrow} title={copy.title} description={copy.description} />
+
+  <Section>
+    <Container>
+      <Reveal class="mx-auto max-w-3xl">
+        <div class="rounded-2xl border border-[var(--border)] bg-[var(--brand-soft)]/40 p-6 md:p-8">
+          <p class="text-sm font-semibold tracking-wide text-[var(--brand-strong)] uppercase">
+            {copy.tldrTitle}
+          </p>
+          <p class="mt-3 text-lg leading-relaxed text-[var(--fg)]">{copy.tldr}</p>
+        </div>
+      </Reveal>
+
+      <div class="mx-auto mt-10 max-w-3xl prose-zb">
+        {
+          copy.sections.map((s, i) => (
+            <Reveal delay={i * 40}>
+              <h2>{s.h}</h2>
+              {s.p.split('\n\n').map((para) => (
+                <p>{para}</p>
+              ))}
+            </Reveal>
+          ))
+        }
+
+        <Reveal>
+          <h2>{copy.faqLead}</h2>
+        </Reveal>
+        <Reveal>
+          <FAQ items={copy.faqItems} />
+        </Reveal>
+
+        <Reveal>
+          <div class="mt-12 rounded-2xl border border-[var(--border)] bg-[var(--surface)] p-6 md:p-8 text-center">
+            <p class="text-lg font-semibold text-[var(--fg)]">{copy.ctaTitle}</p>
+            <div class="mt-4 flex justify-center">
+              <AppStoreButton label={t.cta.appStore} size="lg" />
+            </div>
+          </div>
+        </Reveal>
+
+        <Reveal>
+          <h2>{copy.seeAlsoTitle}</h2>
+          <ul>
+            {
+              copy.seeAlsoLinks.map((link) => (
+                <li>
+                  <a href={localizedPath(lang, link.href)}>{link.label}</a>
+                </li>
+              ))
+            }
+          </ul>
+        </Reveal>
+      </div>
+    </Container>
+  </Section>
+
+  <FinalCta {lang} />
+</PageLayout>

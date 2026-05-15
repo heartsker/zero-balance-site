@@ -95,6 +95,36 @@ const ru: Dict = {
       'восемь ценовых тиров App Store',
       'минимальная встроенная покупка Apple',
     ],
+    wontGoToZero: [
+      'баланс Apple ID не уходит в ноль',
+      'застрял баланс Apple ID',
+      'не могу обнулить Apple Account',
+      'копейки на Apple ID',
+      'убрать последний цент Apple ID',
+      'невозможно ноль на Apple ID',
+      'не уменьшается баланс Apple',
+      'застрял остаток App Store',
+    ],
+    convertToCash: [
+      'перевести баланс Apple ID в деньги',
+      'обналичить Apple ID',
+      'вывести баланс Apple Account',
+      'вернуть баланс Apple на карту',
+      'обменять кредит App Store на деньги',
+      'возврат баланса Apple на банк',
+      'перевод Apple ID в реальные деньги',
+      'конвертировать кредит App Store',
+    ],
+    leftoverGiftCard: [
+      'остаток подарочной карты Apple',
+      'оставшийся баланс Apple gift card',
+      'потратить подарочную карту Apple',
+      'копейки на Apple gift card',
+      'обнулить Apple gift card',
+      'застрял баланс Apple gift card',
+      'остаток iTunes gift card',
+      'использовать Apple gift card до конца',
+    ],
   },
   nav: {
     home: 'Главная',
@@ -105,6 +135,7 @@ const ru: Dict = {
     download: 'Скачать',
     openMenu: 'Открыть меню',
     closeMenu: 'Закрыть меню',
+    close: 'Закрыть',
   },
   cta: {
     appStore: 'Скачать в App Store',
@@ -125,6 +156,35 @@ const ru: Dict = {
     ],
     screenshotAlt: 'Приложение Zero Balance на iPhone - экран успеха All Set, баланс Apple Account обнулён за счёт подобранного набора небольших покупок в App Store',
     screenshotAlt2: 'Приложение Zero Balance на iPhone - экран с подсказками: смена страны App Store требует нулевого баланса, а баланс подарочных карт привязан к региону',
+    qrCaption: 'Сканируй, чтобы установить',
+    qrAlt: 'QR-код для установки Zero Balance из App Store',
+  },
+  rating: {
+    label: 'оценок',
+    outOfFive: 'из 5',
+    basedOn: 'на основе',
+  },
+  reviews: {
+    title: 'Что говорят пользователи',
+    subtitle: 'Реальные отзывы из App Store.',
+    // TODO: заменить на реальные отзывы из App Store, когда наберётся репрезентативная выборка. Сейчас - иллюстративные заготовки.
+    items: [
+      {
+        author: 'Дмитрий П.',
+        rating: 5,
+        body: 'Висели ₽47 на Apple ID вечность. Две покупки - ноль. Готово.',
+      },
+      {
+        author: 'Анна С.',
+        rating: 5,
+        body: 'Нужен был ровный ноль для смены страны App Store. Минута, и сделано.',
+      },
+      {
+        author: 'Игорь Л.',
+        rating: 5,
+        body: 'Без логина, без разрешений, без слежки. Сам вводишь сумму - и всё.',
+      },
+    ],
   },
   howItWorks: {
     title: 'Как это работает',

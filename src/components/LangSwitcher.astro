@@ -1,29 +1,36 @@
 ---
-import { LOCALES, type Locale } from '../i18n';
-import { localizedPath, stripLocale } from '../i18n';
+import {
+  LOCALES,
+  getDict,
+  localizedPath,
+  stripLocale,
+  type Locale,
+} from '../i18n';
 
 interface Props {
   current: Locale;
   path: string;
-  compact?: boolean;
 }
 
-const { current, path, compact = false } = Astro.props;
+const { current, path } = Astro.props;
 const baseRoute = stripLocale(path);
+const t = getDict(current);
 
-const labels: Record<Locale, string> = {
+const shortLabels: Record<Locale, string> = {
   en: 'EN',
   ru: 'RU',
+};
+
+const fullLabels: Record<Locale, string> = {
+  en: t.langSwitcher.en,
+  ru: t.langSwitcher.ru,
 };
 ---
 
 <div
-  class:list={[
-    'inline-flex items-center rounded-full border border-[var(--border)] bg-[var(--surface)] p-1 text-sm',
-    compact ? '' : '',
-  ]}
+  class="inline-flex items-center rounded-full border border-[var(--border)] bg-[var(--surface)] p-1 text-xs font-semibold"
   role="group"
-  aria-label="Language"
+  aria-label={t.langSwitcher.label}
 >
   {
     LOCALES.map((loc) => {
@@ -33,15 +40,17 @@ const labels: Record<Locale, string> = {
           href={localizedPath(loc, baseRoute)}
           hreflang={loc}
           data-lang={loc}
+          data-lang-toggle
           aria-current={isActive ? 'true' : undefined}
+          aria-label={`${t.langSwitcher.label}: ${fullLabels[loc]}`}
           class:list={[
-            'rounded-full px-3 py-1 font-medium transition',
+            'rounded-full px-3 py-1 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--brand)]',
             isActive
-              ? 'bg-[var(--fg)] text-[var(--bg)]'
+              ? 'bg-[var(--brand)] text-white shadow-sm pointer-events-none'
               : 'text-[var(--muted)] hover:text-[var(--fg)]',
           ]}
         >
-          {labels[loc]}
+          {shortLabels[loc]}
         </a>
       );
     })
@@ -52,7 +61,7 @@ const labels: Record<Locale, string> = {
   document.addEventListener('click', function (e) {
     var target = e.target;
     if (!(target instanceof Element)) return;
-    var link = target.closest('a[data-lang]');
+    var link = target.closest('a[data-lang-toggle]');
     if (!link) return;
     var lang = link.getAttribute('data-lang');
     if (!lang) return;
