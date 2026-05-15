@@ -1,0 +1,19 @@
+{
+  "applinks": {
+    "details": [
+      {
+        "appIDs": ["V7SVNPA7QT.com.pustotin.ZeroBalance"],
+        "components": [
+          {
+            "/": "/open_app",
+            "comment": "Universal Link entry point for the Zero Balance app"
+          },
+          {
+            "/": "/open_app/*",
+            "comment": "Universal Link entry point with subpaths or trailing slash"
+          }
+        ]
+      }
+    ]
+  }
+}
