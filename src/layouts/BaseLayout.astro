@@ -5,7 +5,7 @@ import SEO from '../components/SEO.astro';
 import JsonLd from '../components/JsonLd.astro';
 import type { Locale } from '../i18n';
 import { organizationSchema, websiteSchema } from '../lib/schema';
-import { APP_ID, ACCENT, DOMAIN } from '../lib/siteConfig';
+import { APP_ID, ACCENT, DOMAIN, RTL_LOCALES } from '../lib/siteConfig';
 
 interface Props {
   title: string;
@@ -37,7 +37,7 @@ const {
 ---
 
 <!doctype html>
-<html lang={lang}>
+<html lang={lang} dir={RTL_LOCALES.includes(lang) ? 'rtl' : 'ltr'}>
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />

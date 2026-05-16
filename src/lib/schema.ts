@@ -5,6 +5,8 @@ import {
   SUPPORT_EMAIL,
   APP_RATING,
   APP_RATING_COUNT,
+  LOCALES,
+  type Locale,
 } from './siteConfig';
 
 const PUBLISHER = {
@@ -15,7 +17,7 @@ const PUBLISHER = {
 
 export function softwareApplicationSchema(opts: {
   description: string;
-  lang: 'en' | 'ru';
+  lang: Locale;
   featureList?: string[];
   screenshots?: string[];
 }) {
@@ -59,7 +61,7 @@ export function softwareApplicationSchema(opts: {
   };
 }
 
-export function websiteSchema(opts: { lang: 'en' | 'ru' }) {
+export function websiteSchema(opts: { lang: Locale }) {
   return {
     '@context': 'https://schema.org',
     '@type': 'WebSite',
@@ -122,7 +124,7 @@ export function organizationSchema() {
       '@type': 'ContactPoint',
       contactType: 'customer support',
       email: SUPPORT_EMAIL,
-      availableLanguage: ['en', 'ru'],
+      availableLanguage: [...LOCALES],
     },
   };
 }
@@ -168,7 +170,7 @@ export function qaPageSchema(opts: {
   question: string;
   answer: string;
   url: string;
-  lang: 'en' | 'ru';
+  lang: Locale;
 }) {
   return {
     '@context': 'https://schema.org',

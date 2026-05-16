@@ -3,6 +3,8 @@ import sitemap from '@astrojs/sitemap';
 import mdx from '@astrojs/mdx';
 import tailwindcss from '@tailwindcss/vite';
 
+const LOCALES = ['en', 'ru', 'ar', 'de', 'es', 'fr', 'hi', 'it', 'ja', 'ko', 'pt-BR', 'tr'];
+
 export default defineConfig({
   site: 'https://zerobalance.pro',
   trailingSlash: 'always',
@@ -11,7 +13,7 @@ export default defineConfig({
   },
   i18n: {
     defaultLocale: 'en',
-    locales: ['en', 'ru'],
+    locales: LOCALES,
     routing: {
       prefixDefaultLocale: true,
       redirectToDefaultLocale: false,
@@ -21,7 +23,7 @@ export default defineConfig({
     sitemap({
       i18n: {
         defaultLocale: 'en',
-        locales: { en: 'en', ru: 'ru' },
+        locales: Object.fromEntries(LOCALES.map((l) => [l, l])),
       },
     }),
     mdx(),

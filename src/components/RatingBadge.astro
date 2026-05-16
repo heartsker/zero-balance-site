@@ -1,5 +1,5 @@
 ---
-import { APP_RATING, APP_RATING_COUNT, type Locale } from '../lib/siteConfig';
+import { APP_RATING, APP_RATING_COUNT, LOCALE_INTL_TAG, type Locale } from '../lib/siteConfig';
 import { getDict } from '../i18n';
 
 interface Props {
@@ -13,7 +13,7 @@ const t = getDict(lang);
 const rating = APP_RATING;
 const count = APP_RATING_COUNT;
 
-const localeTag = lang === 'ru' ? 'ru-RU' : 'en-US';
+const localeTag = LOCALE_INTL_TAG[lang];
 const countFormatted = new Intl.NumberFormat(localeTag).format(count);
 const ratingFormatted = rating.toLocaleString(localeTag, {
   minimumFractionDigits: 1,

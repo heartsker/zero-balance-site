@@ -1,5 +1,5 @@
 ---
-import { DOMAIN } from '../lib/siteConfig';
+import { DOMAIN, LOCALES } from '../lib/siteConfig';
 ---
 
 <!doctype html>
@@ -13,20 +13,32 @@ import { DOMAIN } from '../lib/siteConfig';
       content="Got leftover Apple Account balance or store credit you cannot shake? Zero Balance picks the closest pack of small App Store items to clear it."
     />
     <link rel="canonical" href={`${DOMAIN}/en/`} />
-    <link rel="alternate" hreflang="en" href={`${DOMAIN}/en/`} />
-    <link rel="alternate" hreflang="ru" href={`${DOMAIN}/ru/`} />
+    {LOCALES.map((loc) => (
+      <link rel="alternate" hreflang={loc} href={`${DOMAIN}/${loc}/`} />
+    ))}
     <link rel="alternate" hreflang="x-default" href={`${DOMAIN}/en/`} />
     <meta http-equiv="refresh" content="0; url=/en/" />
-    <script is:inline>
+    <script is:inline define:vars={{ locales: [...LOCALES] }}>
       (function () {
         try {
           var path = location.pathname;
           if (path !== '/' && path !== '/index.html') return;
-          var cookie = (document.cookie.match(/(?:^|; )zb_locale=(en|ru)/) || [])[1];
-          var lang = cookie;
+          var cookie = (document.cookie.match(/(?:^|; )zb_locale=([A-Za-z-]+)/) || [])[1];
+          var lang = cookie && locales.indexOf(cookie) !== -1 ? cookie : '';
           if (!lang) {
-            var nav = (navigator.languages && navigator.languages[0]) || navigator.language || 'en';
-            lang = /^ru\b/i.test(nav) ? 'ru' : 'en';
+            var navList = navigator.languages && navigator.languages.length ? navigator.languages : [navigator.language || 'en'];
+            for (var i = 0; i < navList.length; i++) {
+              var tag = String(navList[i]).toLowerCase();
+              if (tag.indexOf('pt-br') === 0) { lang = 'pt-BR'; break; }
+              if (tag.indexOf('pt') === 0) { lang = 'pt-BR'; break; }
+              var primary = tag.split('-')[0];
+              for (var j = 0; j < locales.length; j++) {
+                var loc = locales[j].toLowerCase();
+                if (loc === primary || loc.split('-')[0] === primary) { lang = locales[j]; break; }
+              }
+              if (lang) break;
+            }
+            if (!lang) lang = 'en';
           }
           location.replace('/' + lang + '/');
         } catch (_) {

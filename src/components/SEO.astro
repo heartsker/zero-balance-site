@@ -1,6 +1,6 @@
 ---
-import { DOMAIN, LOCALES } from '../lib/siteConfig';
-import { localizedPath, stripLocale, type Locale } from '../i18n';
+import { DOMAIN, LOCALES, LOCALE_OG_TAG } from '../lib/siteConfig';
+import { localizedPath, stripLocale, getDict, type Locale } from '../i18n';
 
 interface Props {
   title: string;
@@ -32,11 +32,8 @@ const normalizedPath = path.startsWith('/') ? path : `/${path}`;
 const canonicalUrl = `${DOMAIN}${normalizedPath}`;
 const ogImageUrl = image.startsWith('http') ? image : `${DOMAIN}${image}`;
 const localePath = stripLocale(normalizedPath);
-const altLocale: Locale = lang === 'ru' ? 'en' : 'ru';
-const ogImageAlt =
-  lang === 'ru'
-    ? 'Zero Balance - приложение для iOS, помогает потратить остаток баланса Apple Account'
-    : 'Zero Balance - iOS app that helps you spend leftover Apple Account balance';
+const t = getDict(lang);
+const ogImageAlt = t.hero.screenshotAlt;
 
 const keywordsString = keywords?.length
   ? [...new Set(keywords.map((k) => k.trim()).filter(Boolean))].join(', ')
@@ -77,8 +74,10 @@ const keywordsString = keywords?.length
 <meta property="og:image:width" content="1200" />
 <meta property="og:image:height" content="630" />
 <meta property="og:image:alt" content={ogImageAlt} />
-<meta property="og:locale" content={lang === 'ru' ? 'ru_RU' : 'en_US'} />
-<meta property="og:locale:alternate" content={altLocale === 'ru' ? 'ru_RU' : 'en_US'} />
+<meta property="og:locale" content={LOCALE_OG_TAG[lang]} />
+{LOCALES.filter((l) => l !== lang).map((l) => (
+  <meta property="og:locale:alternate" content={LOCALE_OG_TAG[l]} />
+))}
 {publishedTime && <meta property="article:published_time" content={publishedTime} />}
 {modifiedTime && <meta property="article:modified_time" content={modifiedTime} />}
 

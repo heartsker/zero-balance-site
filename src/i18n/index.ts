@@ -1,8 +1,31 @@
 import en, { type Dict } from './en';
 import ru from './ru';
+import ar from './ar';
+import de from './de';
+import es from './es';
+import fr from './fr';
+import hi from './hi';
+import it from './it';
+import ja from './ja';
+import ko from './ko';
+import ptBR from './pt-BR';
+import tr from './tr';
 import { LOCALES, DEFAULT_LOCALE, type Locale } from '../lib/siteConfig';
 
-const dictionaries: Record<Locale, Dict> = { en, ru };
+const dictionaries: Record<Locale, Dict> = {
+  en,
+  ru,
+  ar,
+  de,
+  es,
+  fr,
+  hi,
+  it,
+  ja,
+  ko,
+  'pt-BR': ptBR,
+  tr,
+};
 
 export function getDict(lang: Locale): Dict {
   return dictionaries[lang] ?? dictionaries[DEFAULT_LOCALE];
