@@ -1,4 +1,4 @@
 {
-  "home_screen_region_change_warning": true,
-  "home_screen_social_proof": true
+  "home_screen_region_change_warning": false,
+  "home_screen_social_proof": false
 }
