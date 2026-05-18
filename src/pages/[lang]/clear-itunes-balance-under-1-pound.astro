@@ -1,0 +1,126 @@
+---
+import PageLayout from '../../layouts/PageLayout.astro';
+import PageHeader from '../../components/PageHeader.astro';
+import Container from '../../components/Container.astro';
+import Section from '../../components/Section.astro';
+import FAQ from '../../components/FAQ.astro';
+import Reveal from '../../components/Reveal.astro';
+import FinalCta from '../../components/FinalCta.astro';
+import AppStoreButton from '../../components/AppStoreButton.astro';
+import { getDict, LOCALES, type Locale } from '../../i18n';
+import { faqSchema } from '../../lib/schema';
+
+export function getStaticPaths() {
+  return LOCALES.map((lang) => ({ params: { lang } }));
+}
+
+const lang = Astro.params.lang as Locale;
+const t = getDict(lang);
+const path = `/${lang}/clear-itunes-balance-under-1-pound/`;
+
+const copy = {
+  title: 'How to clear £0.38 or any sub-£1 iTunes balance',
+  description:
+    'Stuck with £0.38 or another small leftover on your UK iTunes balance? Apple\'s minimum IAP is £0.29, so some amounts cannot be hit exactly without a card on file. Here is what works in the UK store.',
+  eyebrow: 'Guide - UK store',
+  tldrTitle: 'TL;DR',
+  tldr:
+    'Apple\'s UK App Store IAP floor is £0.29 (then £0.39, £0.49, larger steps - same 900-price-point system as the US, just localized). For £0.38 the closest you can land using only your balance is buying one £0.29 IAP and accepting £0.09 stuck. To land exactly on £0.00 you need a card on file and an overshoot purchase like a £0.99 song.',
+  sections: [
+    {
+      h: 'The UK IAP price floor',
+      p: 'In the UK App Store the smallest in-app purchase price point is £0.29. After that the next available sub-£1 tiers are £0.39, £0.49, £0.79, £0.89, £0.99 - and then £0.50 increments going up. Apple announced this expanded pricing model in December 2022 when it added 700 new price points to the App Store. The localized UK price floor sits at £0.29.\n\nThere is no £0.09 or £0.19 tier on the UK App Store. That claim shows up a lot in older forum threads and it is incorrect.',
+    },
+    {
+      h: 'What "clear £0.38" actually means',
+      p: 'Two interpretations:\n\n1) Land balance as close to £0.00 as possible: achievable, but the residual is constrained by Apple\'s £0.29 floor. You can buy one £0.29 IAP to bring the balance down to £0.09, and then that £0.09 is stuck because no smaller IAP exists.\n\n2) Land balance on exactly £0.00: this is only possible by overshooting with a card on file. There is no combination of IAP-priced purchases that sums to exactly £0.38 using only the balance.',
+    },
+    {
+      h: 'Without a card on file - get close, accept residual',
+      p: 'Buy one £0.29 IAP from your balance. New balance: £0.09. The £0.09 cannot be spent because it is below the £0.29 IAP floor.\n\nIf you are OK with that small residual sitting on the account indefinitely (it does not expire), this is the simplest answer. If you need an exact zero - for example because you are about to change your Apple ID country - move to the next section.',
+    },
+    {
+      h: 'With a card on file - the only path to exact zero',
+      p: 'Buy any £0.99 song from iTunes or £0.99 paid app. Apple debits £0.38 of balance first, then charges the remaining £0.61 to your card. The balance hits exactly £0.00 to the penny.\n\nThis is the only way to land exactly. The card has to be from the UK store region; otherwise the App Store may refuse to split the payment.',
+    },
+    {
+      h: 'How Zero Balance helps',
+      p: 'Zero Balance is a free iOS app that automates the integer-partition problem against Apple\'s price tiers. The app has its own set of small in-app purchases at £0.29, £0.39, £0.49, £0.79, £0.90, £0.95, £1.00, £1.09, £1.19, and £1.49 (or the local-currency equivalents on every App Store storefront).\n\nWhen you enter your balance, the algorithm picks the combination of those tiers that gets closest to your number, and the plan-review screen shows the exact overage or residual before any purchase is confirmed. For £0.38 it would suggest a single £0.29 IAP and clearly display the £0.09 unreachable residual.\n\nNo Apple ID login, no ads, no tracking, no subscription. Built for iPhone and iPad on iOS 26 or later.',
+    },
+    {
+      h: 'What does not work',
+      p: 'A few things people try that fail:\n\n- Asking Apple Support to convert £0.38 to bank credit: refused. Apple Account balance is non-refundable and non-transferable under the Apple Media Services Terms.\n- Buying an Apple Gift Card with your balance: disabled around 2019, no longer possible.\n- Third-party "iTunes-to-cash" sites: scams or punitive fees of 20-30% plus a real risk of getting your code stolen.\n- Family Sharing to a non-organizer member: only the organizer\'s balance is consumed by family-member purchases, not the other way around.',
+    },
+  ],
+  faqLead: 'Related questions',
+  faqItems: [
+    {
+      q: 'Does the £0.29 IAP floor apply everywhere?',
+      a: 'Every App Store storefront has a localized floor that is the equivalent of the US $0.29 floor, set by Apple. The UK floor is £0.29, the EU floor is €0.29 (approximately), and so on - all set in Apple\'s pricing matrix.',
+    },
+    {
+      q: 'Will Apple Support zero out my £0.09 for free?',
+      a: 'Sometimes, but only as a courtesy when you are explicitly trying to change your Apple ID country and have already reduced the balance below an unofficial threshold around £0.69. For a casual cleanup request expect to be told to spend it.',
+    },
+    {
+      q: 'Does Zero Balance work in the UK App Store?',
+      a: 'Yes. The app localizes its own IAP prices to your App Store region. Purchases and the algorithm use your local currency automatically.',
+    },
+  ],
+};
+---
+
+<PageLayout
+  title={`${copy.title} - Zero Balance`}
+  description={copy.description}
+  {lang}
+  {path}
+  schema={faqSchema(copy.faqItems)}
+  ogType="article"
+  keywords={[...t.keywords.remove, ...t.keywords.site]}
+>
+  <PageHeader eyebrow={copy.eyebrow} title={copy.title} description={copy.description} />
+
+  <Section>
+    <Container>
+      <Reveal class="mx-auto max-w-3xl">
+        <div class="rounded-2xl border border-[var(--border)] bg-[var(--brand-soft)]/40 p-6 md:p-8">
+          <p class="text-sm font-semibold tracking-wide text-[var(--brand-strong)] uppercase">
+            {copy.tldrTitle}
+          </p>
+          <p class="mt-3 text-lg leading-relaxed text-[var(--fg)]">{copy.tldr}</p>
+          <div class="mt-6 flex">
+            <AppStoreButton label={t.cta.appStore} ct="outreach-quora-gbp" />
+          </div>
+        </div>
+      </Reveal>
+
+      <div class="mx-auto mt-10 max-w-3xl prose-zb">
+        {
+          copy.sections.map((s, i) => (
+            <Reveal delay={i * 40}>
+              <h2>{s.h}</h2>
+              {s.p.split('\n\n').map((para) => (
+                <p>{para}</p>
+              ))}
+              {i === 4 && (
+                <div class="not-prose my-6 flex">
+                  <AppStoreButton label={t.cta.appStore} ct="outreach-quora-gbp-mid" />
+                </div>
+              )}
+            </Reveal>
+          ))
+        }
+
+        <Reveal>
+          <h2>{copy.faqLead}</h2>
+        </Reveal>
+        <Reveal>
+          <FAQ items={copy.faqItems} />
+        </Reveal>
+      </div>
+    </Container>
+  </Section>
+
+  <FinalCta {lang} />
+</PageLayout>

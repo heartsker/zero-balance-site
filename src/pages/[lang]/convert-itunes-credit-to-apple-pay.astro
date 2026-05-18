@@ -1,0 +1,122 @@
+---
+import PageLayout from '../../layouts/PageLayout.astro';
+import PageHeader from '../../components/PageHeader.astro';
+import Container from '../../components/Container.astro';
+import Section from '../../components/Section.astro';
+import FAQ from '../../components/FAQ.astro';
+import Reveal from '../../components/Reveal.astro';
+import FinalCta from '../../components/FinalCta.astro';
+import AppStoreButton from '../../components/AppStoreButton.astro';
+import { getDict, LOCALES, type Locale } from '../../i18n';
+import { faqSchema } from '../../lib/schema';
+
+export function getStaticPaths() {
+  return LOCALES.map((lang) => ({ params: { lang } }));
+}
+
+const lang = Astro.params.lang as Locale;
+const t = getDict(lang);
+const path = `/${lang}/convert-itunes-credit-to-apple-pay/`;
+
+const copy = {
+  title: 'Can you move iTunes credit or App Store balance to Apple Pay?',
+  description:
+    'No - Apple\'s terms prohibit moving Apple Account balance to Apple Pay, a bank account, or any external payment instrument. Here is what $100 of credit can actually do, and what to avoid.',
+  eyebrow: 'Cash-out reality check',
+  tldrTitle: 'TL;DR',
+  tldr:
+    'Apple Account balance and Apple Pay are separate instruments under the Apple Media Services Terms. Balance cannot move to Apple Pay, a debit card, a bank account, or any non-Apple payment system. It can buy subscriptions, paid apps, in-app purchases, Apple One bundles, AppleCare+, and (in supported regions) Apple hardware via the Apple Store app.',
+  sections: [
+    {
+      h: 'Why Apple Account balance cannot become cash',
+      p: 'Apple\'s Media Services Terms classify Apple Account balance as non-refundable, non-transferable store credit. It is legally distinct from Apple Pay funds, which sit on top of a real bank or card network. Apple does not (and contractually cannot) bridge the two.\n\nThe practical effect: there is no first-party "transfer balance to Apple Pay" button, no Apple Support workflow that converts balance to bank credit, and no third-party app that legitimately does it on iOS.',
+    },
+    {
+      h: 'Why third-party "iTunes-to-cash" sites are unsafe',
+      p: 'A category of websites offer to "buy" your Apple Gift Card code (or unused balance) for cash, usually at a 20-30% discount. The problems:\n\n- Many are outright scams - they take the code, drain the balance, and never pay.\n- Even the legitimate ones take a punitive fee.\n- Apple\'s Terms prohibit reselling redeemed balance. If detected, your account can be flagged.\n- PayPal Digital Gifts ended its iTunes resale program years ago for the same reason.\n\nIf the goal is "get cash for my credit," there is no honest path.',
+    },
+    {
+      h: 'What $100 of locked-in credit can actually do',
+      p: 'Ranked by best dollar-for-dollar value:\n\n1. Apple One Individual ($19.95/mo) or Family ($25.95/mo): $100 covers 4-5 months of bundled iCloud+, Music, TV+, Arcade, and (Premier) News+/Fitness+. Apple charges the subscription against your balance automatically.\n\n2. iCloud+ 2TB standalone ($9.99/mo): $100 = about 10 months of premium storage.\n\n3. Apple hardware via the Apple Store iPhone app (supported regions only - see the dedicated guide): AirPods, accessories, AppleCare+ on a new device.\n\n4. Apple Books and Music: substantial libraries for a $100 budget.\n\n5. In-app purchases in third-party games (Roblox, Clash of Clans, etc.) all debit your balance first.',
+    },
+    {
+      h: 'If you only care about emptying the balance to $0',
+      p: 'A different goal - common before changing Apple ID country, which requires a zero balance. The path is to spend the bulk of the balance via subscriptions or paid apps, then clear residual cents with a tool.\n\nZero Balance is a free iOS app I built for the second step. It has its own 10 small in-app purchases ($0.29 to $1.49) and an algorithm that picks the combination closest to your leftover. The plan-review screen shows the exact overage and confirmation count before any purchase is made. Apple\'s $0.29 IAP floor means residuals smaller than $0.29 can\'t be cleared exactly without a card on file - but for most leftovers it lands within a cent or two.\n\nNo Apple ID login, no ads, no tracking, no subscription.',
+    },
+    {
+      h: 'What about Family Sharing?',
+      p: 'Family Sharing does not let you move balance to a family member\'s Apple Pay. It does let the family organizer\'s balance be consumed first when any family member makes a purchase. So if you are the organizer, your balance effectively pays for your kid\'s app purchases or your spouse\'s subscriptions until it hits zero. This is a useful way to "share" the balance, but it does not produce cash.',
+    },
+  ],
+  faqLead: 'Related questions',
+  faqItems: [
+    {
+      q: 'Can Apple Support transfer my balance to a bank account?',
+      a: 'No. Apple Support cannot move balance to external payment systems. The only refunds Apple processes are for individual purchases via reportaproblem.apple.com.',
+    },
+    {
+      q: 'Is Apple Pay different from Apple Account balance?',
+      a: 'Yes. Apple Pay is a payment method that uses your bank cards. Apple Account balance is store credit issued by Apple. They cannot be combined or converted between each other.',
+    },
+    {
+      q: 'Will Zero Balance turn my balance into cash?',
+      a: 'No - that is not possible by any tool. Zero Balance only spends the balance down to (or close to) $0 by suggesting small in-app purchases. It does not convert credit to cash.',
+    },
+  ],
+};
+---
+
+<PageLayout
+  title={`${copy.title} - Zero Balance`}
+  description={copy.description}
+  {lang}
+  {path}
+  schema={faqSchema(copy.faqItems)}
+  ogType="article"
+  keywords={[...t.keywords.convertToCash, ...t.keywords.site]}
+>
+  <PageHeader eyebrow={copy.eyebrow} title={copy.title} description={copy.description} />
+
+  <Section>
+    <Container>
+      <Reveal class="mx-auto max-w-3xl">
+        <div class="rounded-2xl border border-[var(--border)] bg-[var(--brand-soft)]/40 p-6 md:p-8">
+          <p class="text-sm font-semibold tracking-wide text-[var(--brand-strong)] uppercase">
+            {copy.tldrTitle}
+          </p>
+          <p class="mt-3 text-lg leading-relaxed text-[var(--fg)]">{copy.tldr}</p>
+          <div class="mt-6 flex">
+            <AppStoreButton label={t.cta.appStore} ct="outreach-quora-applepay" />
+          </div>
+        </div>
+      </Reveal>
+
+      <div class="mx-auto mt-10 max-w-3xl prose-zb">
+        {
+          copy.sections.map((s, i) => (
+            <Reveal delay={i * 40}>
+              <h2>{s.h}</h2>
+              {s.p.split('\n\n').map((para) => (
+                <p>{para}</p>
+              ))}
+              {i === 3 && (
+                <div class="not-prose my-6 flex">
+                  <AppStoreButton label={t.cta.appStore} ct="outreach-quora-applepay-mid" />
+                </div>
+              )}
+            </Reveal>
+          ))
+        }
+
+        <Reveal>
+          <h2>{copy.faqLead}</h2>
+        </Reveal>
+        <Reveal>
+          <FAQ items={copy.faqItems} />
+        </Reveal>
+      </div>
+    </Container>
+  </Section>
+
+  <FinalCta {lang} />
+</PageLayout>

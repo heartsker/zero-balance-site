@@ -6,9 +6,12 @@ interface Props {
   variant?: 'primary' | 'ghost';
   size?: 'md' | 'lg';
   class?: string;
+  ct?: string;
 }
 
-const { label, variant = 'primary', size = 'md', class: className = '' } = Astro.props;
+const { label, variant = 'primary', size = 'md', class: className = '', ct } = Astro.props;
+
+const href = ct ? APP_STORE_URL.replace(/ct=[^&]+/, `ct=${ct}`) : APP_STORE_URL;
 
 const classes = [
   'cta',
@@ -18,7 +21,7 @@ const classes = [
 ].filter(Boolean).join(' ');
 ---
 
-<a href={APP_STORE_URL} class={classes} target="_blank" rel="noopener noreferrer">
+<a href={href} class={classes} target="_blank" rel="noopener noreferrer">
   <svg
     aria-hidden="true"
     width="20"
