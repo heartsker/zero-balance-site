@@ -11,8 +11,17 @@ interface Props {
 const { lang } = Astro.props;
 const t = getDict(lang);
 
-const screenshotSrc = `/screenshots/${lang}/1.png`;
-const screenshotSrc2 = `/screenshots/${lang}/2.png`;
+const screenshots = [1, 2, 3, 4].map((n) => ({
+  n,
+  src: `/screenshots/${lang}/${n}.png`,
+  alt:
+    n === 1
+      ? t.hero.screenshotAlt
+      : n === 2
+        ? t.hero.screenshotAlt2
+        : `${t.meta.siteName} - iPhone`,
+  eager: n === 1,
+}));
 ---
 
 <section class="relative overflow-hidden bg-aurora pt-12 pb-16 md:pt-24 md:pb-28">
@@ -64,33 +73,53 @@ const screenshotSrc2 = `/screenshots/${lang}/2.png`;
             class="absolute -inset-8 -z-10 rounded-full bg-[radial-gradient(closest-side,rgba(122,77,230,0.22),transparent)] blur-2xl"
             aria-hidden="true"
           />
-          <div class="flex items-center justify-center gap-3 sm:gap-5">
-            <div class="hero-rise hero-rise-3 float-y w-1/2">
-              <img
-                src={screenshotSrc}
-                alt={t.hero.screenshotAlt}
-                width="430"
-                height="932"
-                loading="eager"
-                fetchpriority="high"
-                decoding="async"
-                class="block w-full rounded-[2rem] shadow-[0_30px_80px_-20px_rgba(20,16,26,0.45)] ring-1 ring-black/5"
-              />
-            </div>
-            <div class="hero-rise hero-rise-4 w-1/2">
-              <img
-                src={screenshotSrc2}
-                alt={t.hero.screenshotAlt2}
-                width="430"
-                height="932"
-                loading="eager"
-                decoding="async"
-                class="block w-full rounded-[2rem] shadow-[0_30px_80px_-20px_rgba(20,16,26,0.45)] ring-1 ring-black/5"
-              />
-            </div>
+          <div
+            class="hero-rail hero-rise hero-rise-3"
+            role="region"
+            aria-label={t.hero.screenshotAlt}
+            tabindex="0"
+          >
+            {
+              screenshots.map((s) => (
+                <div class="hero-rail-item">
+                  <div class="hero-screen-frame">
+                    <img
+                      src={s.src}
+                      alt={s.alt}
+                      width="430"
+                      height="932"
+                      loading={s.eager ? 'eager' : 'lazy'}
+                      fetchpriority={s.eager ? 'high' : 'low'}
+                      decoding="async"
+                      class="hero-screen-img"
+                    />
+                  </div>
+                </div>
+              ))
+            }
           </div>
         </div>
       </div>
     </div>
   </Container>
 </section>
+
+<script>
+  function markLoaded(img: HTMLImageElement) {
+    img.classList.add('is-loaded');
+    img.parentElement?.classList.add('is-loaded');
+  }
+  function setupHeroPreviews() {
+    document.querySelectorAll<HTMLImageElement>('.hero-screen-img').forEach((img) => {
+      if (img.classList.contains('is-loaded')) return;
+      if (img.complete && img.naturalWidth > 0) {
+        markLoaded(img);
+      } else {
+        img.addEventListener('load', () => markLoaded(img), { once: true });
+        img.addEventListener('error', () => markLoaded(img), { once: true });
+      }
+    });
+  }
+  setupHeroPreviews();
+  document.addEventListener('astro:page-load', setupHeroPreviews);
+</script>
