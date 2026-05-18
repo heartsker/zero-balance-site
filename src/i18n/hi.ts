@@ -271,7 +271,6 @@ const hi: Dict = {
       legal: 'क़ानूनी',
     },
     rights: 'सर्वाधिकार सुरक्षित।',
-    builtBy: 'Daniel Pustotin द्वारा बनाया गया',
   },
   langSwitcher: {
     label: 'भाषा',

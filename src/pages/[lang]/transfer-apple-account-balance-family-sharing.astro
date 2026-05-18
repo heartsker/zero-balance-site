@@ -1,0 +1,122 @@
+---
+import PageLayout from '../../layouts/PageLayout.astro';
+import PageHeader from '../../components/PageHeader.astro';
+import Container from '../../components/Container.astro';
+import Section from '../../components/Section.astro';
+import FAQ from '../../components/FAQ.astro';
+import Reveal from '../../components/Reveal.astro';
+import FinalCta from '../../components/FinalCta.astro';
+import AppStoreButton from '../../components/AppStoreButton.astro';
+import { getDict, LOCALES, type Locale } from '../../i18n';
+import { faqSchema } from '../../lib/schema';
+
+export function getStaticPaths() {
+  return LOCALES.map((lang) => ({ params: { lang } }));
+}
+
+const lang = Astro.params.lang as Locale;
+const t = getDict(lang);
+const path = `/${lang}/transfer-apple-account-balance-family-sharing/`;
+
+const copy = {
+  title: 'Can you transfer Apple Account balance to a family member?',
+  description:
+    'Not directly, and never to Apple Pay or a bank. But a Family Sharing organizer\'s balance is automatically consumed by family members\' purchases. Here is how it works and what it does not do.',
+  eyebrow: 'Family Sharing explained',
+  tldrTitle: 'TL;DR',
+  tldr:
+    'You cannot move Apple Account balance to a family member\'s account, to Apple Pay, or to a bank. But if you are the organizer of a Family Sharing group, your balance is consumed first whenever any family member makes a purchase - so a parent\'s leftover balance effectively pays for a kid\'s apps or a spouse\'s subscriptions. The flow only works organizer-to-member, never the other direction.',
+  sections: [
+    {
+      h: 'The hard "no" first',
+      p: 'Apple Account balance cannot be moved to:\n\n- A family member\'s Apple Account balance\n- A family member\'s Apple Pay or bank account\n- Your own Apple Pay or bank account\n- A different Apple ID, even one you own\n\nApple\'s terms classify balance as non-transferable. There is no "send balance to" feature in any first-party Apple app.',
+    },
+    {
+      h: 'What Family Sharing actually does',
+      p: 'When Purchase Sharing is enabled in a Family Sharing group, Apple applies payment in this order for any family member\'s purchase:\n\n1. The family organizer\'s Apple Account balance (used first)\n2. The family organizer\'s payment method on file (card)\n\nSo a parent\'s leftover balance is automatically drained by purchases their family members make. Your child buys a $0.99 song? It comes out of your balance. Your spouse subscribes to a $9.99 app? Same thing.\n\nThis is the only legitimate way to "share" a balance with someone else - and only if they are in your Family Sharing group.',
+    },
+    {
+      h: 'Direction restriction',
+      p: 'Family Sharing payment flow is strictly one-way:\n\n- Organizer balance to family member purchases: yes, automatic\n- Family member balance to organizer purchases: no, never\n- Family member to family member: no, never\n\nIf you are a family member (not the organizer), your balance stays attached to your own Apple ID. It is not pooled or shared. So a teenager who has a leftover gift-card balance cannot give it to a parent or sibling via Family Sharing.',
+    },
+    {
+      h: 'Practical workflow',
+      p: 'If you are the organizer and want to drain your balance through a family member:\n\n1. Confirm Purchase Sharing is on: Settings > [your name] > Family > Purchase Sharing.\n2. Make sure your family member is signed into their Apple ID on their device with Family Sharing enabled.\n3. Have them make a purchase. The Apple receipt sent to your email will show "Apple Account: $X.XX -> $Y.YY," confirming the balance was used.\n\nFor amounts that are awkward (e.g., $0.47 leftover), this method works only down to about $0.29 because Apple\'s minimum IAP is $0.29 - smaller residuals get stuck the same way they would for any other spending method.',
+    },
+    {
+      h: 'If Family Sharing is not an option',
+      p: 'Many people search for "transfer Apple Account balance to family member" because they want their own balance gone - they do not actually want to give the money to a relative.\n\nFor that, the working path is to spend the balance on subscriptions, paid apps, or in-app purchases. Apple\'s $0.29 IAP floor means residuals smaller than $0.29 cannot be cleared exactly without a card on file.\n\nZero Balance is a free iOS app I built for the residual-clearing step. It ships with its own 10 small in-app purchases ($0.29 to $1.49) and an algorithm that picks the combination closest to your leftover. The plan-review screen shows the exact overage and confirmation count before any purchase is made. No Apple ID login, no ads, no tracking, no subscription.',
+    },
+  ],
+  faqLead: 'Related questions',
+  faqItems: [
+    {
+      q: 'I am not the organizer - can I still share my balance with the family?',
+      a: 'No. Only the organizer\'s balance is consumed by family members\' purchases. A family member\'s balance is private to their own Apple ID and cannot be shared in this way.',
+    },
+    {
+      q: 'Can I change who the organizer is?',
+      a: 'Yes, in Settings > Family. Note that some shared subscriptions and storage plans may be paused or transferred when the organizer changes - check Apple\'s Family Sharing documentation.',
+    },
+    {
+      q: 'Will Zero Balance work for a family member spending the organizer\'s balance?',
+      a: 'Yes. If the family member uses Zero Balance, the IAPs they buy still debit the organizer\'s balance first (because Purchase Sharing routes payment that way). So the organizer\'s balance is what gets drained.',
+    },
+  ],
+};
+---
+
+<PageLayout
+  title={`${copy.title} - Zero Balance`}
+  description={copy.description}
+  {lang}
+  {path}
+  schema={faqSchema(copy.faqItems)}
+  ogType="article"
+  keywords={[...t.keywords.convertToCash, ...t.keywords.site]}
+>
+  <PageHeader eyebrow={copy.eyebrow} title={copy.title} description={copy.description} />
+
+  <Section>
+    <Container>
+      <Reveal class="mx-auto max-w-3xl">
+        <div class="rounded-2xl border border-[var(--border)] bg-[var(--brand-soft)]/40 p-6 md:p-8">
+          <p class="text-sm font-semibold tracking-wide text-[var(--brand-strong)] uppercase">
+            {copy.tldrTitle}
+          </p>
+          <p class="mt-3 text-lg leading-relaxed text-[var(--fg)]">{copy.tldr}</p>
+          <div class="mt-6 flex">
+            <AppStoreButton label={t.cta.appStore} ct="outreach-quora-family" />
+          </div>
+        </div>
+      </Reveal>
+
+      <div class="mx-auto mt-10 max-w-3xl prose-zb">
+        {
+          copy.sections.map((s, i) => (
+            <Reveal delay={i * 40}>
+              <h2>{s.h}</h2>
+              {s.p.split('\n\n').map((para) => (
+                <p>{para}</p>
+              ))}
+              {i === 4 && (
+                <div class="not-prose my-6 flex">
+                  <AppStoreButton label={t.cta.appStore} ct="outreach-quora-family-mid" />
+                </div>
+              )}
+            </Reveal>
+          ))
+        }
+
+        <Reveal>
+          <h2>{copy.faqLead}</h2>
+        </Reveal>
+        <Reveal>
+          <FAQ items={copy.faqItems} />
+        </Reveal>
+      </div>
+    </Container>
+  </Section>
+
+  <FinalCta {lang} />
+</PageLayout>

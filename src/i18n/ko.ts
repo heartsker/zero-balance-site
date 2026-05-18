@@ -271,7 +271,6 @@ const ko: Dict = {
       legal: '법적 고지',
     },
     rights: '모든 권리 보유.',
-    builtBy: 'Daniel Pustotin 제작',
   },
   langSwitcher: {
     label: '언어',

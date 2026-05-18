@@ -1,0 +1,122 @@
+---
+import PageLayout from '../../layouts/PageLayout.astro';
+import PageHeader from '../../components/PageHeader.astro';
+import Container from '../../components/Container.astro';
+import Section from '../../components/Section.astro';
+import FAQ from '../../components/FAQ.astro';
+import Reveal from '../../components/Reveal.astro';
+import FinalCta from '../../components/FinalCta.astro';
+import AppStoreButton from '../../components/AppStoreButton.astro';
+import { getDict, LOCALES, type Locale } from '../../i18n';
+import { faqSchema } from '../../lib/schema';
+
+export function getStaticPaths() {
+  return LOCALES.map((lang) => ({ params: { lang } }));
+}
+
+const lang = Astro.params.lang as Locale;
+const t = getDict(lang);
+const path = `/${lang}/what-can-apple-gift-card-buy/`;
+
+const copy = {
+  title: 'What can an Apple Gift Card actually buy?',
+  description:
+    'More than most people realize. Apple Gift Card balance buys paid apps, in-app purchases in third-party games, subscriptions, Apple Books, Apple Music, AppleCare+, and (in supported regions) Apple hardware. Here is the full list.',
+  eyebrow: 'Coverage explainer',
+  tldrTitle: 'TL;DR',
+  tldr:
+    'Apple Gift Card balance (now part of unified "Apple Account balance") buys anything in the Apple ecosystem: paid apps, in-app purchases including third-party games like Roblox and Clash of Clans (because Apple processes the IAP regardless of the developer), Apple Music, Apple TV+, Apple Arcade, iCloud+, Apple One, Apple Books, iTunes content, AppleCare+, and Apple-branded hardware via the Apple Store iPhone app in supported regions.',
+  sections: [
+    {
+      h: 'The big surprise: in-app purchases in third-party games',
+      p: 'This is the part most people miss. When you make an in-app purchase inside an iOS app - any iOS app, including Roblox, Clash of Clans, Fortnite (historical), Subway Surfers, Candy Crush, Genshin Impact, anything - Apple processes the transaction. The developer never touches your payment method.\n\nThat means your Apple Account balance is debited first for every iOS IAP. A Robux pack, a coin bundle, a season pass, a premium currency purchase - all of it can be paid from your Apple Gift Card balance.\n\nThis effectively makes an Apple Gift Card a universal iOS gaming currency, even though it is technically just Apple credit.',
+    },
+    {
+      h: 'What still works to spend the balance',
+      p: 'Full list (US and most major markets):\n\n- Paid apps and games on the App Store\n- In-app purchases inside any iOS app (third-party games, subscriptions, content, etc.)\n- Apple Music, Apple TV+, Apple Arcade, Apple News+, iCloud+\n- Apple One bundles (Individual, Family, Premier)\n- Apple Fitness+\n- iTunes Store songs, albums, movies, TV shows\n- Apple Books and Audiobooks\n- AppleCare+ on any device\n- Apple-branded hardware via the Apple Store iPhone app (US, UK, several EU, see the dedicated guide)\n\nThe pattern: anything Apple processes the payment for is eligible. Anything paid through a non-Apple system is not.',
+    },
+    {
+      h: 'What does not work',
+      p: 'Things Apple Gift Card balance cannot buy:\n\n- Android apps or Google Play purchases (separate ecosystem, separate billing)\n- Web purchases of those same games - buying Robux on roblox.com uses your card directly, not your Apple balance, because the transaction does not go through Apple\n- Steam, Epic Games Store, GOG, any non-Apple PC marketplace\n- Amazon, eBay, retail purchases\n- Apple Pay at coffee shops, gas stations, anywhere physical (Apple Pay uses your linked cards, not your store credit)\n- Physical goods from non-Apple retailers, even if they sell Apple products\n- Cash withdrawals, bank transfers, or any conversion to liquid money',
+    },
+    {
+      h: 'The "stuck cents" problem',
+      p: 'A side effect of how Apple Gift Cards work: you almost always end up with an awkward residual amount. You redeem a $25 card, buy a subscription, buy a game, and end up with $0.47 or $1.13 sitting on the account that does not match any single purchase amount.\n\nApple\'s minimum in-app purchase price is $0.29, so residuals smaller than $0.29 cannot be cleared exactly without a card on file. For amounts above $0.29 you can usually combine smaller in-app purchases to get close.\n\nZero Balance is a free iOS app I built specifically for this residual case. It ships with its own 10 small in-app purchases ($0.29, $0.39, $0.49, $0.79, $0.90, $0.95, $1.00, $1.09, $1.19, $1.49) and an algorithm that picks the combination closest to your leftover. The plan-review screen shows the exact overage and number of confirmation prompts before any purchase is made. No Apple ID login, no ads, no tracking, no subscription.',
+    },
+    {
+      h: 'Apple Gift Card vs App Store and iTunes Gift Card',
+      p: 'Apple used to issue two separate types of gift card: the physical-store "Apple Gift Card" (usable on Apple hardware) and the digital "App Store and iTunes Gift Card" (usable for apps and content only). In 2020 Apple unified them into a single "Apple Gift Card" SKU and merged the redemption flow so a single redeemed code adds to one unified balance.\n\nIf you have an old, unredeemed "App Store and iTunes" card from before 2020, you can still redeem it - it goes into the same unified balance. There is no functional difference today.',
+    },
+  ],
+  faqLead: 'Related questions',
+  faqItems: [
+    {
+      q: 'Will my Apple Gift Card balance work for buying Robux on roblox.com (the website)?',
+      a: 'No. Web purchases use your card directly, not your Apple balance. The same Robux purchase made inside the Roblox iOS app would use your Apple balance, because Apple processes that transaction.',
+    },
+    {
+      q: 'Can I redeem an Apple Gift Card on an Android phone?',
+      a: 'No. Apple Gift Card balance is tied to an Apple ID and only works in the Apple ecosystem.',
+    },
+    {
+      q: 'I have $0.47 leftover. What do I do?',
+      a: 'Combine small in-app purchases to get as close to $0 as possible. Apple\'s $0.29 IAP floor means you may have a few cents stuck unless you use a card on file to overshoot. Zero Balance automates the combination math.',
+    },
+  ],
+};
+---
+
+<PageLayout
+  title={`${copy.title} - Zero Balance`}
+  description={copy.description}
+  {lang}
+  {path}
+  schema={faqSchema(copy.faqItems)}
+  ogType="article"
+  keywords={[...t.keywords.leftoverGiftCard, ...t.keywords.site]}
+>
+  <PageHeader eyebrow={copy.eyebrow} title={copy.title} description={copy.description} />
+
+  <Section>
+    <Container>
+      <Reveal class="mx-auto max-w-3xl">
+        <div class="rounded-2xl border border-[var(--border)] bg-[var(--brand-soft)]/40 p-6 md:p-8">
+          <p class="text-sm font-semibold tracking-wide text-[var(--brand-strong)] uppercase">
+            {copy.tldrTitle}
+          </p>
+          <p class="mt-3 text-lg leading-relaxed text-[var(--fg)]">{copy.tldr}</p>
+          <div class="mt-6 flex">
+            <AppStoreButton label={t.cta.appStore} ct="outreach-quora-whatbuys" />
+          </div>
+        </div>
+      </Reveal>
+
+      <div class="mx-auto mt-10 max-w-3xl prose-zb">
+        {
+          copy.sections.map((s, i) => (
+            <Reveal delay={i * 40}>
+              <h2>{s.h}</h2>
+              {s.p.split('\n\n').map((para) => (
+                <p>{para}</p>
+              ))}
+              {i === 3 && (
+                <div class="not-prose my-6 flex">
+                  <AppStoreButton label={t.cta.appStore} ct="outreach-quora-whatbuys-mid" />
+                </div>
+              )}
+            </Reveal>
+          ))
+        }
+
+        <Reveal>
+          <h2>{copy.faqLead}</h2>
+        </Reveal>
+        <Reveal>
+          <FAQ items={copy.faqItems} />
+        </Reveal>
+      </div>
+    </Container>
+  </Section>
+
+  <FinalCta {lang} />
+</PageLayout>

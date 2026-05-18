@@ -1,0 +1,122 @@
+---
+import PageLayout from '../../layouts/PageLayout.astro';
+import PageHeader from '../../components/PageHeader.astro';
+import Container from '../../components/Container.astro';
+import Section from '../../components/Section.astro';
+import FAQ from '../../components/FAQ.astro';
+import Reveal from '../../components/Reveal.astro';
+import FinalCta from '../../components/FinalCta.astro';
+import AppStoreButton from '../../components/AppStoreButton.astro';
+import { getDict, LOCALES, type Locale } from '../../i18n';
+import { faqSchema } from '../../lib/schema';
+
+export function getStaticPaths() {
+  return LOCALES.map((lang) => ({ params: { lang } }));
+}
+
+const lang = Astro.params.lang as Locale;
+const t = getDict(lang);
+const path = `/${lang}/buy-gift-cards-with-apple-account-balance/`;
+
+const copy = {
+  title: 'Can you buy gift cards with Apple Account balance?',
+  description:
+    'No. Apple disabled buying gift cards with Apple Account balance around 2019 to stop fraud laundering. Here is what your balance still buys, and how to actually use it.',
+  eyebrow: 'Direct answer',
+  tldrTitle: 'TL;DR',
+  tldr:
+    'Apple removed "pay for a gift card using your Apple Account balance" in 2019 after the workflow was abused for fraud. No first-party or third-party app legitimately offers it today. Your balance still buys paid apps, in-app purchases (including in third-party games), Apple One bundles, Apple Music, Apple TV+, AppleCare+, Apple Books, and - in supported regions - Apple hardware via the Apple Store iPhone app.',
+  sections: [
+    {
+      h: 'Why the gift-card workflow is gone',
+      p: 'Before 2019, the Apple Store on iPhone let you buy an Apple Gift Card (or App Store and iTunes Gift Card) using your existing Apple Account balance. Effectively this converted store credit into a transferable code.\n\nFraudsters used this to launder stolen accounts: compromise an Apple ID, drain the balance into gift cards inside the same account, then resell the codes for cash on grey-market resale sites. Apple closed the loop entirely - today the Apple Gift Card purchase flow no longer accepts Apple Account balance as a payment method on any storefront.',
+    },
+    {
+      h: 'Avoid third-party "balance-to-gift-card" sites',
+      p: 'A category of websites claim to convert your Apple Account balance into Amazon gift cards, Steam codes, PayPal credit, or cash. They are uniformly either:\n\n- Outright scams that vanish with your gift-card code or login credentials.\n- Punitive middlemen taking 20-30% cuts and reselling on grey markets.\n- Phishing operations harvesting Apple IDs.\n\nApple\'s Terms also prohibit reselling redeemed balance. If detected, your account can be flagged or restricted. There is no honest "convert to gift card" service for Apple Account balance.',
+    },
+    {
+      h: 'What your balance can still buy',
+      p: 'The current list is broader than most people realize:\n\n- Paid apps and games on the App Store\n- In-app purchases - including IAPs inside third-party games (Clash of Clans, Roblox, Subway Surfers gems, etc.) because Apple processes every iOS IAP regardless of who developed the app\n- Apple Music, Apple TV+, Apple Arcade, Apple News+, iCloud+ subscriptions\n- Apple One bundles (Individual, Family, Premier)\n- Apple Books and Audiobooks\n- iTunes Store songs, albums, movies, TV shows\n- AppleCare+ on a new or existing device\n- Apple-branded hardware (AirPods, accessories, even Macs and iPhones) via the Apple Store iPhone app, in supported regions: US, UK, Canada, Australia, and several EU countries',
+    },
+    {
+      h: 'If the real goal is to zero out the balance',
+      p: 'A common reason people search for "buy gift cards with my balance" is that they actually want to clear the balance to $0 - for example, before changing their Apple ID country, which Apple requires to be zero.\n\nThe working approach is two steps: spend the bulk of the balance on a subscription or paid app, then clear the residual cents by combining small in-app purchases. Apple\'s minimum IAP price is $0.29, so residuals smaller than that can\'t be cleared exactly without a card on file.\n\nZero Balance is a free iOS app I built for the residual-clearing step. It ships with its own 10 small in-app purchases ($0.29, $0.39, $0.49, $0.79, $0.90, $0.95, $1.00, $1.09, $1.19, $1.49) and an algorithm that picks the combination closest to your leftover. The plan-review screen always shows the exact overage and confirmation count before any purchase is made.\n\nNo Apple ID login, no ads, no tracking, no subscription.',
+    },
+    {
+      h: 'What about gifting the balance to a family member?',
+      p: 'Family Sharing partially supports this. If you are the organizer of a Family Sharing group, your Apple Account balance is consumed first when any family member makes a purchase - so a parent\'s leftover balance can effectively pay for a child\'s apps, songs, or in-app purchases. It only flows in one direction (organizer to member), and only as purchases occur, not as a transfer of balance.',
+    },
+  ],
+  faqLead: 'Related questions',
+  faqItems: [
+    {
+      q: 'When exactly did Apple remove gift-card purchase with balance?',
+      a: 'Around 2019. Apple did not publish a press release; the change was confirmed via Apple Support documentation updates and community reports at the time.',
+    },
+    {
+      q: 'Can a third-party developer build an app that does this on iOS?',
+      a: 'No. Apple processes every IAP and gift-card transaction. There is no API a third-party developer could use to "convert" balance to another payment instrument.',
+    },
+    {
+      q: 'Does Zero Balance let me convert my credit?',
+      a: 'No - that is impossible by any tool. Zero Balance only helps you spend your balance down to (or close to) $0 by suggesting an optimal combination of small in-app purchases.',
+    },
+  ],
+};
+---
+
+<PageLayout
+  title={`${copy.title} - Zero Balance`}
+  description={copy.description}
+  {lang}
+  {path}
+  schema={faqSchema(copy.faqItems)}
+  ogType="article"
+  keywords={[...t.keywords.leftoverGiftCard, ...t.keywords.site]}
+>
+  <PageHeader eyebrow={copy.eyebrow} title={copy.title} description={copy.description} />
+
+  <Section>
+    <Container>
+      <Reveal class="mx-auto max-w-3xl">
+        <div class="rounded-2xl border border-[var(--border)] bg-[var(--brand-soft)]/40 p-6 md:p-8">
+          <p class="text-sm font-semibold tracking-wide text-[var(--brand-strong)] uppercase">
+            {copy.tldrTitle}
+          </p>
+          <p class="mt-3 text-lg leading-relaxed text-[var(--fg)]">{copy.tldr}</p>
+          <div class="mt-6 flex">
+            <AppStoreButton label={t.cta.appStore} ct="outreach-quora-giftcards" />
+          </div>
+        </div>
+      </Reveal>
+
+      <div class="mx-auto mt-10 max-w-3xl prose-zb">
+        {
+          copy.sections.map((s, i) => (
+            <Reveal delay={i * 40}>
+              <h2>{s.h}</h2>
+              {s.p.split('\n\n').map((para) => (
+                <p>{para}</p>
+              ))}
+              {i === 3 && (
+                <div class="not-prose my-6 flex">
+                  <AppStoreButton label={t.cta.appStore} ct="outreach-quora-giftcards-mid" />
+                </div>
+              )}
+            </Reveal>
+          ))
+        }
+
+        <Reveal>
+          <h2>{copy.faqLead}</h2>
+        </Reveal>
+        <Reveal>
+          <FAQ items={copy.faqItems} />
+        </Reveal>
+      </div>
+    </Container>
+  </Section>
+
+  <FinalCta {lang} />
+</PageLayout>

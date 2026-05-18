@@ -1,0 +1,126 @@
+---
+import PageLayout from '../../layouts/PageLayout.astro';
+import PageHeader from '../../components/PageHeader.astro';
+import Container from '../../components/Container.astro';
+import Section from '../../components/Section.astro';
+import FAQ from '../../components/FAQ.astro';
+import Reveal from '../../components/Reveal.astro';
+import FinalCta from '../../components/FinalCta.astro';
+import AppStoreButton from '../../components/AppStoreButton.astro';
+import { getDict, LOCALES, type Locale } from '../../i18n';
+import { faqSchema } from '../../lib/schema';
+
+export function getStaticPaths() {
+  return LOCALES.map((lang) => ({ params: { lang } }));
+}
+
+const lang = Astro.params.lang as Locale;
+const t = getDict(lang);
+const path = `/${lang}/use-apple-account-balance-for-physical-products/`;
+
+const copy = {
+  title: 'Can you use Apple Account balance to buy Apple hardware?',
+  description:
+    'Yes - in supported regions, via the Apple Store iPhone app, your Apple Account balance can pay for AirPods, accessories, and even Macs. Here is where it works, where it does not, and the catch about partial payments.',
+  eyebrow: 'Hardware payment guide',
+  tldrTitle: 'TL;DR',
+  tldr:
+    'In the US, UK, Canada, Australia, and several EU countries, Apple Account balance can pay for physical Apple hardware through the Apple Store iPhone app. AirPods, accessories, AppleCare+, even iPhones and Macs are eligible. The catch: in some regions Apple will not split a hardware payment between balance and card, so the balance must cover the full price. apple.com web checkout typically does not accept balance.',
+  sections: [
+    {
+      h: 'Where this works (2026)',
+      p: 'Confirmed working: United States, United Kingdom, Canada, Australia, Germany, France, Italy, Spain, and several other EU countries. The exact list shifts over time - Apple has been expanding it quietly without major announcements.\n\nNot supported in most of Asia, Latin America, the Middle East, and Africa. India remains digital-only for Apple Account balance.\n\nIf you are unsure whether your country is supported, open the Apple Store iPhone app, add a small accessory to your cart, and go to checkout - if Apple Account balance shows up in the payment options, you are good.',
+    },
+    {
+      h: 'What you can actually buy',
+      p: '- AirPods (every variant)\n- MagSafe chargers, cables, adapters\n- Cases, screen protectors, Apple-branded accessories\n- Magic Keyboard, Magic Mouse, Magic Trackpad\n- Apple TV, HomePod, HomePod mini\n- Apple Pencil\n- iPhone, iPad, Mac (if balance is large enough)\n- AppleCare+ for any new or existing device\n\nThe pattern: anything Apple sells directly through the Apple Store iPhone app is eligible, including most third-party accessories Apple resells through that app.',
+    },
+    {
+      h: 'How to do it',
+      p: '1. Install the Apple Store app on your iPhone (free download, separate from the App Store - icon is a white shopping bag on grey).\n2. Sign in with the same Apple ID that holds your balance.\n3. Add items to your cart and go to checkout.\n4. At the payment-method step, "Apple Account Balance" appears as an option alongside Apple Pay and saved cards.\n5. Select it. Apple shows the balance and how much remains after the purchase.\n6. Confirm. The balance is debited immediately upon order confirmation.\n\nThe balance also covers shipping and tax in most regions, as long as the total fits inside what you have.',
+    },
+    {
+      h: 'The "full price" catch',
+      p: 'In some regions and for some product categories, Apple will refuse to split a hardware payment between Apple Account balance and a credit card. The balance has to cover the entire amount (price + tax + shipping).\n\nWhich means $80 of balance against $99 AirPods may be blocked outright in those regions - you cannot pay $80 from balance and $19 from a card. You either need to top up the balance first (Settings > [your name] > Payment & Shipping > Add Funds), or buy something cheaper.\n\nThis behavior varies by region. The US generally allows split payment for some items; some EU storefronts do not. There is no official Apple support document that maps this exhaustively - the only reliable way to find out is to add the item to your cart and see what payment options appear at checkout.',
+    },
+    {
+      h: 'When the balance is too small for hardware',
+      p: 'Very common case: you have $0.30, £0.50, or €0.74 left over from a gift card. Apple does not sell any product at those prices. The balance is "stranded" for hardware purposes.\n\nThe only path to clear it is digital - small in-app purchases. Apple\'s minimum IAP is $0.29, so residuals smaller than $0.29 cannot be cleared exactly without a card on file. For larger leftovers you can usually land within a cent or two.\n\nZero Balance is a free iOS app I built for this stranded-balance case. It ships with 10 small in-app purchases ($0.29 to $1.49) and an algorithm that picks the combination closest to your leftover. The plan-review screen shows the exact overage and confirmation count before any purchase is made. No Apple ID login, no ads, no tracking, no subscription.',
+    },
+    {
+      h: 'What does not work',
+      p: '- apple.com web checkout - typically does not accept Apple Account balance, only cards and Apple Pay. There are exceptions, but they are rare.\n- Apple retail stores in person - cannot apply your balance to a Genius Bar or in-store hardware purchase.\n- Third-party Apple resellers (Best Buy, Amazon, carrier stores) - none accept Apple Account balance. Card-only.',
+    },
+  ],
+  faqLead: 'Related questions',
+  faqItems: [
+    {
+      q: 'Can I use my Apple Account balance to buy an iPhone outright?',
+      a: 'Yes, in supported regions through the Apple Store iPhone app, if your balance covers the full price including tax. Most people use it for accessories rather than a full iPhone purchase because the balances do not match up.',
+    },
+    {
+      q: 'Will Apple Pay show my Apple Account balance as a payment option for hardware?',
+      a: 'No. Apple Pay and Apple Account balance are separate. At hardware checkout, "Apple Account Balance" is listed as its own payment option, distinct from Apple Pay.',
+    },
+    {
+      q: 'My region is not supported. Any workaround?',
+      a: 'Not officially. If your balance is small and you want to use it up, the digital path (subscriptions, paid apps, in-app purchases) is the realistic option in those regions.',
+    },
+  ],
+};
+---
+
+<PageLayout
+  title={`${copy.title} - Zero Balance`}
+  description={copy.description}
+  {lang}
+  {path}
+  schema={faqSchema(copy.faqItems)}
+  ogType="article"
+  keywords={[...t.keywords.spend, ...t.keywords.site]}
+>
+  <PageHeader eyebrow={copy.eyebrow} title={copy.title} description={copy.description} />
+
+  <Section>
+    <Container>
+      <Reveal class="mx-auto max-w-3xl">
+        <div class="rounded-2xl border border-[var(--border)] bg-[var(--brand-soft)]/40 p-6 md:p-8">
+          <p class="text-sm font-semibold tracking-wide text-[var(--brand-strong)] uppercase">
+            {copy.tldrTitle}
+          </p>
+          <p class="mt-3 text-lg leading-relaxed text-[var(--fg)]">{copy.tldr}</p>
+          <div class="mt-6 flex">
+            <AppStoreButton label={t.cta.appStore} ct="outreach-quora-hardware" />
+          </div>
+        </div>
+      </Reveal>
+
+      <div class="mx-auto mt-10 max-w-3xl prose-zb">
+        {
+          copy.sections.map((s, i) => (
+            <Reveal delay={i * 40}>
+              <h2>{s.h}</h2>
+              {s.p.split('\n\n').map((para) => (
+                <p>{para}</p>
+              ))}
+              {i === 4 && (
+                <div class="not-prose my-6 flex">
+                  <AppStoreButton label={t.cta.appStore} ct="outreach-quora-hardware-mid" />
+                </div>
+              )}
+            </Reveal>
+          ))
+        }
+
+        <Reveal>
+          <h2>{copy.faqLead}</h2>
+        </Reveal>
+        <Reveal>
+          <FAQ items={copy.faqItems} />
+        </Reveal>
+      </div>
+    </Container>
+  </Section>
+
+  <FinalCta {lang} />
+</PageLayout>

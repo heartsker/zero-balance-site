@@ -270,7 +270,6 @@ const en = {
       legal: 'Legal',
     },
     rights: 'All rights reserved.',
-    builtBy: 'Built by Daniel Pustotin',
   },
   langSwitcher: {
     label: 'Language',

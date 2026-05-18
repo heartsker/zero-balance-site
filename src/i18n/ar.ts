@@ -271,7 +271,6 @@ const ar: Dict = {
       legal: 'القانونية',
     },
     rights: 'جميع الحقوق محفوظة.',
-    builtBy: 'صنعه Daniel Pustotin',
   },
   langSwitcher: {
     label: 'اللغة',

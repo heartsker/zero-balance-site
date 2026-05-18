@@ -1,0 +1,126 @@
+---
+import PageLayout from '../../layouts/PageLayout.astro';
+import PageHeader from '../../components/PageHeader.astro';
+import Container from '../../components/Container.astro';
+import Section from '../../components/Section.astro';
+import FAQ from '../../components/FAQ.astro';
+import Reveal from '../../components/Reveal.astro';
+import FinalCta from '../../components/FinalCta.astro';
+import AppStoreButton from '../../components/AppStoreButton.astro';
+import { getDict, LOCALES, type Locale } from '../../i18n';
+import { faqSchema } from '../../lib/schema';
+
+export function getStaticPaths() {
+  return LOCALES.map((lang) => ({ params: { lang } }));
+}
+
+const lang = Astro.params.lang as Locale;
+const t = getDict(lang);
+const path = `/${lang}/leftover-itunes-gift-card-1-dollar/`;
+
+const copy = {
+  title: '$1.01 left on an iTunes gift card - what to actually do',
+  description:
+    'A redeemed iTunes gift card cannot be cancelled. Here is how to spend the leftover $1.01 (or any sub-$2 residual) and what works with and without a card on file.',
+  eyebrow: 'Worked example',
+  tldrTitle: 'TL;DR',
+  tldr:
+    'Once a gift card is redeemed, it is gone - the value sits as Apple Account balance and is non-refundable per Apple\'s terms. For $1.01: the closest match using only balance is Hearth Orb at $1.00 (1 cent stuck, unreachable - smaller than Apple\'s $0.29 IAP floor). Exact $0.00 requires a card on file and an overshoot purchase like a $1.99 song.',
+  sections: [
+    {
+      h: 'You cannot cancel a redeemed iTunes gift card',
+      p: 'Once the gift-card code has been entered on your Apple Account, the card itself is destroyed and the value merges into your balance. Apple\'s Media Services Terms make redeemed gift cards non-refundable, non-transferable store credit. Apple Support cannot reverse the redemption.\n\nSo the working question is not "how do I cancel it" but "how do I spend exactly $1.01."',
+    },
+    {
+      h: 'The price-floor constraint',
+      p: 'Apple\'s minimum in-app purchase price is $0.29 (per Apple\'s December 2022 announcement on the 900-price-point expansion). Sub-tier prices are $0.29, $0.39, $0.49, then $0.50 increments going up. There is no $0.01, $0.05, $0.09, or $0.19 IAP tier - those tiers don\'t exist on the App Store.\n\nThat floor is what makes some leftover amounts unreachable in exact terms.',
+    },
+    {
+      h: 'Without a card on file - get close, accept residual',
+      p: 'Closest combinations against $1.01:\n\n- $1.00 (Hearth Orb IAP or equivalent paid item) leaves $0.01 stuck.\n- $0.49 + $0.49 = $0.98 leaves $0.03 stuck.\n- $0.29 + $0.29 + $0.29 = $0.87 leaves $0.14 stuck.\n- $0.29 + $0.39 + $0.29 = $0.97 leaves $0.04 stuck.\n\nIn every case there is some residual smaller than $0.29 that cannot be cleared because no IAP costs less than $0.29. If the residual sitting on your account does not bother you, this is the simplest path.',
+    },
+    {
+      h: 'With a card on file - the clean path to $0.00',
+      p: 'Buy any $1.99 song or paid app. Apple debits your $1.01 balance first, then charges the remaining $0.98 to your card. Balance hits exactly $0.00 to the cent.\n\nThis is the only way to land exactly. Use it if you do not mind the small card charge - for example, if you are about to change your Apple ID country and need a zero balance.',
+    },
+    {
+      h: 'How Zero Balance handles $1.01',
+      p: 'Zero Balance is a free iOS app that automates the integer-partition problem. The app ships with 10 small in-app purchases: Cosmic Cocoa $0.29, Nebula Nibbles $0.39, Star Sprinkles $0.49, Galaxy Feast $0.79, Sunbeam Patch $0.90, Toast Pebble $0.95, Hearth Orb $1.00, Giggle Bubble $1.09, Meteor Pop $1.19, Cozy Pin $1.49.\n\nFor $1.01 the algorithm would suggest Hearth Orb at $1.00, leaving a $0.01 residual that is plainly displayed on the plan-review screen alongside the total cost and the number of Apple confirmation prompts. You see the plan before any purchase is confirmed. If you do not want a residual, you can adjust the plan or skip it entirely.\n\nNo Apple ID login, no ads, no tracking, no subscription. The app exists to clear a balance once, not to extract recurring fees.',
+    },
+    {
+      h: 'What does not work for $1.01',
+      p: 'Things that fail:\n\n- Apple Support refunding $1.01 to a bank account: not under standard terms.\n- Moving $1.01 to Apple Pay: separate instruments, no transfer mechanism.\n- Buying an Apple Gift Card with $1.01: disabled around 2019 to stop fraud laundering.\n- Third-party iTunes-to-cash exchange sites: scams or punitive fees, often both. Avoid.\n- Family Sharing as a non-organizer: only the organizer\'s balance is consumed by family purchases.',
+    },
+  ],
+  faqLead: 'Related questions',
+  faqItems: [
+    {
+      q: 'My balance is exactly $1.00 - what is the move?',
+      a: 'Best case: buy one Hearth Orb ($1.00) and land on $0.00 exactly. If you do not have Zero Balance installed, any $1.00 IAP in any app works the same way.',
+    },
+    {
+      q: 'Can I just leave $1.01 sitting forever?',
+      a: 'Yes - Apple Account balance does not expire. The only time leaving it matters is if you want to change Apple ID country, which Apple requires a $0.00 balance for.',
+    },
+    {
+      q: 'Will Zero Balance ever get me to exactly $0 with $1.01?',
+      a: 'Only via the overshoot path with a card on file. With balance-only, the closest landing is $0.01 stuck. The plan-review screen shows the exact residual before you commit.',
+    },
+  ],
+};
+---
+
+<PageLayout
+  title={`${copy.title} - Zero Balance`}
+  description={copy.description}
+  {lang}
+  {path}
+  schema={faqSchema(copy.faqItems)}
+  ogType="article"
+  keywords={[...t.keywords.leftoverGiftCard, ...t.keywords.remove, ...t.keywords.site]}
+>
+  <PageHeader eyebrow={copy.eyebrow} title={copy.title} description={copy.description} />
+
+  <Section>
+    <Container>
+      <Reveal class="mx-auto max-w-3xl">
+        <div class="rounded-2xl border border-[var(--border)] bg-[var(--brand-soft)]/40 p-6 md:p-8">
+          <p class="text-sm font-semibold tracking-wide text-[var(--brand-strong)] uppercase">
+            {copy.tldrTitle}
+          </p>
+          <p class="mt-3 text-lg leading-relaxed text-[var(--fg)]">{copy.tldr}</p>
+          <div class="mt-6 flex">
+            <AppStoreButton label={t.cta.appStore} ct="outreach-quora-1dollar" />
+          </div>
+        </div>
+      </Reveal>
+
+      <div class="mx-auto mt-10 max-w-3xl prose-zb">
+        {
+          copy.sections.map((s, i) => (
+            <Reveal delay={i * 40}>
+              <h2>{s.h}</h2>
+              {s.p.split('\n\n').map((para) => (
+                <p>{para}</p>
+              ))}
+              {i === 4 && (
+                <div class="not-prose my-6 flex">
+                  <AppStoreButton label={t.cta.appStore} ct="outreach-quora-1dollar-mid" />
+                </div>
+              )}
+            </Reveal>
+          ))
+        }
+
+        <Reveal>
+          <h2>{copy.faqLead}</h2>
+        </Reveal>
+        <Reveal>
+          <FAQ items={copy.faqItems} />
+        </Reveal>
+      </div>
+    </Container>
+  </Section>
+
+  <FinalCta {lang} />
+</PageLayout>

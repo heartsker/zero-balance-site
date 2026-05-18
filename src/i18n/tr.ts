@@ -271,7 +271,6 @@ const tr: Dict = {
       legal: 'Yasal',
     },
     rights: 'Tüm hakları saklıdır.',
-    builtBy: 'Daniel Pustotin tarafından yapıldı',
   },
   langSwitcher: {
     label: 'Dil',

@@ -271,7 +271,6 @@ const ja: Dict = {
       legal: '法的事項',
     },
     rights: 'All rights reserved.',
-    builtBy: 'Daniel Pustotin が制作',
   },
   langSwitcher: {
     label: '言語',

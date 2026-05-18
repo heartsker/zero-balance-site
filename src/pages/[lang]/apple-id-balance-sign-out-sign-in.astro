@@ -1,0 +1,122 @@
+---
+import PageLayout from '../../layouts/PageLayout.astro';
+import PageHeader from '../../components/PageHeader.astro';
+import Container from '../../components/Container.astro';
+import Section from '../../components/Section.astro';
+import FAQ from '../../components/FAQ.astro';
+import Reveal from '../../components/Reveal.astro';
+import FinalCta from '../../components/FinalCta.astro';
+import AppStoreButton from '../../components/AppStoreButton.astro';
+import { getDict, LOCALES, type Locale } from '../../i18n';
+import { faqSchema } from '../../lib/schema';
+
+export function getStaticPaths() {
+  return LOCALES.map((lang) => ({ params: { lang } }));
+}
+
+const lang = Astro.params.lang as Locale;
+const t = getDict(lang);
+const path = `/${lang}/apple-id-balance-sign-out-sign-in/`;
+
+const copy = {
+  title: 'Does signing out of Apple ID erase your balance?',
+  description:
+    'No. Apple Account balance is stored server-side against your account, not on the device. Signing out, restoring, or switching iPhones does not touch it. Here are the only cases where balance actually goes away.',
+  eyebrow: 'Reassurance',
+  tldrTitle: 'TL;DR',
+  tldr:
+    'Your Apple Account balance is server-side state attached to your Apple ID, not local state on the device. Signing out, restoring from backup, or switching to a new iPhone does not change the balance. The only times balance can actually disappear: changing Apple ID country (any residue is forfeited), requesting account deletion, an Apple-detected fraud/T&C violation freeze, or Family Sharing organizer purchases.',
+  sections: [
+    {
+      h: 'Where balance actually lives',
+      p: 'Apple Account balance is a server-side ledger entry attached to your Apple ID. Apple stores it in their accounts infrastructure, not in iOS or any iCloud-synced container on the device.\n\nThat means signing out of your Apple ID on a device, factory-resetting the iPhone, restoring from backup, or even buying a brand-new iPhone and signing in fresh - none of those touch the balance. Sign back into the same Apple ID and the same balance is sitting there.',
+    },
+    {
+      h: 'What signing out does and does not change',
+      p: 'Signing out of Apple ID on a device:\n\n- Removes the account credentials from this device\n- Wipes locally cached purchases (apps, music) from this device (the right to redownload remains tied to your account)\n- Disables iCloud sync from this device until you sign back in\n- Removes payment methods stored for Apple Pay on this device (the bank-card kind)\n\nWhat signing out does NOT change:\n\n- Your Apple Account balance amount\n- Active subscriptions\n- Purchase history\n- The account itself\n- Anything stored at Apple\'s end, including iCloud data, iCloud Drive files, Photos, etc.',
+    },
+    {
+      h: 'When balance can actually disappear',
+      p: 'Four scenarios:\n\n1) You change your Apple ID country or region. Apple requires balance to be at $0.00 before allowing a region switch. Any non-zero residue is forfeited - you cannot take it across borders even if Apple Support tries to help. This is the most common way people accidentally lose balance.\n\n2) You request account deletion via privacy.apple.com. Apple permanently closes the account and any remaining balance is gone.\n\n3) Apple detects fraud or a Terms violation. Account freeze can include access to the balance, often pending resolution.\n\n4) Family Sharing organizer balance is consumed by family member purchases. This is normal behavior, not a bug. Only the organizer\'s balance is affected.',
+    },
+    {
+      h: 'If you actually want the balance to be zero',
+      p: 'Common reason: you are about to change Apple ID country and Apple requires $0.00.\n\nApple will not refund the balance to cash, will not move it to Apple Pay, will not let you buy gift cards with it. The only working path is to spend it.\n\nApple\'s minimum in-app purchase price is $0.29, so residuals smaller than $0.29 cannot be cleared exactly without a card on file. For larger leftovers you can usually land within a cent or two by combining small in-app purchases.\n\nZero Balance is a free iOS app I built for that purpose. It has its own 10 small in-app purchases ($0.29 to $1.49) and an algorithm that picks the combination closest to your leftover. The plan-review screen shows the exact overage and the number of Apple confirmation prompts before any purchase is made. No Apple ID login, no ads, no tracking, no subscription.',
+    },
+    {
+      h: 'A note on subscriptions',
+      p: 'Signing out does not cancel any active subscriptions. They continue to renew using whatever payment method Apple has on file (balance first, then card). To cancel a subscription, go to Settings > [your name] > Subscriptions, or use a Mac in App Store > Account.\n\nIf you are signing out because you plan to delete the account, cancel subscriptions first to avoid being charged for one more cycle.',
+    },
+  ],
+  faqLead: 'Related questions',
+  faqItems: [
+    {
+      q: 'I signed out and now my purchased apps look gone. Did I lose them?',
+      a: 'No. The local app copies are removed, but the purchase rights stay attached to your Apple ID. Sign back in and you can redownload everything from your purchase history in the App Store.',
+    },
+    {
+      q: 'What if I sign in on a friend\'s iPhone with my Apple ID - is my balance at risk?',
+      a: 'Signing in does not transfer or share the balance. The balance remains attached to your Apple ID. However, any purchase made while signed in on that device debits your balance, so be careful what you authorize.',
+    },
+    {
+      q: 'Does Zero Balance store anything if I sign out of Apple ID?',
+      a: 'Zero Balance stores its purchased inventory in your private iCloud (under your own Apple ID). Signing out removes the local view but the data remains in your iCloud account, available when you sign back in.',
+    },
+  ],
+};
+---
+
+<PageLayout
+  title={`${copy.title} - Zero Balance`}
+  description={copy.description}
+  {lang}
+  {path}
+  schema={faqSchema(copy.faqItems)}
+  ogType="article"
+  keywords={[...t.keywords.wontGoToZero, ...t.keywords.site]}
+>
+  <PageHeader eyebrow={copy.eyebrow} title={copy.title} description={copy.description} />
+
+  <Section>
+    <Container>
+      <Reveal class="mx-auto max-w-3xl">
+        <div class="rounded-2xl border border-[var(--border)] bg-[var(--brand-soft)]/40 p-6 md:p-8">
+          <p class="text-sm font-semibold tracking-wide text-[var(--brand-strong)] uppercase">
+            {copy.tldrTitle}
+          </p>
+          <p class="mt-3 text-lg leading-relaxed text-[var(--fg)]">{copy.tldr}</p>
+          <div class="mt-6 flex">
+            <AppStoreButton label={t.cta.appStore} ct="outreach-quora-signout" />
+          </div>
+        </div>
+      </Reveal>
+
+      <div class="mx-auto mt-10 max-w-3xl prose-zb">
+        {
+          copy.sections.map((s, i) => (
+            <Reveal delay={i * 40}>
+              <h2>{s.h}</h2>
+              {s.p.split('\n\n').map((para) => (
+                <p>{para}</p>
+              ))}
+              {i === 3 && (
+                <div class="not-prose my-6 flex">
+                  <AppStoreButton label={t.cta.appStore} ct="outreach-quora-signout-mid" />
+                </div>
+              )}
+            </Reveal>
+          ))
+        }
+
+        <Reveal>
+          <h2>{copy.faqLead}</h2>
+        </Reveal>
+        <Reveal>
+          <FAQ items={copy.faqItems} />
+        </Reveal>
+      </div>
+    </Container>
+  </Section>
+
+  <FinalCta {lang} />
+</PageLayout>

@@ -262,7 +262,6 @@ const ru: Dict = {
       legal: 'Юридическое',
     },
     rights: 'Все права защищены.',
-    builtBy: 'Сделал Даниэль Пустотин',
   },
   langSwitcher: {
     label: 'Язык',

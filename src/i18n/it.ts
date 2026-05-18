@@ -271,7 +271,6 @@ const it: Dict = {
       legal: 'Legale',
     },
     rights: 'Tutti i diritti riservati.',
-    builtBy: 'Realizzato da Daniel Pustotin',
   },
   langSwitcher: {
     label: 'Lingua',
