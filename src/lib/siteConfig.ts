@@ -84,6 +84,10 @@ export const LOCALE_INTL_TAG: Record<Locale, string> = {
   tr: 'tr-TR',
 };
 
+// Used as datePublished for static QAPage / FAQ structured data.
+// Bump when an entry is meaningfully rewritten.
+export const FAQ_PUBLISHED_DATE = '2026-05-14';
+
 export const APP_NAME = 'Zero Balance';
 export const APP_TAGLINE_EN = 'Spend Credit';
 export const APP_TAGLINE_RU = 'Потратить баланс';

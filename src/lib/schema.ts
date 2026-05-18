@@ -6,6 +6,7 @@ import {
   APP_RATING,
   APP_RATING_COUNT,
   LOCALES,
+  FAQ_PUBLISHED_DATE,
   type Locale,
 } from './siteConfig';
 
@@ -171,7 +172,9 @@ export function qaPageSchema(opts: {
   answer: string;
   url: string;
   lang: Locale;
+  datePublished?: string;
 }) {
+  const datePublished = opts.datePublished ?? FAQ_PUBLISHED_DATE;
   return {
     '@context': 'https://schema.org',
     '@type': 'QAPage',
@@ -179,15 +182,19 @@ export function qaPageSchema(opts: {
     mainEntity: {
       '@type': 'Question',
       name: opts.question,
+      text: opts.question,
       url: opts.url,
       answerCount: 1,
+      datePublished,
+      author: PUBLISHER,
       acceptedAnswer: {
         '@type': 'Answer',
         text: opts.answer,
         url: opts.url,
+        datePublished,
+        upvoteCount: 0,
         author: PUBLISHER,
       },
-      author: PUBLISHER,
     },
   };
 }
