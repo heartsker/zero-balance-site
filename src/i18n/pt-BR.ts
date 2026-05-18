@@ -135,6 +135,18 @@ const ptBR: Dict = {
       'cartão-presente Apple saldo preso',
       'saldo restante cartão-presente iTunes',
     ],
+    alternatives: [
+      'zerar saldo conta Apple',
+      'alternativas saldo Apple ID',
+      'como limpar saldo Apple ID',
+      'opções saldo conta Apple',
+      'Apple Support limpar saldo',
+      'gastar saldo Apple manualmente',
+      'Family Sharing saldo Apple mito',
+      'alternativa app Zero Balance',
+      'formas zerar Apple ID',
+      'comparar opções saldo Apple',
+    ],
   },
   nav: {
     home: 'Início',

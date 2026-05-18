@@ -135,6 +135,18 @@ const de: Dict = {
       'Apple Geschenkkarte hängengebliebenes Guthaben',
       'Restguthaben iTunes Geschenkkarte',
     ],
+    alternatives: [
+      'Apple Account Guthaben loeschen',
+      'Apple ID Guthaben Alternativen',
+      'wie Apple ID Guthaben auf Null',
+      'Apple Account Guthaben Optionen',
+      'Apple ID Guthaben entfernen',
+      'Apple Support Guthaben loeschen',
+      'Apple Guthaben manuell ausgeben',
+      'Familienfreigabe Apple Guthaben Mythos',
+      'Zero Balance App Alternative',
+      'Wege Apple ID Guthaben Null',
+    ],
   },
   nav: {
     home: 'Start',

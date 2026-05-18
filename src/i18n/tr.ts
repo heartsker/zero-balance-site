@@ -135,6 +135,18 @@ const tr: Dict = {
       'Apple hediye kartı takılı bakiye',
       'iTunes hediye kartı kalan',
     ],
+    alternatives: [
+      'Apple Hesap bakiyesini sıfırla',
+      'Apple ID bakiyesi alternatifleri',
+      'Apple ID bakiyesi nasıl temizlenir',
+      'Apple Account bakiye seçenekleri',
+      'Apple Support bakiye temizleme',
+      'Apple bakiyesini elle harcama',
+      'Aile Paylaşımı Apple bakiye efsanesi',
+      'Zero Balance uygulama alternatifi',
+      'Apple ID sıfırlama yolları',
+      'Apple bakiye seçenekleri karşılaştırma',
+    ],
   },
   nav: {
     home: 'Ana sayfa',

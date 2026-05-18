@@ -135,6 +135,18 @@ const it: Dict = {
       'carta regalo Apple saldo bloccato',
       'saldo residuo carta regalo iTunes',
     ],
+    alternatives: [
+      'azzerare saldo account Apple',
+      'alternative saldo Apple ID',
+      'come cancellare saldo Apple ID',
+      'opzioni saldo account Apple',
+      'Apple Support cancellare saldo',
+      'spendere saldo Apple manualmente',
+      'Family Sharing saldo Apple mito',
+      'alternativa app Zero Balance',
+      'modi azzerare Apple ID',
+      'confronto opzioni saldo Apple',
+    ],
   },
   nav: {
     home: 'Home',

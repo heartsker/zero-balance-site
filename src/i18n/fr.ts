@@ -135,6 +135,18 @@ const fr: Dict = {
       'carte cadeau Apple solde bloqué',
       'solde restant carte cadeau iTunes',
     ],
+    alternatives: [
+      'vider solde compte Apple',
+      'alternatives solde Apple ID',
+      'comment effacer solde Apple ID',
+      'options solde compte Apple',
+      'Apple Support effacer solde',
+      'dépenser solde Apple manuellement',
+      'Family Sharing solde Apple mythe',
+      'alternative app Zero Balance',
+      'façons mettre Apple ID à zéro',
+      'comparer options solde Apple',
+    ],
   },
   nav: {
     home: 'Accueil',

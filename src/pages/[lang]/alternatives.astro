@@ -1,0 +1,176 @@
+---
+import PageLayout from '../../layouts/PageLayout.astro';
+import PageHeader from '../../components/PageHeader.astro';
+import Container from '../../components/Container.astro';
+import Section from '../../components/Section.astro';
+import FAQ from '../../components/FAQ.astro';
+import Reveal from '../../components/Reveal.astro';
+import FinalCta from '../../components/FinalCta.astro';
+import { getDict, LOCALES, type Locale } from '../../i18n';
+import { faqSchema } from '../../lib/schema';
+
+export function getStaticPaths() {
+  return LOCALES.map((lang) => ({ params: { lang } }));
+}
+
+const lang = Astro.params.lang as Locale;
+const t = getDict(lang);
+const path = `/${lang}/alternatives/`;
+
+const copy = lang === 'ru'
+  ? {
+      title: '4 способа обнулить остаток Apple Account - сравнение',
+      description:
+        'Звонок в поддержку Apple, ручная трата, Family Sharing или приложение Zero Balance - честное сравнение всех способов очистить остаток баланса Apple Account, с плюсами, минусами и шансами на успех.',
+      eyebrow: 'Сравнение',
+      tldrTitle: 'Коротко',
+      tldr:
+        'Есть четыре реальных способа обнулить баланс Apple Account: попросить поддержку Apple, потратить вручную с доплатой картой, или использовать Zero Balance. Family Sharing для этого не работает - это распространённый миф. Ниже - какой способ когда выбрать.',
+      sections: [
+        {
+          h: 'Способ 1: попросить поддержку Apple обнулить',
+          p: 'Поддержка Apple может вручную списать небольшой остаток. Деньги остаются у Apple, у вас - чистый ноль.\n\nКак сделать: открыть getsupport.apple.com, найти "Apple Account balance", выбрать "Clear Apple ID balance", запросить чат или звонок. Сказать агенту, что нужен ноль для смены страны / закрытия аккаунта.\n\nЛучше всего работает для сумм меньше $1 при смене региона. Время: 15-45 минут.',
+        },
+        {
+          h: 'Способ 2: потратить вручную с доплатой картой',
+          p: 'Если к аккаунту привязана карта, купите что-то дороже остатка. Apple сначала спишет баланс, остаток - с карты.\n\nКогда работает: когда вы реально хотите купить эту вещь. Иначе вы платите реальные деньги, чтобы избавиться от виртуальных - выглядит странно.\n\nНе работает, если карты больше нет в нужной стране.',
+        },
+        {
+          h: 'Способ 3: Family Sharing (НЕ работает)',
+          p: 'Многие форумы советуют поделиться балансом через Family Sharing. Это миф. Family Sharing шарит купленные приложения, Apple Music, iCloud Storage и подписки, но не баланс. У каждого участника семьи свой отдельный баланс.\n\nЕсли вам сказали так сделать - не тратьте время.',
+        },
+        {
+          h: 'Способ 4: Zero Balance',
+          p: 'Disclosure: я сделал это приложение - включил сюда не как единственный вариант, а как один из четырёх.\n\nZero Balance подбирает комбинацию мелких IAP, которая складывается в ваш остаток. Вы вводите сумму, видите план, подтверждаете покупки через стандартное окно Apple. 60-90 секунд на всё.\n\nРаботает для любых сумм за счёт восьми ценовых тиров - в том числе для остатков меньше самого дешёвого приложения. Без доступа к Apple ID, без рекламы и трекинга.',
+        },
+        {
+          h: 'Какой способ выбрать',
+          p: 'Хотите чтобы баланс просто исчез и готовы созвониться - способ 1. Хотите купить приложение или песню - способ 2. Застряли с копейками и не хотите звонить - способ 4. Форум советует Family Sharing - игнорируйте.',
+        },
+      ],
+      faqLead: 'Связанные вопросы',
+      faqItems: [
+        {
+          q: 'Можно ли вернуть баланс на банковскую карту?',
+          a: 'Нет. Баланс Apple Account невозвратный и не переводится на карту, Apple Pay или другой счёт. Единственные варианты: потратить, попросить Apple списать, или оставить как есть.',
+        },
+        {
+          q: 'Можно ли совместить способы?',
+          a: 'Да. Если Apple отказала в обнулении $0.47, можно использовать способ 2 или 4 и обнулить вручную.',
+        },
+        {
+          q: 'Истекает ли баланс?',
+          a: 'По дате - нет, но он привязан к текущему сторфронту. Если Apple закрывает или объединяет регионы (редко), баланс может быть конвертирован.',
+        },
+        {
+          q: 'Почему смена региона блокируется даже при $0.01?',
+          a: 'Apple требует ровно $0.00 для смены сторфронта. Даже доля цента блокирует.',
+        },
+        {
+          q: 'Потеряю ли я купленное, если использую способ 2 или 4?',
+          a: 'Нет. Купленные приложения, песни и IAP остаются привязанными к Apple ID даже после смены сторфронта.',
+        },
+      ],
+    }
+  : {
+      title: '4 ways to clear leftover Apple Account balance to $0.00 - compared',
+      description:
+        'Apple Support call, manual spending, Family Sharing, or the Zero Balance app - an honest comparison of every way to clear leftover Apple Account credit, with pros, cons, and success rates.',
+      eyebrow: 'Comparison',
+      tldrTitle: 'TL;DR',
+      tldr:
+        'There are four real ways to clear a leftover Apple Account balance: ask Apple Support, spend it down manually with card overshoot, or use Zero Balance. Family Sharing does not work for this - it is a common myth. Below is which to pick when.',
+      sections: [
+        {
+          h: 'Method 1: ask Apple Support to zero it out',
+          p: 'Apple Support can manually clear a small leftover balance. They keep the money; you walk away with $0.00 and an unblocked account.\n\nHow: open getsupport.apple.com, search "Apple Account balance", choose "Clear Apple ID balance", request chat or callback. Tell the agent you have a small leftover and want it cleared so you can change country or close the account.\n\nBest for amounts under $1 with a region-change reason. Time: 15-45 minutes.',
+        },
+        {
+          h: 'Method 2: spend manually with card overshoot',
+          p: 'If you still have a payment method attached, buy something priced higher than your leftover. Apple deducts the balance first and charges the difference to your card.\n\nWhen it works: when you actually want what you are buying. Otherwise you are paying real money to escape virtual money, which feels backwards.\n\nDoes not work if your card no longer belongs to the same country as your current App Store region.',
+        },
+        {
+          h: 'Method 3: Family Sharing (does NOT work)',
+          p: 'Many forum answers say you can share your Apple Account balance through Family Sharing. You cannot. Family Sharing shares purchased apps, Apple Music, iCloud Storage, and subscriptions, but not balance. Each family member has a separate balance.\n\nIf someone told you to try this, skip it.',
+        },
+        {
+          h: 'Method 4: Zero Balance',
+          p: 'Disclosure: I built this app - included here as one of four options, not as the only one.\n\nZero Balance picks the closest combination of small in-app items that adds up to your leftover. You type the balance, see the plan, confirm each purchase through Apple\'s normal sheet. End to end: 60-90 seconds.\n\nWorks for any amount because of eight price tiers - including leftovers smaller than the cheapest app on the store. No access to your Apple ID, no ads, no tracking.',
+        },
+        {
+          h: 'Which one to pick',
+          p: 'You just want it gone and do not mind a phone call: Method 1. You actually want to buy an app or song anyway: Method 2. Stuck with cents and do not want to call: Method 4. A forum told you Family Sharing works: do not.',
+        },
+      ],
+      faqLead: 'Related questions',
+      faqItems: [
+        {
+          q: 'Will any of these methods refund the balance to my bank account?',
+          a: 'No. Apple Account balance is non-refundable and non-transferable to cash, Apple Pay, or any external account. The only options are spend it, have Apple absorb it, or leave it sitting.',
+        },
+        {
+          q: 'Can I combine methods?',
+          a: 'Yes. If Apple Support refuses to zero out $0.47, you can use Method 2 or 4 to spend it down to zero anyway.',
+        },
+        {
+          q: 'Does the balance expire?',
+          a: 'Apple Account balance does not expire by date, but it is tied to your current storefront. If Apple closes or merges regions (rare), the balance may be converted.',
+        },
+        {
+          q: 'Why is changing my Apple ID region blocked even with $0.01 left?',
+          a: 'Apple requires exactly $0.00 to switch storefronts. Even a fraction of a cent can hold up the change.',
+        },
+        {
+          q: 'Do I lose what I buy if I use Method 2 or 4?',
+          a: 'No. Purchased apps, songs, and in-app items stay tied to your Apple ID even after you change storefronts.',
+        },
+      ],
+    };
+---
+
+<PageLayout
+  title={`${copy.title} - Zero Balance`}
+  description={copy.description}
+  {lang}
+  {path}
+  schema={faqSchema(copy.faqItems)}
+  ogType="article"
+  keywords={[...t.keywords.alternatives, ...t.keywords.site]}
+>
+  <PageHeader eyebrow={copy.eyebrow} title={copy.title} description={copy.description} />
+
+  <Section>
+    <Container>
+      <Reveal class="mx-auto max-w-3xl">
+        <div class="rounded-2xl border border-[var(--border)] bg-[var(--brand-soft)]/40 p-6 md:p-8">
+          <p class="text-sm font-semibold tracking-wide text-[var(--brand-strong)] uppercase">
+            {copy.tldrTitle}
+          </p>
+          <p class="mt-3 text-lg leading-relaxed text-[var(--fg)]">{copy.tldr}</p>
+        </div>
+      </Reveal>
+
+      <div class="mx-auto mt-10 max-w-3xl prose-zb">
+        {
+          copy.sections.map((s, i) => (
+            <Reveal delay={i * 40}>
+              <h2>{s.h}</h2>
+              {s.p.split('\n\n').map((para) => (
+                <p>{para}</p>
+              ))}
+            </Reveal>
+          ))
+        }
+
+        <Reveal>
+          <h2>{copy.faqLead}</h2>
+        </Reveal>
+        <Reveal>
+          <FAQ items={copy.faqItems} />
+        </Reveal>
+      </div>
+    </Container>
+  </Section>
+
+  <FinalCta {lang} />
+</PageLayout>

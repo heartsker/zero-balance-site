@@ -135,6 +135,18 @@ const hi: Dict = {
       'Apple गिफ़्ट कार्ड बैलेंस अटका',
       'बचा iTunes गिफ़्ट कार्ड',
     ],
+    alternatives: [
+      'Apple Account बैलेंस साफ़ करें',
+      'Apple ID बैलेंस के विकल्प',
+      'Apple ID बैलेंस कैसे शून्य करें',
+      'Apple Account बैलेंस विकल्प',
+      'Apple Support बैलेंस हटाएं',
+      'Apple बैलेंस मैन्युअली खर्च',
+      'Family Sharing Apple बैलेंस मिथक',
+      'Zero Balance app विकल्प',
+      'Apple ID बैलेंस शून्य तरीके',
+      'Apple बैलेंस विकल्पों की तुलना',
+    ],
   },
   nav: {
     home: 'होम',

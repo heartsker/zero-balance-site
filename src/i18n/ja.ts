@@ -135,6 +135,18 @@ const ja: Dict = {
       'Apple ギフトカードの残高が動かない',
       'iTunes ギフトカードの残り',
     ],
+    alternatives: [
+      'Apple Account 残高をクリア',
+      'Apple ID 残高の代替案',
+      'Apple ID 残高をゼロにする方法',
+      'Apple Account 残高オプション',
+      'Apple Support 残高クリア',
+      'Apple 残高 手動で使い切る',
+      'Family Sharing Apple 残高 誤解',
+      'Zero Balance アプリ 代替',
+      'Apple ID 残高ゼロの方法',
+      'Apple 残高オプション 比較',
+    ],
   },
   nav: {
     home: 'ホーム',

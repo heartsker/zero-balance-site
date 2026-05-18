@@ -135,6 +135,18 @@ const ko: Dict = {
       'Apple 기프트카드 잔액 막힘',
       'iTunes 기프트카드 잔액',
     ],
+    alternatives: [
+      'Apple Account 잔액 비우기',
+      'Apple ID 잔액 대안',
+      'Apple ID 잔액 0원 만드는 방법',
+      'Apple Account 잔액 옵션',
+      'Apple Support 잔액 제거',
+      'Apple 잔액 수동으로 사용',
+      'Family Sharing Apple 잔액 오해',
+      'Zero Balance 앱 대안',
+      'Apple ID 잔액 0원 방법',
+      'Apple 잔액 옵션 비교',
+    ],
   },
   nav: {
     home: '홈',

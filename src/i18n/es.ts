@@ -135,6 +135,18 @@ const es: Dict = {
       'tarjeta regalo Apple saldo atascado',
       'saldo restante tarjeta regalo iTunes',
     ],
+    alternatives: [
+      'vaciar saldo cuenta Apple',
+      'alternativas saldo Apple ID',
+      'cómo eliminar saldo Apple ID',
+      'opciones saldo cuenta Apple',
+      'Apple Support eliminar saldo',
+      'gastar saldo Apple manualmente',
+      'Family Sharing saldo Apple mito',
+      'alternativa app Zero Balance',
+      'formas dejar Apple ID en cero',
+      'comparar opciones saldo Apple',
+    ],
   },
   nav: {
     home: 'Inicio',

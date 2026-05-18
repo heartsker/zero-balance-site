@@ -133,6 +133,18 @@ const en = {
       'Apple gift card stuck balance',
       'leftover iTunes gift card',
     ],
+    alternatives: [
+      'clear Apple Account balance',
+      'apple id balance alternatives',
+      'how to clear Apple ID balance',
+      'apple account balance options',
+      'empty Apple ID balance',
+      'Apple Support clear balance',
+      'spend Apple Account balance manually',
+      'Family Sharing Apple balance',
+      'Zero Balance app alternative',
+      'ways to zero Apple ID balance',
+    ],
   },
   nav: {
     home: 'Home',

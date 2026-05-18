@@ -125,6 +125,18 @@ const ru: Dict = {
       'остаток iTunes gift card',
       'использовать Apple gift card до конца',
     ],
+    alternatives: [
+      'очистить баланс Apple Account',
+      'альтернативы баланс Apple ID',
+      'как обнулить баланс Apple ID',
+      'способы очистить баланс Apple',
+      'поддержка Apple обнулить баланс',
+      'потратить баланс Apple вручную',
+      'Family Sharing баланс Apple миф',
+      'приложение Zero Balance альтернатива',
+      'сравнение способов очистки Apple ID',
+      'обнулить Apple Account варианты',
+    ],
   },
   nav: {
     home: 'Главная',

@@ -135,6 +135,18 @@ const ar: Dict = {
       'بطاقة هدايا Apple رصيد عالق',
       'رصيد متبقي بطاقة هدايا iTunes',
     ],
+    alternatives: [
+      'محو رصيد حساب Apple',
+      'بدائل رصيد Apple ID',
+      'كيفية مسح رصيد Apple ID',
+      'خيارات رصيد حساب Apple',
+      'إفراغ رصيد Apple ID',
+      'دعم Apple مسح الرصيد',
+      'إنفاق رصيد Apple يدويا',
+      'Family Sharing رصيد Apple خرافة',
+      'تطبيق Zero Balance بديل',
+      'طرق تصفير رصيد Apple ID',
+    ],
   },
   nav: {
     home: 'الرئيسية',
