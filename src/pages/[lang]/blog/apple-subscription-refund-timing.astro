@@ -1,0 +1,146 @@
+---
+import PageLayout from '../../../layouts/PageLayout.astro';
+import PageHeader from '../../../components/PageHeader.astro';
+import Container from '../../../components/Container.astro';
+import Section from '../../../components/Section.astro';
+import FAQ from '../../../components/FAQ.astro';
+import Reveal from '../../../components/Reveal.astro';
+import FinalCta from '../../../components/FinalCta.astro';
+import AppStoreButton from '../../../components/AppStoreButton.astro';
+import { getDict, LOCALES, type Locale } from '../../../i18n';
+import { articleSchema, faqSchema, breadcrumbSchema } from '../../../lib/schema';
+import { DOMAIN } from '../../../lib/siteConfig';
+
+export function getStaticPaths() {
+  return LOCALES.map((lang) => ({ params: { lang } }));
+}
+
+const lang = Astro.params.lang as Locale;
+const t = getDict(lang);
+const slug = 'apple-subscription-refund-timing';
+const path = `/${lang}/blog/${slug}/`;
+const published = '2026-05-19T00:00:00Z';
+
+const copy = {
+  title: 'How long does an Apple subscription refund take?',
+  description:
+    'Apple\'s refund decision and disbursement timelines vary by case and payment method. Here is what to expect from "approved" to "in your bank account".',
+  eyebrow: 'Refunds',
+  tldr:
+    'If Apple refunds to your Apple Account balance, it shows up immediately. Refunds to a credit card take 3-5 business days, debit cards up to 10, and PayPal up to 7. If 14 days have passed and nothing has landed, contact Apple - the refund was approved but never sent.',
+  sections: [
+    {
+      h: 'Decision timeline: from request to "approved"',
+      p: 'The first email from Apple after you submit a refund at reportaproblem.apple.com is the decision. How long that takes depends on which path Apple\'s system routes the request through.\n\nAuto-approved: the most common case for clean requests. Decision email arrives within minutes of submission. Apple\'s automated system reviews the request against the account history and the purchase metadata; if everything looks clean, it approves without human review.\n\nHuman-reviewed: 24-48 hours typical. Routed when the auto-system is uncertain - mid-range refund amounts, accounts with prior refund history, free-text explanations Apple\'s system wants a human to read. The reviewer reads the case, sometimes the app description, sometimes the user\'s history, then approves or denies.\n\nEscalated (Senior Advisor): 5-7 days typical. Routed when the case has been re-submitted after a denial, or when a Senior Advisor explicitly took ownership during a support call. The advisor has access to broader account context and authority to approve outside normal policy bounds.\n\nNo response after 5 days: rare, but happens. Check the email folder Apple uses (no_reply@email.apple.com); occasionally these land in spam. If genuinely missing, re-submit the same request - the second submission creates a fresh case.',
+    },
+    {
+      h: 'Money-back timeline by payment method',
+      p: 'Once Apple approves and queues the refund, the actual money movement depends on how the original purchase was funded. Apple\'s decision is instant; the bank-side processing is not.\n\n- Apple Account balance: instant. The refund credits to the balance the moment the approval email arrives. If you check Settings -> Apple Account immediately after the email, the amount is already there.\n\n- Credit card: 3-5 business days typical. Apple submits the credit to the card-issuing bank within hours; the bank takes a few days to post it to your statement. Visa and Mastercard tend toward the faster end; Amex sometimes the slower.\n\n- Debit card: 5-10 business days. Slower than credit because debit card refunds re-credit your bank account directly and the issuing bank routes them through a different pipeline.\n\n- PayPal: 3-7 days. PayPal\'s side is fast; the delay is on the funding source linked to PayPal (a connected card or bank account).\n\n- Apple Pay: depends on the underlying funding source. If Apple Pay used a credit card, treat as credit-card timing. If it used a debit card or bank account, treat as debit-card timing.\n\n- Carrier billing (rare): the refund credits to your next mobile-phone bill, not to a card. Timing depends on the carrier\'s billing cycle, often 30+ days.',
+    },
+    {
+      h: 'Why "approved" emails sometimes lie about timing',
+      p: 'The decision email Apple sends often says "refunds usually post within 48 hours". This is true on Apple\'s side (Apple submits the refund to the bank within 48 hours) but misleading on the user side (the bank then takes its own time to post).\n\nThe 48-hour line refers to when Apple has finished its part. After that, the money is in the bank\'s pipeline. Specific banks behave differently:\n\n- Chase, BofA, Wells Fargo (US): post within 3 business days typical.\n- Capital One: faster, often 1-2 business days.\n- UK high-street banks: 3-5 business days.\n- Revolut, Wise, N26: very fast - often within hours of Apple submitting.\n- Smaller community banks and credit unions: slower, sometimes 7+ days.\n\nIf the email says "48 hours" and a week has passed, the bank is the holdup, not Apple. Apple support cannot speed up your bank\'s posting cycle.',
+    },
+    {
+      h: 'What to do if more than 14 days have passed',
+      p: 'After 14 days from the approval email with no money posted: the refund was approved but the disbursement got stuck. Real fix:\n\n1. Check your bank statement carefully. Refunds sometimes post under a different merchant name than the original charge (e.g. "Apple iTunes" credit instead of "Apple.com/Bill"). Searching for the original charge name may not find it.\n\n2. Verify the refund destination. If the original purchase was funded by Apple Account balance, the refund returns to balance, not your card. Check Settings -> Apple Account balance.\n\n3. Contact iTunes Store support: getsupport.apple.com -> Subscriptions and Purchases -> Refund -> Refund did not arrive. Apple can re-submit the disbursement.\n\n4. If Apple confirms the disbursement was sent and the bank denies receiving it, both sides need to talk. Apple provides a reference number; the bank traces it on their side. This is rare but happens.\n\n5. For PayPal refunds, the missing-funds path is to check PayPal account history first (not the underlying funding source). PayPal sometimes holds a refund credit in the PayPal balance for a few days before transferring it to the linked source.',
+    },
+    {
+      h: 'Partial-period subscription refunds',
+      p: 'When you cancel a subscription mid-period and request a refund, the refund amount is usually pro-rated based on unused days. Apple\'s logic:\n\n- Monthly subscription cancelled 10 days into a 30-day cycle: refund covers ~20 days, roughly two-thirds of the monthly price.\n- Yearly subscription cancelled 60 days into a 365-day cycle: refund covers ~305 days, roughly 83% of the annual price.\n- Free trial cancelled after conversion: full refund of the conversion charge if requested within ~14 days.\n\nThe pro-rated portion is calculated on Apple\'s side. You do not negotiate; the email shows the amount. The refund destination follows the same rules as full refunds (balance instant, card 3-5 days, etc.).\n\nA few subscriptions are sold as "no pro-rated refund" - typically apps that explicitly opt out of Apple\'s pro-ration. In those cases the refund is all-or-nothing: full refund of the current period, or no refund at all. Apple\'s decision email indicates which scheme applies.',
+    },
+  ],
+  faqItems: [
+    {
+      q: 'Can I get a refund credited to a different card than the one I paid with?',
+      a: 'No. Apple refunds always go back to the original payment method. If the original card is closed or expired, Apple still tries to credit it; some banks accept the credit and transfer to your new card, others bounce it back to Apple. If bounced, Apple re-issues to Apple Account balance.',
+    },
+    {
+      q: 'My refund went to Apple Account balance but I wanted it on my card. Can I move it?',
+      a: 'Not directly. Apple Account balance cannot be converted to cash or moved to a card. You can only spend it on digital purchases or hardware via the Apple Store iPhone app (in supported regions).',
+    },
+    {
+      q: 'Does Apple charge a processing fee on refunds?',
+      a: 'No. Refunds are full-amount with no fees deducted. The exception is currency conversion - if you paid in one currency and refund processes in another, FX differences apply at the bank\'s rate.',
+    },
+    {
+      q: 'Why did my partial-period refund come out smaller than I expected?',
+      a: 'Apple\'s pro-ration uses days, not weeks or months. Calculate: original_price * (unused_days / total_days). For a $9.99 monthly subscription cancelled on day 10 of 30, the refund is $9.99 * (20/30) = $6.66. Tax may also be pro-rated.',
+    },
+    {
+      q: 'Will Apple refund a free trial I never wanted?',
+      a: 'Free trials themselves are free - there is nothing to refund. If the trial converted to a paid subscription and you want the conversion charge back, request within ~14 days of conversion citing "did not realize subscription would auto-renew". High approval rate when recent.',
+    },
+  ],
+};
+---
+
+<PageLayout
+  title={`${copy.title} - Zero Balance`}
+  description={copy.description}
+  {lang}
+  {path}
+  schema={[
+    articleSchema({ title: copy.title, description: copy.description, slug, lang, datePublished: published }),
+    faqSchema(copy.faqItems),
+    breadcrumbSchema([
+      { name: 'Home', url: `${DOMAIN}/${lang}/` },
+      { name: 'Blog', url: `${DOMAIN}/${lang}/blog/` },
+      { name: copy.title, url: `${DOMAIN}${path}` },
+    ]),
+  ]}
+  ogType="article"
+  publishedTime={published}
+  modifiedTime={published}
+  keywords={[
+    'apple refund how long',
+    'apple subscription refund time',
+    'when will apple refund arrive',
+    'apple refund pending',
+    'apple refund timeline',
+    ...t.keywords.support,
+  ]}
+>
+  <PageHeader eyebrow={copy.eyebrow} title={copy.title} description={copy.description} />
+
+  <Section>
+    <Container>
+      <Reveal class="mx-auto max-w-3xl">
+        <div class="rounded-2xl border border-[var(--border)] bg-[var(--brand-soft)]/40 p-6 md:p-8">
+          <p class="text-sm font-semibold tracking-wide text-[var(--brand-strong)] uppercase">TL;DR</p>
+          <p class="mt-3 text-lg leading-relaxed text-[var(--fg)]">{copy.tldr}</p>
+          <div class="mt-6 flex">
+            <AppStoreButton label={t.cta.appStore} ct="blog-refund-timing-tldr" />
+          </div>
+        </div>
+      </Reveal>
+
+      <div class="mx-auto mt-10 max-w-3xl prose-zb">
+        {
+          copy.sections.map((s, i) => (
+            <Reveal delay={i * 40}>
+              <h2>{s.h}</h2>
+              {s.p.split('\n\n').map((para) => (
+                <p>{para}</p>
+              ))}
+              {i === 1 && (
+                <div class="not-prose my-6 flex">
+                  <AppStoreButton label={t.cta.appStore} ct="blog-refund-timing-mid" />
+                </div>
+              )}
+            </Reveal>
+          ))
+        }
+
+        <Reveal>
+          <h2>Related questions</h2>
+        </Reveal>
+        <Reveal>
+          <FAQ items={copy.faqItems} />
+        </Reveal>
+      </div>
+    </Container>
+  </Section>
+
+  <FinalCta {lang} />
+</PageLayout>

@@ -1,0 +1,146 @@
+---
+import PageLayout from '../../../layouts/PageLayout.astro';
+import PageHeader from '../../../components/PageHeader.astro';
+import Container from '../../../components/Container.astro';
+import Section from '../../../components/Section.astro';
+import FAQ from '../../../components/FAQ.astro';
+import Reveal from '../../../components/Reveal.astro';
+import FinalCta from '../../../components/FinalCta.astro';
+import AppStoreButton from '../../../components/AppStoreButton.astro';
+import { getDict, LOCALES, type Locale } from '../../../i18n';
+import { articleSchema, faqSchema, breadcrumbSchema } from '../../../lib/schema';
+import { DOMAIN } from '../../../lib/siteConfig';
+
+export function getStaticPaths() {
+  return LOCALES.map((lang) => ({ params: { lang } }));
+}
+
+const lang = Astro.params.lang as Locale;
+const t = getDict(lang);
+const slug = 'apple-account-balance-disabled';
+const path = `/${lang}/blog/${slug}/`;
+const published = '2026-05-19T00:00:00Z';
+
+const copy = {
+  title: 'Why your Apple Account balance is disabled and how to fix it',
+  description:
+    'Three real causes for a disabled Apple Account balance, how to tell which one applies, and the only path Apple offers to recover it.',
+  eyebrow: 'Account issues',
+  tldr:
+    'A disabled Apple Account balance almost always means Apple\'s fraud system flagged the source - usually a gift card that was later reported stolen, or a chargeback on the card that funded the credit. Only Apple iTunes Store support can restore it; contact them with the original receipt.',
+  sections: [
+    {
+      h: 'The three common causes',
+      p: 'Apple does not surface a reason in the UI when it disables a balance. The amount still displays in Settings, but every purchase fails and Apple Support chat agents read off a generic "balance is currently unavailable" line. Underneath, the actual cause is almost always one of three:\n\n1. The gift card that funded the balance was later reported stolen by the retailer or the original purchaser. Apple\'s fraud system runs delayed checks on gift-card serial numbers; flagged cards retroactively disable any balance still associated with them.\n\n2. A chargeback hit the card that originally funded the balance. Customer disputed an Apple charge with their bank, the bank reversed it, Apple clawed back the value from the corresponding store credit.\n\n3. An account-level restriction was applied to the Apple ID itself - usually a side effect of a Senior Advisor flag from a prior refund pattern, not specific to the balance. Once the account restriction lifts, the balance is usable again.\n\nThe three look identical from the user side. The recovery path is the same in all cases (iTunes Store support), but the evidence you bring matters.',
+    },
+    {
+      h: 'How to identify which cause applies to you',
+      p: 'Without an explicit message from Apple, the clues are circumstantial. A few signals:\n\n- Did you redeem a gift card recently? If yes, cause #1 is most likely. Especially if the card was bought from a third-party reseller, eBay, a discount retailer, or any non-Apple channel.\n\n- Did you (or someone on your account) recently dispute an Apple charge with your bank? If yes, cause #2 is most likely. Apple\'s fraud system pattern-matches this even if the dispute was unrelated to the balance itself.\n\n- Are other parts of the Apple ID also restricted? Try downloading a free app, signing in to iCloud, or sending an iMessage. If multiple Apple services misbehave, cause #3 is most likely.\n\n- Did you receive any email from Apple recently about a refund, dispute, or account review? If yes, the email body usually hints at which lever was pulled.\n\nThe distinction matters because the agent on the phone will ask "when did this happen and what changed recently". Coming prepared with one of the above shortens the call.',
+    },
+    {
+      h: 'The only recovery channel: iTunes Store support',
+      p: 'Standard AppleCare chat cannot lift a balance disable. The team that can is iTunes Store support, accessed through getsupport.apple.com -> "Apple Account & Apple ID" -> "Apple Account Billing & Payment" -> "Apple Account Balance" -> request a callback or chat.\n\nFront-line iTunes Store agents handle most disables. Some cases need to escalate to a Senior Advisor, which front-line agents can do during the same call. Ask explicitly: "If this needs Senior Advisor review, can you transfer me now?"\n\nWhat to have ready before you call:\n\n- The exact balance amount shown in Settings.\n- A receipt or screenshot from the original gift card purchase (if you redeemed one).\n- The date and approximate time the disable started (when purchases first failed).\n- The card number (last 4 digits) of the card that funded the balance, if you redeemed via card rather than gift card.\n- A copy of any email you received from Apple about the account.\n\nTypical call duration: 20-45 minutes. Outcome lands at the end of the call or within 24-72 hours by email.',
+    },
+    {
+      h: 'Realistic outcomes and timelines',
+      p: 'What actually happens after the support contact:\n\n- Clean case (legitimate gift card, no prior issues): Apple usually restores the balance within 24-72 hours.\n\n- Gift card from a flagged source: Apple may decline to restore. The position is: the original buyer or their bank disputed the funding source, so the value reverted to that party. The user who redeemed the card loses the balance and is told to seek a refund from the retailer they bought the card from.\n\n- Chargeback aftermath: similar. Apple keeps the balance disabled and points the user to the disputing party (often the user themselves, if they did the chargeback on their own card).\n\n- Account-level restriction: balance reactivates when the underlying account flag is lifted, which is a separate process involving Senior Advisor review.\n\nMedian timeline: 24-72 hours from the support contact to a final answer. Worst case (escalations, evidence requests, multi-team reviews): a few weeks. Most cases resolve at the front-line tier within 72 hours.',
+    },
+    {
+      h: 'When it is genuinely unrecoverable',
+      p: 'Some cases do not come back. Be honest with yourself about these:\n\n- Gift card bought on Telegram, Discord, an unofficial reseller, or any "discount" channel. These are almost always stolen or laundered. Apple will not restore the balance and you have no retailer to chase. The money is gone.\n\n- Chargeback you initiated yourself on the funding card. By disputing the charge, you effectively asked the bank to take the money back from Apple. Apple complied. You cannot then ask Apple to give you the credit equivalent.\n\n- Repeated disputes pattern. If your Apple ID has multiple historical chargebacks or refund-then-keep cycles, Apple\'s fraud system treats new balance redemption with extra suspicion. The disable may be one of several restrictions that compound.\n\n- Account has been used to redeem multiple flagged gift cards. The pattern itself becomes the reason for the disable, not any single card.\n\nIn the unrecoverable cases, treat it as a write-off and move on. Buying gift cards only from major retailers with a receipt is the only real prevention.',
+    },
+  ],
+  faqItems: [
+    {
+      q: 'My balance shows the correct amount but every purchase fails. Is that a disable?',
+      a: 'Yes. The amount displays normally because Apple has not zeroed the balance; the disable is a separate flag that blocks the balance from being applied. The amount visually present is misleading - functionally it is unusable until the disable lifts.',
+    },
+    {
+      q: 'Can I just redeem another gift card to replace the disabled balance?',
+      a: 'Adding a new gift card adds to the same balance line, which is the disabled one. The new amount disables along with the rest. Wait until the disable is lifted before adding more credit.',
+    },
+    {
+      q: 'Will Apple disable the new balance if I switch to a different Apple ID?',
+      a: 'No. The disable is per-Apple-ID. A different Apple ID with a clean history can redeem gift cards normally. Practically, though, your purchase history and apps live on the original account, so switching is a heavy move for a small balance.',
+    },
+    {
+      q: 'Does the disabled balance still count for the country-change check?',
+      a: 'Yes. Apple\'s region-change checker sees the amount, not the disable state. A disabled balance still blocks country change. You have to resolve the disable (or get Apple to zero the balance) before the switch.',
+    },
+    {
+      q: 'How long do I have to wait before contacting iTunes Store support after first noticing the disable?',
+      a: 'There is no waiting period. Contact them immediately. The longer you wait, the less context Apple\'s system retains; some flags age out and become harder to reverse after weeks.',
+    },
+  ],
+};
+---
+
+<PageLayout
+  title={`${copy.title} - Zero Balance`}
+  description={copy.description}
+  {lang}
+  {path}
+  schema={[
+    articleSchema({ title: copy.title, description: copy.description, slug, lang, datePublished: published }),
+    faqSchema(copy.faqItems),
+    breadcrumbSchema([
+      { name: 'Home', url: `${DOMAIN}/${lang}/` },
+      { name: 'Blog', url: `${DOMAIN}/${lang}/blog/` },
+      { name: copy.title, url: `${DOMAIN}${path}` },
+    ]),
+  ]}
+  ogType="article"
+  publishedTime={published}
+  modifiedTime={published}
+  keywords={[
+    'apple account balance disabled',
+    'apple gift card balance disabled',
+    'cant use store credit apple',
+    'apple balance frozen unavailable',
+    'restore apple account credit',
+    ...t.keywords.support,
+  ]}
+>
+  <PageHeader eyebrow={copy.eyebrow} title={copy.title} description={copy.description} />
+
+  <Section>
+    <Container>
+      <Reveal class="mx-auto max-w-3xl">
+        <div class="rounded-2xl border border-[var(--border)] bg-[var(--brand-soft)]/40 p-6 md:p-8">
+          <p class="text-sm font-semibold tracking-wide text-[var(--brand-strong)] uppercase">TL;DR</p>
+          <p class="mt-3 text-lg leading-relaxed text-[var(--fg)]">{copy.tldr}</p>
+          <div class="mt-6 flex">
+            <AppStoreButton label={t.cta.appStore} ct="blog-balance-disabled-tldr" />
+          </div>
+        </div>
+      </Reveal>
+
+      <div class="mx-auto mt-10 max-w-3xl prose-zb">
+        {
+          copy.sections.map((s, i) => (
+            <Reveal delay={i * 40}>
+              <h2>{s.h}</h2>
+              {s.p.split('\n\n').map((para) => (
+                <p>{para}</p>
+              ))}
+              {i === 2 && (
+                <div class="not-prose my-6 flex">
+                  <AppStoreButton label={t.cta.appStore} ct="blog-balance-disabled-mid" />
+                </div>
+              )}
+            </Reveal>
+          ))
+        }
+
+        <Reveal>
+          <h2>Related questions</h2>
+        </Reveal>
+        <Reveal>
+          <FAQ items={copy.faqItems} />
+        </Reveal>
+      </div>
+    </Container>
+  </Section>
+
+  <FinalCta {lang} />
+</PageLayout>

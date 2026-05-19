@@ -1,0 +1,146 @@
+---
+import PageLayout from '../../../layouts/PageLayout.astro';
+import PageHeader from '../../../components/PageHeader.astro';
+import Container from '../../../components/Container.astro';
+import Section from '../../../components/Section.astro';
+import FAQ from '../../../components/FAQ.astro';
+import Reveal from '../../../components/Reveal.astro';
+import FinalCta from '../../../components/FinalCta.astro';
+import AppStoreButton from '../../../components/AppStoreButton.astro';
+import { getDict, LOCALES, type Locale } from '../../../i18n';
+import { articleSchema, faqSchema, breadcrumbSchema } from '../../../lib/schema';
+import { DOMAIN } from '../../../lib/siteConfig';
+
+export function getStaticPaths() {
+  return LOCALES.map((lang) => ({ params: { lang } }));
+}
+
+const lang = Astro.params.lang as Locale;
+const t = getDict(lang);
+const slug = 'your-purchase-could-not-be-completed';
+const path = `/${lang}/blog/${slug}/`;
+const published = '2026-05-19T00:00:00Z';
+
+const copy = {
+  title: 'Your purchase could not be completed: every cause and fix',
+  description:
+    'Apple\'s generic App Store error has six common causes. Step through this diagnostic to find which one applies and what to do about it.',
+  eyebrow: 'Errors',
+  tldr:
+    'This error is generic on purpose. Step through six things in order: Apple system status, payment method validity, Apple ID purchase enablement, Screen Time restrictions, app/account region match, and account balance state. One of those is almost always the cause.',
+  sections: [
+    {
+      h: 'The six most common causes (in order)',
+      p: 'Apple wraps several different underlying failures behind the same "your purchase could not be completed" message. The error itself does not tell you which one, so the diagnostic is to step through them in order from most-common to least-common.\n\n1. Payment method invalid - card expired, card declined the Apple auth, billing address does not match what the bank has on file.\n\n2. Apple ID not enabled for in-app purchases - either a recent dispute disabled the purchase side of the account, or "In-App Purchases" was turned off under Screen Time at some point.\n\n3. Screen Time / Content & Privacy Restrictions block - the device-level parental control that blocks IAPs.\n\n4. Region mismatch - the app or in-app purchase is not offered in your storefront, or your Apple ID storefront does not match the device\'s region.\n\n5. Negative Apple Account balance - a prior failed settlement put your account in arrears; Apple blocks new purchases until the debt clears.\n\n6. Apple-side outage - rare, but system.apple.com shows when the App Store is degraded.\n\nWork through these in order. Most "repeating failure" cases land in #1 or #5.',
+    },
+    {
+      h: 'The diagnostic flow',
+      p: 'Step 1: check Apple\'s system status. Open system.apple.com on any browser. Look at the App Store, iTunes Store, and Apple ID lines. If anything other than a green dot is showing, wait an hour and retry. Apple usually fixes outages within a few hours.\n\nStep 2: validate the payment method. account.apple.com -> Payment & Shipping. Check that the card on file is current (not expired), the billing address matches what the bank has, and the country of the card matches the storefront country of your Apple ID. If any are wrong, fix them.\n\nStep 3: check Apple ID purchase enablement. Settings -> [your name] -> Media & Purchases -> View Account. If the page loads with normal content (balance, subscriptions, history), purchase enablement is fine. If it shows "your account is not enabled for purchases" or similar, you have an account-level issue requiring iTunes Store support.\n\nStep 4: check Screen Time. Settings -> Screen Time -> Content & Privacy Restrictions. If on, scroll to iTunes & App Store Purchases and verify In-App Purchases is set to Allow. If Screen Time is off entirely, this step does not apply.\n\nStep 5: confirm the app and your account share a region. App Store -> tap the app you cannot buy -> scroll to Information -> Languages and Country/Region. Compare to your Apple ID region (Settings -> Media & Purchases -> View Account -> Country/Region). If they do not match, the IAP may be restricted in your region.\n\nStep 6: check balance state. Same View Account page. If it shows a negative number, that is the blocker. Clear it before retrying.',
+    },
+    {
+      h: '"In-app purchases not enabled" specifically',
+      p: 'A subset of users see a more specific variant: "in-app purchases are not enabled" or "this Apple ID is not enabled for in-app purchases". This is almost always Screen Time, not an Apple-side disable.\n\nWhere to find it:\n\n1. Settings -> Screen Time. If off, this is not the cause.\n2. If on: Content & Privacy Restrictions -> tap to enable, enter Screen Time passcode if prompted.\n3. iTunes & App Store Purchases -> In-App Purchases. Set to Allow.\n4. Retry the purchase.\n\nIf the toggle is greyed out, Screen Time is being managed by another device (a parent\'s phone in a Family Sharing setup) and you need to change it from there. The family payer can adjust IAP restrictions for any child member.\n\nFor adult accounts that have never had Screen Time, the toggle is irrelevant - the error is something else. Skip to the next step in the diagnostic.',
+    },
+    {
+      h: 'When to restart the device',
+      p: 'Restarting the iPhone fixes the error in a small but real fraction of cases. The cause is a stale StoreKit receipt cache - the device thinks the local receipt is invalid when it actually is not, or vice versa. Restarting forces the receipt to refresh on next App Store request.\n\nThis is rarely the actual problem. Try it after running through the diagnostic above. If steps 1-6 all check clean and the error still happens, restart the device, sign out of Media & Purchases (Settings -> [your name] -> Media & Purchases -> Sign Out), restart again, sign back in.\n\nThe sign-out plus restart is a heavier reset than just restart. It clears any client-side stuck state from previous purchase attempts. Some users report it resolves edge-case errors that survive everything else.\n\nDo not do this in a loop. If the error survives the diagnostic + restart + sign-out cycle, the cause is server-side and you need iTunes Store support to look at the account state.',
+    },
+    {
+      h: 'When it is an app-side bug, not Apple',
+      p: 'A small fraction of "purchase could not be completed" errors are bugs in the app, not in Apple\'s system. Signs:\n\n- The error happens only in one specific app, not across all your purchases.\n- Other purchases work fine on the same Apple ID and device.\n- The error happens immediately on tapping the IAP button, before Apple\'s confirmation sheet appears.\n- The app\'s recent reviews on the App Store mention IAP failures.\n\nThe cause is typically that the app has not properly initialized StoreKit, has stale product IDs cached, or is trying to purchase a product that does not exist on the App Store side. Apple shows the generic error because the app did not provide a more specific one.\n\nFix path:\n\n1. Force-quit the app (swipe up from the home indicator, swipe the app card off).\n2. Reopen the app and retry.\n3. If still failing, delete the app and reinstall. Some apps cache product configurations and need a fresh install to fetch the right one.\n4. Check the developer\'s support page or contact them. Apple cannot fix app-side bugs; the developer has to push an update.',
+    },
+  ],
+  faqItems: [
+    {
+      q: 'I bought from this app before and it worked. Why is it failing now?',
+      a: 'Something has changed on either your side or the app\'s side. Common changes: card expired since the last purchase, Apple ID region was changed, Screen Time was turned on, or the app updated and broke something. Run the diagnostic - one of the six causes will surface.',
+    },
+    {
+      q: 'The error happens only on Wi-Fi but works on cellular. Is that a clue?',
+      a: 'Possibly. Some corporate or hotel Wi-Fi blocks Apple\'s purchase auth endpoints. Try the purchase on cellular to confirm. If cellular works, the Wi-Fi is filtering Apple traffic and switching networks is the fix.',
+    },
+    {
+      q: 'I share the iPad with my kid. Does that matter?',
+      a: 'Yes, if Family Sharing is set up with Ask to Buy. The Apple ID on the iPad might be the kid\'s, which requires parental approval before any purchase. The error message may be obscuring this. Check Settings -> Media & Purchases for which Apple ID is signed in.',
+    },
+    {
+      q: 'Does the error mean I have been charged?',
+      a: 'No. The "could not be completed" path means the purchase was aborted before settlement. Your card is not charged and your balance is not debited. The pre-auth charge Apple sometimes places ($1 USD equivalent) is the only thing that might appear, and it reverses within a few business days.',
+    },
+    {
+      q: 'When should I contact Apple support vs the app developer?',
+      a: 'Contact Apple if the error happens across multiple apps or if account state is the issue. Contact the app developer if the error happens only in one app and other purchases work fine on the same account.',
+    },
+  ],
+};
+---
+
+<PageLayout
+  title={`${copy.title} - Zero Balance`}
+  description={copy.description}
+  {lang}
+  {path}
+  schema={[
+    articleSchema({ title: copy.title, description: copy.description, slug, lang, datePublished: published }),
+    faqSchema(copy.faqItems),
+    breadcrumbSchema([
+      { name: 'Home', url: `${DOMAIN}/${lang}/` },
+      { name: 'Blog', url: `${DOMAIN}/${lang}/blog/` },
+      { name: copy.title, url: `${DOMAIN}${path}` },
+    ]),
+  ]}
+  ogType="article"
+  publishedTime={published}
+  modifiedTime={published}
+  keywords={[
+    'your purchase could not be completed',
+    'app store purchase error',
+    'in app purchase not enabled',
+    'apple purchase failed',
+    'app store error fix',
+    ...t.keywords.support,
+  ]}
+>
+  <PageHeader eyebrow={copy.eyebrow} title={copy.title} description={copy.description} />
+
+  <Section>
+    <Container>
+      <Reveal class="mx-auto max-w-3xl">
+        <div class="rounded-2xl border border-[var(--border)] bg-[var(--brand-soft)]/40 p-6 md:p-8">
+          <p class="text-sm font-semibold tracking-wide text-[var(--brand-strong)] uppercase">TL;DR</p>
+          <p class="mt-3 text-lg leading-relaxed text-[var(--fg)]">{copy.tldr}</p>
+          <div class="mt-6 flex">
+            <AppStoreButton label={t.cta.appStore} ct="blog-purchase-not-completed-tldr" />
+          </div>
+        </div>
+      </Reveal>
+
+      <div class="mx-auto mt-10 max-w-3xl prose-zb">
+        {
+          copy.sections.map((s, i) => (
+            <Reveal delay={i * 40}>
+              <h2>{s.h}</h2>
+              {s.p.split('\n\n').map((para) => (
+                <p>{para}</p>
+              ))}
+              {i === 1 && (
+                <div class="not-prose my-6 flex">
+                  <AppStoreButton label={t.cta.appStore} ct="blog-purchase-not-completed-mid" />
+                </div>
+              )}
+            </Reveal>
+          ))
+        }
+
+        <Reveal>
+          <h2>Related questions</h2>
+        </Reveal>
+        <Reveal>
+          <FAQ items={copy.faqItems} />
+        </Reveal>
+      </div>
+    </Container>
+  </Section>
+
+  <FinalCta {lang} />
+</PageLayout>

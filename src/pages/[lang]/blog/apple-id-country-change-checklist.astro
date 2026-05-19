@@ -1,0 +1,150 @@
+---
+import PageLayout from '../../../layouts/PageLayout.astro';
+import PageHeader from '../../../components/PageHeader.astro';
+import Container from '../../../components/Container.astro';
+import Section from '../../../components/Section.astro';
+import FAQ from '../../../components/FAQ.astro';
+import Reveal from '../../../components/Reveal.astro';
+import FinalCta from '../../../components/FinalCta.astro';
+import AppStoreButton from '../../../components/AppStoreButton.astro';
+import { getDict, LOCALES, type Locale } from '../../../i18n';
+import { articleSchema, faqSchema, breadcrumbSchema } from '../../../lib/schema';
+import { DOMAIN } from '../../../lib/siteConfig';
+
+export function getStaticPaths() {
+  return LOCALES.map((lang) => ({ params: { lang } }));
+}
+
+const lang = Astro.params.lang as Locale;
+const t = getDict(lang);
+const slug = 'apple-id-country-change-checklist';
+const path = `/${lang}/blog/${slug}/`;
+const published = '2026-05-19T00:00:00Z';
+
+const copy = {
+  title: 'Apple ID country change checklist (2026)',
+  description:
+    'Every box Apple makes you tick before allowing a country change: balance to zero, subs cancelled, pre-orders cleared, new payment method, address format, and more.',
+  eyebrow: 'Region change',
+  tldr:
+    'Apple lets you change country only when your balance is $0.00, every subscription is cancelled, pre-orders are cleared, and you have a payment method and billing address valid in the new country. Run through the checklist below before you start - the change cannot be reversed in the same calendar day.',
+  sections: [
+    {
+      h: 'The full checklist',
+      p: 'Apple\'s region-change checker fails silently on any of these. Tick each before you start the switch:\n\n1. Apple Account balance is exactly $0.00.\n\n2. Every active subscription is cancelled (Settings -> Subscriptions, Active section empty).\n\n3. No pre-orders pending (Account -> Purchase History, no rows marked Scheduled).\n\n4. No pending refunds processing.\n\n5. Family Sharing role: you are not the organizer, OR the family is dissolved.\n\n6. Apple Cash (US only) closed if leaving the US.\n\n7. A valid payment method for the destination country is ready (local card, local PayPal, or "None" if that region supports it).\n\n8. A billing address that matches the destination country\'s format.\n\n9. Apple ID logged into Media & Purchases is the same one you want to switch (not a leftover secondary account).\n\nIf any of these is wrong, the "Change Country or Region" button stays greyed out or the form fails with an unhelpful error.',
+    },
+    {
+      h: 'Balance at exactly $0.00',
+      p: 'The hard one. Apple does not check "balance under $1" or "balance is small" - it checks for exactly zero. One cent blocks the switch.\n\nIf your balance is a round dollar amount and you can buy something that matches: easy. Buy it, balance hits zero, move on.\n\nIf your balance is something awkward like $0.43 or $1.07, the App Store does not have an item priced at that exact amount. Two routes work:\n\n- Overshoot with a card on file: buy any item priced above the leftover, Apple uses the balance first and charges your card the remainder. You end up at exact zero.\n\n- Ask Apple Support to clear small leftovers under $1, citing the region change. Success rate is high when the request is framed around the country switch.\n\n- For the awkward middle ground (between $0.01 and a few dollars), [Zero Balance](https://apps.apple.com/app/apple-store/id6761912988?pt=128302223&ct=zerobalance-pro-site&mt=8) stacks small consumables across ten price tiers to land near or at zero.\n\nFull-depth walkthrough at /' + lang + '/reset-apple-id-balance/.',
+    },
+    {
+      h: 'Subscriptions and pre-orders',
+      p: 'These two often hide. Subscriptions tab is obvious - cancel each row in Active. Pre-orders are sneakier.\n\nPre-orders live in Account -> Purchase History rather than Subscriptions. Look for any row marked "Scheduled" or "Pre-order" with a future date. Apps in pre-order, iTunes movies in pre-order, Apple Books in pre-order all count. Cancel them by tapping the row -> Cancel Pre-order.\n\nThe other silent blocker: a subscription you started in a different storefront (because you previously changed country once). It still shows in Subscriptions and still blocks. Cancel it the same way as any other.\n\nIf you cancelled a yearly subscription recently, Apple sometimes refunds the unused portion as Apple Account balance. That refund can land days after the cancellation, putting your balance back above zero right when you thought you were ready to switch. Wait 48 hours after the last cancellation before clearing the balance.',
+    },
+    {
+      h: 'Payment method and billing address',
+      p: 'For the new country, you need:\n\n- A card issued in that country (US-issued Visa cannot be used on a UK Apple ID), OR\n- A PayPal account in that country (PayPal\'s country is fixed at account creation), OR\n- Apple Pay backed by a card from that country, OR\n- "None" if the destination region offers it (most do).\n\nThe "None" option is the simplest and is the one most movers use. It appears as a radio button alongside the card options.\n\nBilling address must match the destination country\'s format:\n\n- UK: house number + street + town + county + postcode (UK postcodes are space-separated, e.g. SW1A 1AA).\n- US: street + city + state (two-letter code) + ZIP (5 or 9 digits).\n- Germany: Straße + Hausnummer + PLZ + Ort.\n\nApple validates the format, not the actual address. A real address in the right format works; a real address in the wrong format does not.',
+    },
+    {
+      h: 'Family Sharing and Apple Cash',
+      p: 'Family Sharing organizer status blocks the country change entirely. The fix is one of two things:\n\n- Transfer the organizer role to another adult family member: Settings -> Family -> [your name] -> Transfer Organizer. The new organizer must be 18+ and have a valid payment method in the original country.\n\n- Dissolve the family: Settings -> Family -> [your name] -> Stop Using Family Sharing. Each member becomes their own account again.\n\nApple Cash is US-only and disappears when you leave the US. Before the switch:\n\n- Transfer the Apple Cash balance to a US bank account (Wallet -> Apple Cash card -> Transfer to Bank).\n- The card itself goes away automatically when the country changes.\n- Apple Card (the credit card) similarly cannot exist outside the US and must be closed before the switch, which Apple handles through Goldman Sachs.',
+    },
+    {
+      h: 'What to do if the button is greyed out',
+      p: 'You ticked every box and "Change Country or Region" is still disabled. The diagnostic checklist:\n\n1. Refresh the page (Settings can show stale state for a few minutes after a cancel).\n\n2. Settings -> Sign Out and sign back in. This forces Apple\'s client to re-fetch the account state.\n\n3. Try from the web at account.apple.com -> Personal Information -> Country/Region. The web flow sometimes gives a clearer error than the iPhone Settings flow.\n\n4. Check Subscriptions on the web as well as on iPhone. Each surface can lag the other by a few hours.\n\n5. If still stuck, contact iTunes Store support (not AppleCare). Ask them to read out what their system says is blocking the change. The agent can usually name the blocker exactly: "you have an active subscription on a different Apple ID linked to this account" or "a refund is processing".\n\nThe one blocker you cannot fix yourself: a Senior Advisor flag on the account from a prior dispute. Only Apple can lift those.',
+    },
+  ],
+  faqItems: [
+    {
+      q: 'How long after meeting the checklist can I actually start the change?',
+      a: 'Immediately. Apple does not impose a waiting period between meeting the conditions and starting the switch. If the button is still greyed out after the checklist, the issue is stale client state - sign out, sign back in, retry.',
+    },
+    {
+      q: 'Can I change country and then change back the same day?',
+      a: 'No. Apple imposes a cooldown (commonly 90 days, sometimes longer) before the next country change on the same Apple ID. The exact length is not published and varies by account history.',
+    },
+    {
+      q: 'Does the country change affect my existing iCloud data and Photos?',
+      a: 'No. iCloud data lives with the Apple ID, not the storefront. Your Photos, iCloud Drive files, contacts, and Mail all survive the change unchanged. Only iCloud+ billing currency switches.',
+    },
+    {
+      q: 'I have two Apple IDs. Do I need to change both, or just the main one?',
+      a: 'Each Apple ID is its own account with its own country. Changing one does not affect the other. Decide which Apple ID you actually use for purchases (Settings -> Media & Purchases) and run the checklist on that one.',
+    },
+    {
+      q: 'My new country is not in the dropdown. What now?',
+      a: 'Apple operates the App Store in 175+ countries but not every UN member state. If your destination is not listed (some Central African and small island states), Apple has no storefront there and you cannot officially switch. Some users keep the closest neighboring country\'s account and accept the friction.',
+    },
+  ],
+};
+---
+
+<PageLayout
+  title={`${copy.title} - Zero Balance`}
+  description={copy.description}
+  {lang}
+  {path}
+  schema={[
+    articleSchema({ title: copy.title, description: copy.description, slug, lang, datePublished: published }),
+    faqSchema(copy.faqItems),
+    breadcrumbSchema([
+      { name: 'Home', url: `${DOMAIN}/${lang}/` },
+      { name: 'Blog', url: `${DOMAIN}/${lang}/blog/` },
+      { name: copy.title, url: `${DOMAIN}${path}` },
+    ]),
+  ]}
+  ogType="article"
+  publishedTime={published}
+  modifiedTime={published}
+  keywords={[
+    'apple id change country requirements',
+    'country change checklist apple',
+    'switch app store region steps',
+    'apple id region change greyed out',
+    'change apple id country 2026',
+    ...t.keywords.changeCountry,
+  ]}
+>
+  <PageHeader eyebrow={copy.eyebrow} title={copy.title} description={copy.description} />
+
+  <Section>
+    <Container>
+      <Reveal class="mx-auto max-w-3xl">
+        <div class="rounded-2xl border border-[var(--border)] bg-[var(--brand-soft)]/40 p-6 md:p-8">
+          <p class="text-sm font-semibold tracking-wide text-[var(--brand-strong)] uppercase">TL;DR</p>
+          <p class="mt-3 text-lg leading-relaxed text-[var(--fg)]">{copy.tldr}</p>
+          <div class="mt-6 flex">
+            <AppStoreButton label={t.cta.appStore} ct="blog-country-checklist-tldr" />
+          </div>
+        </div>
+      </Reveal>
+
+      <div class="mx-auto mt-10 max-w-3xl prose-zb">
+        {
+          copy.sections.map((s, i) => (
+            <Reveal delay={i * 40}>
+              <h2>{s.h}</h2>
+              {s.p.split('\n\n').map((para) => (
+                <p>{para}</p>
+              ))}
+              {i === 1 && (
+                <div class="not-prose my-6 flex">
+                  <AppStoreButton label={t.cta.appStore} ct="blog-country-checklist-mid" />
+                </div>
+              )}
+            </Reveal>
+          ))
+        }
+
+        <Reveal>
+          <h2>Related questions</h2>
+        </Reveal>
+        <Reveal>
+          <FAQ items={copy.faqItems} />
+        </Reveal>
+      </div>
+    </Container>
+  </Section>
+
+  <FinalCta {lang} />
+</PageLayout>

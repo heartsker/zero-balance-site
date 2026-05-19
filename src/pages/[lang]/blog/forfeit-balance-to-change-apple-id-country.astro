@@ -1,0 +1,156 @@
+---
+import PageLayout from '../../../layouts/PageLayout.astro';
+import PageHeader from '../../../components/PageHeader.astro';
+import Container from '../../../components/Container.astro';
+import Section from '../../../components/Section.astro';
+import FAQ from '../../../components/FAQ.astro';
+import Reveal from '../../../components/Reveal.astro';
+import FinalCta from '../../../components/FinalCta.astro';
+import AppStoreButton from '../../../components/AppStoreButton.astro';
+import { getDict, LOCALES, type Locale } from '../../../i18n';
+import { articleSchema, faqSchema, breadcrumbSchema } from '../../../lib/schema';
+import { DOMAIN } from '../../../lib/siteConfig';
+
+export function getStaticPaths() {
+  return LOCALES.map((lang) => ({ params: { lang } }));
+}
+
+const lang = Astro.params.lang as Locale;
+const t = getDict(lang);
+const slug = 'forfeit-balance-to-change-apple-id-country';
+const path = `/${lang}/blog/${slug}/`;
+const published = '2026-05-19T00:00:00Z';
+
+const copy = {
+  title: 'Apple says I must forfeit my balance to change country',
+  description:
+    'Apple blocks region change while your Apple Account balance is positive, and the balance does not transfer. Here is how to keep the money instead.',
+  eyebrow: 'Region change',
+  tldr:
+    'Apple will not change your App Store country while your Apple Account balance is positive, and the balance does not transfer. You have two options: spend it down to exactly $0.00 (the only way to keep the value) or let Apple zero it out and lose it. Below is the step-by-step that actually keeps the money.',
+  sections: [
+    {
+      h: 'Why Apple blocks the region change',
+      p: 'Each Apple Account belongs to exactly one storefront, and the balance on it is tied to that storefront\'s currency, tax rules, and refund policy. A US balance is a US-tax-jurisdiction liability for Apple. Moving the same balance to, say, the Polish App Store would mean converting USD to PLN at a rate Apple does not publish, transferring the tax exposure between jurisdictions, and inheriting a different refund-window regime.\n\nApple\'s answer to all of that is "don\'t". The "Change Country or Region" button stays greyed out as long as the balance is anything other than exactly $0.00 - even one cent blocks it. The Apple help page at support.apple.com/en-us/118283 confirms this in plain language.\n\nThe forfeit screen people hit later in the flow is Apple\'s offer to clear the balance for you (effectively, Apple keeps it). It is not a bug and it is not a negotiating tactic. It is the policy.',
+    },
+    {
+      h: 'The two real options',
+      p: 'You have two paths and only two:\n\n1. Spend the balance to exactly $0.00 before starting the region change. The money turns into apps, in-app purchases, subscriptions, Apple Music tracks, books, movies, iCloud upgrades, or AppleCare+. It does not turn into cash. But you keep the value.\n\n2. Accept the forfeiture. Click through the screen Apple shows you, watch the balance go to zero, change region. You lose the money.\n\nPath 1 is almost always the right answer when the balance is over a few cents. Path 2 makes sense only when the balance is a few pennies that you cannot match against any in-app purchase tier and you do not want to deal with a card-on-file overshoot.\n\nThere is no third path. "Transfer to another Apple ID" does not exist. "Convert to Apple Cash" does not exist. "Family Sharing pool" does not exist - balance is locked per Apple ID, despite forum posts that say otherwise.',
+    },
+    {
+      h: 'Spending it down with IAPs you actually want',
+      p: 'The mechanics: Apple always charges your Apple Account balance first on any in-app purchase, then falls back to your payment method for the remainder. So every digital purchase you make moves the balance counter down by the price of the item.\n\nIf your balance is several dollars or more, an Apple One month, an iCloud+ tier, an Apple TV+ subscription, or a couple of paid apps you would have bought anyway will work fine. Apple Music for one month is $10.99 (US); Apple One Individual is $19.95; iCloud+ 200GB is $2.99. Any of those is a real purchase you might want, and Apple pulls it from the balance automatically.\n\nThe edge case is the last few cents - the residual after you have spent the round-dollar portion. Apple\'s minimum in-app purchase is $0.29, which means a leftover of $0.03 or $0.17 has no matching tier on its own. You either accept the residual (the balance does not expire), overshoot with a card on file (Apple uses the balance first, charges the card the rest), or stack multiple small consumables to fit. The third option is what Zero Balance is for.',
+    },
+    {
+      h: 'When Zero Balance helps',
+      p: 'Zero Balance is a free iOS app that exists specifically for the last-mile case: a small leftover that no single in-app purchase can match. It ships with consumables across ten price tiers from $0.29 to $1.49, and the matching algorithm picks the combination that lands closest to the amount you enter. You see the plan before you confirm anything - total, overage, number of purchase confirmations Apple will ask for.\n\nIt does not need your Apple ID password and it does not read your balance automatically. You type the amount yourself. The purchases go through Apple\'s normal in-app purchase flow.\n\nIt is most useful for leftovers between $0.01 and a few dollars - exactly the range where the region-change flow gets stuck. For larger balances ($20+), spend the bulk on a subscription or app you actually want first, then use the app for the leftover under $1 if any.',
+    },
+    {
+      h: 'Edge cases that trip people up',
+      p: 'A few specific scenarios that surface in the Reddit threads more than once:\n\n- Pro-rated subscription refunds. You cancel an Apple One mid-period; Apple refunds the unused days to your balance as store credit. You bring the balance to zero, start the region change, and Apple credits another $0.04 because the refund was still processing. Fix: cancel subs first, wait 48 hours, then clear the balance.\n\n- Family Sharing organizer status. You cannot change country while you are the family organizer. Transfer the role or dissolve the family first.\n\n- Pre-orders. An App Store, iTunes, or Apple Books pre-order silently blocks region change. Check Account -> Purchase History for any "scheduled" rows and cancel them.\n\n- Apple Cash. US-only; does not move with you. Close the Apple Cash card in Wallet before switching to a non-US storefront. Existing Apple Cash balance must be transferred to a US bank account first.\n\n- Subscriptions on other Apple IDs. If Settings -> Media & Purchases is on a different Apple ID than Settings -> iCloud, you have two accounts to clear, not one.',
+    },
+    {
+      h: 'What happens after the region change',
+      p: 'Once Apple flips the storefront on your Apple ID, several things change at once. Your purchased apps and your iCloud library stay with the account - they are tied to the Apple ID, not the storefront. Your downloaded music and movies stay too. Apple Music continues to work, but in the new region\'s catalog.\n\nWhat changes: subscriptions had to be cancelled before the switch, so they will not auto-renew. You re-subscribe in the new region at the new region\'s price. Apple One bundles, Apple TV+, Apple Arcade, Apple Music, Apple Fitness+, Apple News+ all behave this way.\n\nFamily Sharing memberships need to be re-established if you were a member of a family in the old region. Apple Card and Apple Cash are US-only and disappear from the account if you leave the US. Your purchase history stays visible for as long as Apple retains it. Region change can be done again, but Apple imposes a 90-day waiting period before the next switch on most accounts.',
+    },
+  ],
+  faqItems: [
+    {
+      q: 'Can I keep my balance by transferring it to another Apple ID before changing country?',
+      a: 'No. There is no Apple-sanctioned way to transfer balance between Apple IDs. Anyone offering a "transfer service" is running a scam or phishing for credentials. The only legitimate move is to spend the balance down on the current Apple ID before changing region.',
+    },
+    {
+      q: 'What if my leftover is smaller than the cheapest in-app purchase ($0.29)?',
+      a: 'Either accept the residual (the balance does not expire and continues to apply to future purchases), or overshoot with a card on file - buy any item priced above the leftover and Apple uses the balance first, charging the card for the difference. The overshoot path is the only way to hit exact $0.00 when the leftover is below the IAP floor.',
+    },
+    {
+      q: 'Will Apple actually forfeit my balance if I click through, or is that screen a bluff?',
+      a: 'Apple actually forfeits it. The button does what it says. There is no second confirmation step that quietly restores the balance afterward. If you click the forfeit option, the money is gone.',
+    },
+    {
+      q: 'How long does the region change take to process?',
+      a: 'Usually instant once the form passes Apple\'s checks (balance zero, no active subs, valid new-country payment method). The new storefront\'s apps and pricing are visible within minutes. The 90-day cooldown before the next region change starts from the moment the switch completes.',
+    },
+    {
+      q: 'I am the family organizer. Do I have to dissolve the family before changing country?',
+      a: 'Yes. Apple does not allow a family organizer to change country while the family exists. Either transfer the organizer role to another adult member (Settings -> Family -> [your name] -> Transfer Organizer) or dissolve the family before starting the region change.',
+    },
+  ],
+};
+---
+
+<PageLayout
+  title={`${copy.title} - Zero Balance`}
+  description={copy.description}
+  {lang}
+  {path}
+  schema={[
+    articleSchema({
+      title: copy.title,
+      description: copy.description,
+      slug,
+      lang,
+      datePublished: published,
+    }),
+    faqSchema(copy.faqItems),
+    breadcrumbSchema([
+      { name: 'Home', url: `${DOMAIN}/${lang}/` },
+      { name: 'Blog', url: `${DOMAIN}/${lang}/blog/` },
+      { name: copy.title, url: `${DOMAIN}${path}` },
+    ]),
+  ]}
+  ogType="article"
+  publishedTime={published}
+  modifiedTime={published}
+  keywords={[
+    'apple id change country balance',
+    'forfeit apple account balance',
+    'change region apple id remaining credit',
+    'apple region change balance not zero',
+    'keep apple balance country change',
+    ...t.keywords.changeCountry,
+  ]}
+>
+  <PageHeader eyebrow={copy.eyebrow} title={copy.title} description={copy.description} />
+
+  <Section>
+    <Container>
+      <Reveal class="mx-auto max-w-3xl">
+        <div class="rounded-2xl border border-[var(--border)] bg-[var(--brand-soft)]/40 p-6 md:p-8">
+          <p class="text-sm font-semibold tracking-wide text-[var(--brand-strong)] uppercase">TL;DR</p>
+          <p class="mt-3 text-lg leading-relaxed text-[var(--fg)]">{copy.tldr}</p>
+          <div class="mt-6 flex">
+            <AppStoreButton label={t.cta.appStore} ct="blog-forfeit-balance-tldr" />
+          </div>
+        </div>
+      </Reveal>
+
+      <div class="mx-auto mt-10 max-w-3xl prose-zb">
+        {
+          copy.sections.map((s, i) => (
+            <Reveal delay={i * 40}>
+              <h2>{s.h}</h2>
+              {s.p.split('\n\n').map((para) => (
+                <p>{para}</p>
+              ))}
+              {i === 3 && (
+                <div class="not-prose my-6 flex">
+                  <AppStoreButton label={t.cta.appStore} ct="blog-forfeit-balance-mid" />
+                </div>
+              )}
+            </Reveal>
+          ))
+        }
+
+        <Reveal>
+          <h2>Related questions</h2>
+        </Reveal>
+        <Reveal>
+          <FAQ items={copy.faqItems} />
+        </Reveal>
+      </div>
+    </Container>
+  </Section>
+
+  <FinalCta {lang} />
+</PageLayout>

@@ -1,0 +1,150 @@
+---
+import PageLayout from '../../../layouts/PageLayout.astro';
+import PageHeader from '../../../components/PageHeader.astro';
+import Container from '../../../components/Container.astro';
+import Section from '../../../components/Section.astro';
+import FAQ from '../../../components/FAQ.astro';
+import Reveal from '../../../components/Reveal.astro';
+import FinalCta from '../../../components/FinalCta.astro';
+import AppStoreButton from '../../../components/AppStoreButton.astro';
+import { getDict, LOCALES, type Locale } from '../../../i18n';
+import { articleSchema, faqSchema, breadcrumbSchema } from '../../../lib/schema';
+import { DOMAIN } from '../../../lib/siteConfig';
+
+export function getStaticPaths() {
+  return LOCALES.map((lang) => ({ params: { lang } }));
+}
+
+const lang = Astro.params.lang as Locale;
+const t = getDict(lang);
+const slug = 'refunded-iap-still-have-it';
+const path = `/${lang}/blog/${slug}/`;
+const published = '2026-05-19T00:00:00Z';
+
+const copy = {
+  title: 'Refunded an in-app purchase but still have it? Here is why',
+  description:
+    'Apple refunded your IAP but the app still grants the feature. Here is why that happens, whether Apple claws it back, and the account-safety angle.',
+  eyebrow: 'Refunds',
+  tldr:
+    'Apple refunds the money but only notifies the app; whether the app revokes the unlock is up to its developers. Old or indie apps often never revoke. Apple will not penalize you for one refund where the app did not follow through, but a pattern of refund-then-keep is one of the most common triggers for an Apple ID disable.',
+  sections: [
+    {
+      h: 'The technical reason: Apple owns refunds, the app owns revocation',
+      p: 'When you request and receive an in-app purchase refund, two separate things happen:\n\n1. Apple credits the money back to your payment method or balance. This is automatic and unavoidable - once Apple approves a refund, the money moves.\n\n2. Apple notifies the app that the IAP was refunded via StoreKit\'s refund-notification API. The app receives a webhook (server-side notification) and/or a StoreKit 2 transaction observer event (client-side).\n\nWhat the app does with that notification is entirely up to the app developer. The technical mechanism is in place; the implementation is not enforced. Some apps revoke immediately; some wait until next launch to check; some never check at all.\n\nApple does not police this. The platform contract is: developers should listen for refund notifications and revoke access accordingly. Most major subscription apps do; many small indie apps do not. There is no Apple enforcement, no automatic in-app revocation by Apple, no test Apple runs to verify revocation works.',
+    },
+    {
+      h: 'How StoreKit 2 refund notifications work',
+      p: 'For developers, the relevant API is StoreKit 2\'s `Transaction.updates` async sequence on the client, or App Store Server Notifications V2 on the server. Both deliver refund events with the original transaction ID and a refund reason.\n\nWhat a well-implemented subscription app does on refund:\n\n1. Receive the refund notification (server-side recommended, client-side as fallback).\n2. Match the transaction ID to the user account in the app\'s own database.\n3. Mark the entitlement as revoked.\n4. On next user request, refuse to serve premium content / unlock.\n5. Optionally email the user explaining the refund and the revocation.\n\nWhat a poorly-implemented app does:\n\n1. Nothing on the server side. The app does not listen for refund webhooks at all.\n2. On the client, only checks for purchases at install time; never re-checks. The unlock state is local and never updated.\n3. The user keeps the feature forever after the refund.\n\nApple\'s server-side notification system was introduced in 2018; StoreKit 2\'s client-side API in 2021. Apps that pre-date these and have not been updated do not listen at all. Apps that launched in the StoreKit 2 era usually do.',
+    },
+    {
+      h: 'Apps that revoke immediately',
+      p: 'Most subscription-based apps revoke quickly because they have strong incentives to do so. Subscription revenue depends on month-by-month renewals; users who refunded should not continue using the service.\n\nCategories that usually revoke:\n\n- Major SaaS subscriptions on iOS (Notion, Dropbox, Things 3, OmniFocus, Bear, Drafts, etc.). These check server-side on every launch.\n\n- Streaming subscriptions (Disney+, Netflix when billed via Apple, Hulu, etc.). Tied to a server-side account that revokes immediately on Apple refund notification.\n\n- Cloud-backed game subscriptions (Apple Arcade, individual games\' "premium" subscriptions). Refund flips a server-side entitlement flag.\n\n- Subscription versions of utility apps (PCalc, 1Password, etc.). Strict about revocation because the value is in continuous access.\n\nFor these apps, a refund means losing the feature within minutes to hours. The unlock state syncs from the developer\'s server, and once the server marks it revoked, the app refuses to render the feature on next launch.',
+    },
+    {
+      h: 'Apps that never revoke',
+      p: 'A long tail of apps does not revoke. The typical profiles:\n\n- One-time IAP unlocks for indie apps from 2014-2019. The developer never wired up refund handling. Refunds happen rarely enough that they did not prioritize it.\n\n- Older mobile games where progress is local. You bought 1000 gems, used them in-game, then refunded. The gems already moved into local in-game state; the app has no concept of "un-give the gems".\n\n- Apps from developers who are no longer actively maintaining the app. Refund webhooks delivered to dead endpoints; the app keeps working as if nothing happened.\n\n- Apps with consumable IAPs that were already consumed. Even with proper refund handling, you cannot un-eat the food in a cooking sim or un-spawn the boss the user already killed with the IAP-purchased item.\n\nFor these apps, the refund money lands back on your card or balance, and the feature continues to work. From the user side, this looks like a free win.',
+    },
+    {
+      h: 'Will Apple disable your account for this?',
+      p: 'Apple\'s position on the refund-then-keep pattern is nuanced. The platform contract puts the responsibility on the app to revoke; the platform does not police whether the user "ethically" continues using the feature. But Apple\'s fraud system tracks the pattern:\n\nSingle case: Apple does not penalize. The system attributes it to the app failing to revoke, not to you abusing the refund flow. No flag goes on your account.\n\nMultiple cases across different apps in a short window: Apple\'s fraud system pattern-matches this. The pattern is similar to known refund abuse (request refunds with the intent of keeping the value), and the heuristic does not distinguish "I refunded because the app was bad" from "I refunded to scam".\n\nLong-term pattern (5+ refunds in 12 months, even if each was justified): triggers the most common cause of Apple ID purchase disables. Even if every refund was approved by Apple\'s reviewer at the time, the accumulated pattern is what flags the account.\n\nApple will not specifically penalize you for one app failing to revoke. The risk is the broader refund-volume pattern your account develops over time.',
+    },
+    {
+      h: 'The ethical and account-safety angle',
+      p: 'Two separate considerations.\n\nEthically: the refund is between you and Apple. If the underlying complaint was legitimate (the app did not work, the IAP did not deliver, you did not authorize the purchase), the refund is the appropriate remedy. If the app then fails to revoke the unlock, that is the developer\'s implementation issue, not your moral debt. Whether to continue using the feature is your call.\n\nThat said: continuing to use a feature you got a refund on - especially in a subscription app where the value is continuous access - is closer to taking from the developer than from Apple. If you want to be careful about this, do not use the feature after the refund. The friction is asymmetric: the developer\'s revenue is small per user; your single decision matters.\n\nAccount-safety-wise: the bigger concern is the broader pattern. If you find yourself requesting many refunds across many apps, even with valid reasons, the cumulative effect on your account is real. Be more selective with future purchases (try the free tier longer, look up the app\'s actual functionality before buying, avoid apps with sketchy IAP wording) rather than relying on refunds as a safety net.\n\nFor users in the specific situation of "I refunded, the app did not revoke, what now": one occurrence is fine. Just do not make it a habit.',
+    },
+  ],
+  faqItems: [
+    {
+      q: 'If I keep using a feature I refunded, can the developer report me to Apple?',
+      a: 'Technically yes - they can flag your account through their developer-side reporting tools. In practice, this happens rarely; developers focus on app-side revocation, not user-by-user reporting. The risk is the broader Apple fraud-system flag, not direct developer reports.',
+    },
+    {
+      q: 'Will Apple claw back the refund if the app later revokes my access?',
+      a: 'No. The refund and the revocation are separate operations. Once Apple has refunded, the money is back with you; the app revocation does not reverse the refund.',
+    },
+    {
+      q: 'What about subscriptions - can I refund a subscription mid-month and keep using it until the period ends?',
+      a: 'Apple\'s refund usually pro-rates the unused portion, so the refund is for the unused days only. The subscription cancels, you keep access through the period end (a feature of cancellation, not a refund-then-keep). This is the official flow, not an abuse pattern.',
+    },
+    {
+      q: 'I bought consumable currency in a game, used it, then refunded. Is that a problem?',
+      a: 'Apple does not block this and the game cannot reclaim consumables that are already spent. But repeating it - "consumable refund farming" - is one of the patterns Apple\'s fraud system specifically watches for. Once or twice is fine; as a strategy, it triggers disables.',
+    },
+    {
+      q: 'How do I know if an app revokes IAPs on refund?',
+      a: 'You usually do not, until it happens. As a rough heuristic: actively-maintained subscription apps from major developers almost always revoke; indie one-time-purchase apps from years ago almost never do.',
+    },
+  ],
+};
+---
+
+<PageLayout
+  title={`${copy.title} - Zero Balance`}
+  description={copy.description}
+  {lang}
+  {path}
+  schema={[
+    articleSchema({ title: copy.title, description: copy.description, slug, lang, datePublished: published }),
+    faqSchema(copy.faqItems),
+    breadcrumbSchema([
+      { name: 'Home', url: `${DOMAIN}/${lang}/` },
+      { name: 'Blog', url: `${DOMAIN}/${lang}/blog/` },
+      { name: copy.title, url: `${DOMAIN}${path}` },
+    ]),
+  ]}
+  ogType="article"
+  publishedTime={published}
+  modifiedTime={published}
+  keywords={[
+    'refunded in app purchase still have it',
+    'apple refund did not remove iap',
+    'refund still works app',
+    'storekit 2 refund notification',
+    'apple iap revocation',
+    ...t.keywords.support,
+  ]}
+>
+  <PageHeader eyebrow={copy.eyebrow} title={copy.title} description={copy.description} />
+
+  <Section>
+    <Container>
+      <Reveal class="mx-auto max-w-3xl">
+        <div class="rounded-2xl border border-[var(--border)] bg-[var(--brand-soft)]/40 p-6 md:p-8">
+          <p class="text-sm font-semibold tracking-wide text-[var(--brand-strong)] uppercase">TL;DR</p>
+          <p class="mt-3 text-lg leading-relaxed text-[var(--fg)]">{copy.tldr}</p>
+          <div class="mt-6 flex">
+            <AppStoreButton label={t.cta.appStore} ct="blog-refunded-iap-tldr" />
+          </div>
+        </div>
+      </Reveal>
+
+      <div class="mx-auto mt-10 max-w-3xl prose-zb">
+        {
+          copy.sections.map((s, i) => (
+            <Reveal delay={i * 40}>
+              <h2>{s.h}</h2>
+              {s.p.split('\n\n').map((para) => (
+                <p>{para}</p>
+              ))}
+              {i === 2 && (
+                <div class="not-prose my-6 flex">
+                  <AppStoreButton label={t.cta.appStore} ct="blog-refunded-iap-mid" />
+                </div>
+              )}
+            </Reveal>
+          ))
+        }
+
+        <Reveal>
+          <h2>Related questions</h2>
+        </Reveal>
+        <Reveal>
+          <FAQ items={copy.faqItems} />
+        </Reveal>
+      </div>
+    </Container>
+  </Section>
+
+  <FinalCta {lang} />
+</PageLayout>

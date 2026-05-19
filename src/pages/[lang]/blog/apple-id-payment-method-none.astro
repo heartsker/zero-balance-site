@@ -1,0 +1,150 @@
+---
+import PageLayout from '../../../layouts/PageLayout.astro';
+import PageHeader from '../../../components/PageHeader.astro';
+import Container from '../../../components/Container.astro';
+import Section from '../../../components/Section.astro';
+import FAQ from '../../../components/FAQ.astro';
+import Reveal from '../../../components/Reveal.astro';
+import FinalCta from '../../../components/FinalCta.astro';
+import AppStoreButton from '../../../components/AppStoreButton.astro';
+import { getDict, LOCALES, type Locale } from '../../../i18n';
+import { articleSchema, faqSchema, breadcrumbSchema } from '../../../lib/schema';
+import { DOMAIN } from '../../../lib/siteConfig';
+
+export function getStaticPaths() {
+  return LOCALES.map((lang) => ({ params: { lang } }));
+}
+
+const lang = Astro.params.lang as Locale;
+const t = getDict(lang);
+const slug = 'apple-id-payment-method-none';
+const path = `/${lang}/blog/${slug}/`;
+const published = '2026-05-19T00:00:00Z';
+
+const copy = {
+  title: 'How to set Apple ID payment method to None (and when Apple blocks it)',
+  description:
+    'The None option only appears when your Apple ID has no active subscriptions, no balance, and no organizer role. Here is how to surface it.',
+  eyebrow: 'Payment setup',
+  tldr:
+    '"None" only appears when your Apple ID has no active subscriptions, no outstanding balance, and you are not the Family Sharing payer. Cancel subscriptions, settle the balance, and pass off the payer role - then "None" shows up under Payment & Shipping.',
+  sections: [
+    {
+      h: 'When "None" is available',
+      p: 'Apple allows "None" as a Payment Method only in specific circumstances:\n\n- The Apple ID is in a region that supports the option (most major regions do; some Gulf states, certain African countries, and some Asia-Pacific regions do not).\n- The Apple ID has no active subscriptions, including free trials.\n- The Apple ID has no outstanding balance (positive or negative).\n- The Apple ID owner is not the Family Sharing organizer (the role responsible for paying for kids\' purchases).\n- The Apple ID has no pending refunds or pre-orders.\n\nWhen all of these conditions are met, the Payment Method screen at Settings -> [your name] -> Payment & Shipping -> Manage Payments shows "None" as a radio button alongside the card options.\n\nIf you do not see "None", one of the conditions is failing. The fix is to clear the blocker, not to find a workaround. There is no menu setting to force the option to appear when the conditions are not met.',
+    },
+    {
+      h: 'When "None" is hidden',
+      p: 'The five common reasons "None" does not appear:\n\n1. Active subscriptions. Settings -> Subscriptions -> Active. If any row is listed there, "None" is blocked. Cancel each one, including any free trials currently running.\n\n2. Positive balance. Apple Account balance must be exactly $0.00. If you have leftover credit, spend it down to zero first. See the [reset Apple ID balance guide](/' + lang + '/reset-apple-id-balance/) for how.\n\n3. Negative balance. The account is in arrears from a failed settlement. Add a working card, trigger a purchase to clear the debt, then proceed.\n\n4. Family organizer role. You cannot drop to "None" while you are responsible for billing the family. Transfer the role (Settings -> Family -> [your name] -> Transfer Organizer) or dissolve the family first.\n\n5. Region does not support it. Some regional storefronts do not offer the option at all. The workaround for those regions: leave a card on file with a $0 daily spend limit if your bank supports it, or use a virtual prepaid card.\n\nAfter fixing the blocker, the option usually appears immediately. If you fixed it and still do not see "None", sign out of Media & Purchases and sign back in to refresh the client state.',
+    },
+    {
+      h: 'Step-by-step: iPhone',
+      p: 'Once you have ticked the prerequisites:\n\n1. Settings -> [your name] (top of the screen) -> Payment & Shipping.\n2. Authenticate with Face ID or Touch ID.\n3. Tap Add Payment Method (yes, even though you want None - this is where the option lives in current iOS).\n4. The Payment Method picker appears. "None" should be the first radio button.\n5. Select None. Tap Save in the top-right.\n6. If the old card is still listed, swipe left on it to delete (or tap Edit -> red minus button).\n\nApple now has no card on file. The Apple ID can still download free apps, restore previous purchases, and use any positive balance you redeem in the future. But it cannot make any new card-based purchase or subscribe to anything until you add a method back.',
+    },
+    {
+      h: 'Step-by-step: account.apple.com (web)',
+      p: 'Sometimes the iPhone Settings flow does not surface "None" even when prerequisites are met. The web flow can be more reliable.\n\n1. account.apple.com -> sign in.\n2. Personal Information section -> scroll down to Payment & Shipping.\n3. Edit -> Add Payment Method.\n4. Select "None" -> Save.\n\nThe web flow validates the same prerequisites but is sometimes faster to refresh after you cancel subscriptions or clear balance. If iPhone says no and web says yes, web wins - the change applies to the account.\n\nIf neither flow offers "None", your account has a blocker you have not addressed. Check the Subscriptions tab on both surfaces (iPhone and web) - they sometimes show different active subscriptions when the data is stale.',
+    },
+    {
+      h: 'Common mistake: deleting the card from Wallet',
+      p: 'A very common confusion: removing a card from the Wallet app does not remove it from the Apple ID as a payment method.\n\nThe two are separate:\n\n- Wallet stores cards for Apple Pay contactless payments. Removing here stops Apple Pay from offering the card at terminals; the card is no longer usable for tap-to-pay.\n\n- Apple ID Payment Method is the card Apple charges for App Store purchases, subscriptions, and iCloud+. Removing from Wallet does not affect this.\n\nIf you have a card on file for Apple ID and a different card in Wallet (or the same card in both), you need to remove each separately.\n\nThe one case where they overlap: if you used Apple Pay as your Apple ID payment method, the card behind it is shared with Wallet. Removing the Apple Pay link from Apple ID does not remove the card from Wallet, but removing the card from Wallet eventually causes the Apple ID payment method to fail too (because the underlying card is no longer trustable to Apple Pay).',
+    },
+    {
+      h: 'Why most people want None',
+      p: 'Three common reasons people remove all payment methods:\n\n1. Preparing the Apple ID for a kid. A child account in Family Sharing inherits payment from the organizer\'s card via Ask to Buy. The kid\'s personal Apple ID payment method can be None; purchases route through the parent\'s card automatically.\n\n2. Preventing accidental purchases. Without a card on file, no purchase confirms. Useful for accounts shared between household members where you do not want any one person to be able to charge.\n\n3. Preparing for region change. Some countries make region change easier when the source account has no payment method at all. Less common but worth knowing.\n\nThe trade-off: with None, you cannot start new subscriptions, cannot buy paid apps, cannot start an iCloud+ tier, cannot subscribe to Apple One. You can still redeem gift cards and use the balance for any digital purchase.\n\nApple offers None specifically as a "safe state" - the account is fully functional for everything except spending real money.',
+    },
+  ],
+  faqItems: [
+    {
+      q: 'Will setting "None" cancel my active subscriptions?',
+      a: 'No - Apple does not let you switch to None while subscriptions are active. You have to cancel each subscription first. Once cancelled, you can set None. Existing subscriptions then continue until the period ends, but new ones cannot start.',
+    },
+    {
+      q: 'Can I redeem gift cards and use balance with None on file?',
+      a: 'Yes. The balance ledger works independently of card-on-file. Redeem gift cards in Settings -> Redeem Gift Card or Code; the credit goes to your balance and can pay for anything balance-eligible.',
+    },
+    {
+      q: 'Why is the None option greyed out even though I have no subscriptions?',
+      a: 'Most likely the balance is not exactly $0.00, or the iPhone Settings is showing stale state. Verify the balance in Settings -> Apple Account -> View Account, sign out of Media & Purchases and back in, then retry. The web flow at account.apple.com sometimes works when iPhone Settings does not.',
+    },
+    {
+      q: 'Does None survive across devices?',
+      a: 'Yes. Payment method is per-Apple-ID, not per-device. Setting None on one device applies to every device signed in with that Apple ID. The change propagates immediately.',
+    },
+    {
+      q: 'Can the family organizer set None?',
+      a: 'No. The organizer must have a valid payment method on file at all times - it is the method used to pay for kids\' purchases. Transfer the organizer role or dissolve the family before switching to None.',
+    },
+  ],
+};
+---
+
+<PageLayout
+  title={`${copy.title} - Zero Balance`}
+  description={copy.description}
+  {lang}
+  {path}
+  schema={[
+    articleSchema({ title: copy.title, description: copy.description, slug, lang, datePublished: published }),
+    faqSchema(copy.faqItems),
+    breadcrumbSchema([
+      { name: 'Home', url: `${DOMAIN}/${lang}/` },
+      { name: 'Blog', url: `${DOMAIN}/${lang}/blog/` },
+      { name: copy.title, url: `${DOMAIN}${path}` },
+    ]),
+  ]}
+  ogType="article"
+  publishedTime={published}
+  modifiedTime={published}
+  keywords={[
+    'apple id no payment method',
+    'set payment to none apple',
+    'none option missing apple id',
+    'apple id remove card',
+    'apple kid account no payment',
+    ...t.keywords.support,
+  ]}
+>
+  <PageHeader eyebrow={copy.eyebrow} title={copy.title} description={copy.description} />
+
+  <Section>
+    <Container>
+      <Reveal class="mx-auto max-w-3xl">
+        <div class="rounded-2xl border border-[var(--border)] bg-[var(--brand-soft)]/40 p-6 md:p-8">
+          <p class="text-sm font-semibold tracking-wide text-[var(--brand-strong)] uppercase">TL;DR</p>
+          <p class="mt-3 text-lg leading-relaxed text-[var(--fg)]">{copy.tldr}</p>
+          <div class="mt-6 flex">
+            <AppStoreButton label={t.cta.appStore} ct="blog-payment-none-tldr" />
+          </div>
+        </div>
+      </Reveal>
+
+      <div class="mx-auto mt-10 max-w-3xl prose-zb">
+        {
+          copy.sections.map((s, i) => (
+            <Reveal delay={i * 40}>
+              <h2>{s.h}</h2>
+              {s.p.split('\n\n').map((para) => (
+                <p>{para}</p>
+              ))}
+              {i === 1 && (
+                <div class="not-prose my-6 flex">
+                  <AppStoreButton label={t.cta.appStore} ct="blog-payment-none-mid" />
+                </div>
+              )}
+            </Reveal>
+          ))
+        }
+
+        <Reveal>
+          <h2>Related questions</h2>
+        </Reveal>
+        <Reveal>
+          <FAQ items={copy.faqItems} />
+        </Reveal>
+      </div>
+    </Container>
+  </Section>
+
+  <FinalCta {lang} />
+</PageLayout>

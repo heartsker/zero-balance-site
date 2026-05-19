@@ -1,0 +1,146 @@
+---
+import PageLayout from '../../../layouts/PageLayout.astro';
+import PageHeader from '../../../components/PageHeader.astro';
+import Container from '../../../components/Container.astro';
+import Section from '../../../components/Section.astro';
+import FAQ from '../../../components/FAQ.astro';
+import Reveal from '../../../components/Reveal.astro';
+import FinalCta from '../../../components/FinalCta.astro';
+import AppStoreButton from '../../../components/AppStoreButton.astro';
+import { getDict, LOCALES, type Locale } from '../../../i18n';
+import { articleSchema, faqSchema, breadcrumbSchema } from '../../../lib/schema';
+import { DOMAIN } from '../../../lib/siteConfig';
+
+export function getStaticPaths() {
+  return LOCALES.map((lang) => ({ params: { lang } }));
+}
+
+const lang = Astro.params.lang as Locale;
+const t = getDict(lang);
+const slug = 'apple-subscription-payment-failed-retry';
+const path = `/${lang}/blog/${slug}/`;
+const published = '2026-05-19T00:00:00Z';
+
+const copy = {
+  title: 'Apple subscription payment failed: how long does the retry last?',
+  description:
+    'Card declined on an Apple subscription renewal but the subscription still shows active? Here is the 16-day retry window and what happens next.',
+  eyebrow: 'Subscriptions',
+  tldr:
+    'Apple keeps a failed-payment subscription active for up to 16 days while it retries the card. You still have full access during that window. If you do not update your payment method, the subscription pauses and you lose access; it can be resumed by paying the past-due amount.',
+  sections: [
+    {
+      h: 'Apple\'s official grace period',
+      p: 'When an Apple subscription renewal\'s payment fails, Apple does not cancel the subscription immediately. The default behavior is a grace period during which the subscription remains active even though the renewal payment has not gone through.\n\nThe standard grace period is 16 days for most subscriptions. Some App Store apps configure a shorter grace period (commonly 7 days) at the developer\'s discretion. Apple One bundles, Apple Music, iCloud+, and most major subscription apps use 16 days.\n\nDuring the grace period:\n\n- The subscription shows as active in Settings -> Subscriptions.\n- The app continues to deliver paid features.\n- Apple emails you to update your payment method.\n- Apple retries the original card 3-4 times at increasing intervals.\n\nThe grace period exists for a reason: cards expire, banks decline auths for fraud rules, payment methods get cancelled. Apple gives you time to fix it without losing access. Most failed renewals resolve when the user adds a working card mid-window.',
+    },
+    {
+      h: 'What Apple does during the retry window',
+      p: 'Day 0: original renewal date. Apple charges the card. Card declines. Apple emails you with a "billing issue" notification.\n\nDays 1-3: Apple retries the same card. Usually a daily attempt for the first few days, then less frequent.\n\nDays 3-7: Apple emails reminders. The notifications get more urgent over the window.\n\nDays 7-16: continued retries at decreasing frequency. Apple\'s system also surfaces the billing issue in the App Store banner on your iPhone (a red badge on the profile icon) and inside Settings.\n\nDay 16: if the renewal has not gone through, the subscription pauses. The app loses access immediately. You can still resume by paying the past-due amount, but you have to re-trigger it explicitly.\n\nThroughout the window, Apple does not double-charge - the retries are for the same renewal amount, and only one of them eventually settles (or none, if all fail). Your bank may show pending auths for each retry; these reverse if the auth never settles.',
+    },
+    {
+      h: 'The subscription stays active during retry',
+      p: 'This is the part people miss. A failed renewal does not pause the subscription. The app behaves exactly as if the renewal succeeded - all features delivered, all content available, all sync working. The only signal that something is wrong is the emails Apple sends and the small banner in Settings.\n\nThis is intentional. Apple\'s research shows users who lose access during a billing hiccup often cannot tell whether they cancelled the subscription themselves; the friction of cancelling-by-accident is a worse user experience than letting access continue while the payment gets fixed.\n\nA practical implication: if you intended to cancel a subscription but did not, and a renewal then fails, the subscription will still be active for two more weeks. To stop it cleanly, cancel during the retry window (Settings -> Subscriptions -> [the subscription] -> Cancel). Cancellation during retry stops the retries immediately and ends the subscription at the current period end.',
+    },
+    {
+      h: 'What happens after the window expires',
+      p: 'On day 17, if the payment never resolved:\n\n- Subscription state changes to "expired" or "billing issue - paused".\n- The app loses access immediately on next launch.\n- Apple stops retrying the card.\n- The subscription is preserved in Settings -> Subscriptions but inactive.\n\nResuming after expiration:\n\n- Apple does not auto-resume. You have to explicitly tap the subscription in Settings and choose to renew.\n- Apple charges the new payment method for the missed renewal cycle plus, depending on the app\'s configuration, may also charge a new renewal to bring you current. Some apps charge both, some only the new renewal.\n- Some apps offer a "billing retry" promotion - resume in the first 30 days at the original price; after that, the price may have changed.\n\nYour app data is preserved during the pause. Apple Music library, iCloud Drive contents, third-party app data (where the developer wrote it to a server) all wait for you to resume. Local-only data on the device stays on the device.',
+    },
+    {
+      h: 'How to intentionally let it lapse vs how to keep it',
+      p: 'Strategy depends on what you want.\n\nTo keep the subscription:\n\n1. Settings -> [your name] -> Payment & Shipping.\n2. Replace the failed card or add a working one.\n3. Apple uses the new method on the next retry attempt. No manual action needed.\n4. The renewal goes through, the subscription stays active, no interruption.\n\nTo cancel cleanly:\n\n1. Settings -> [your name] -> Subscriptions.\n2. Tap the subscription, choose Cancel Subscription.\n3. Apple stops the retries and the subscription ends at the current paid period end (which may be in the past now, so it ends immediately).\n4. No further charges, no pending balance.\n\nTo let it expire passively (not recommended):\n\n1. Do nothing. Wait 16 days.\n2. Subscription pauses, app loses access.\n3. Apple keeps emailing reminders for ~30 days after expiration.\n\nPassive expiration is messier than cancelling. The active retries during the window show up as pending auths on the card, can interact badly with new cards if you add one for unrelated reasons, and leave a "billing issue" badge in the App Store that some users find stressful.',
+    },
+  ],
+  faqItems: [
+    {
+      q: 'Why does my bank show a pending charge from Apple that never settles?',
+      a: 'That is one of the retry auths. Each retry triggers a hold on the card; if the auth does not settle (Apple does not capture it), the hold reverses on the bank\'s side after a few days. Multiple retries can stack as multiple pending holds; all reverse if none settle.',
+    },
+    {
+      q: 'Can I tell Apple to skip the retry window and just cancel?',
+      a: 'Cancel the subscription in Settings; that stops the retries immediately. The grace period ends with cancellation, not with the 16-day clock.',
+    },
+    {
+      q: 'My card was declined for fraud rules but the rules are fixed now. Will the next retry succeed automatically?',
+      a: 'Yes. Apple\'s retry schedule continues regardless. The next attempt within the window will go through if the card accepts it. No manual re-trigger needed.',
+    },
+    {
+      q: 'What if I want to switch cards but keep the current renewal cycle?',
+      a: 'Update the payment method during the retry window: Settings -> Payment & Shipping. Apple will use the new method on the next retry. The subscription renewal cycle is preserved (it does not reset based on which card paid).',
+    },
+    {
+      q: 'Does the grace period apply to in-app subscriptions from third-party apps?',
+      a: 'Yes. The 16-day grace is set by Apple at the platform level for most subscription apps. Some apps configure 7 days. The behavior - subscription stays active during retry - applies to all App Store-billed subscriptions.',
+    },
+  ],
+};
+---
+
+<PageLayout
+  title={`${copy.title} - Zero Balance`}
+  description={copy.description}
+  {lang}
+  {path}
+  schema={[
+    articleSchema({ title: copy.title, description: copy.description, slug, lang, datePublished: published }),
+    faqSchema(copy.faqItems),
+    breadcrumbSchema([
+      { name: 'Home', url: `${DOMAIN}/${lang}/` },
+      { name: 'Blog', url: `${DOMAIN}/${lang}/blog/` },
+      { name: copy.title, url: `${DOMAIN}${path}` },
+    ]),
+  ]}
+  ogType="article"
+  publishedTime={published}
+  modifiedTime={published}
+  keywords={[
+    'apple subscription payment failed still active',
+    'apple retry billing days',
+    'billing retry window apple',
+    'apple subscription billing issue',
+    'apple 16 day grace period',
+    ...t.keywords.support,
+  ]}
+>
+  <PageHeader eyebrow={copy.eyebrow} title={copy.title} description={copy.description} />
+
+  <Section>
+    <Container>
+      <Reveal class="mx-auto max-w-3xl">
+        <div class="rounded-2xl border border-[var(--border)] bg-[var(--brand-soft)]/40 p-6 md:p-8">
+          <p class="text-sm font-semibold tracking-wide text-[var(--brand-strong)] uppercase">TL;DR</p>
+          <p class="mt-3 text-lg leading-relaxed text-[var(--fg)]">{copy.tldr}</p>
+          <div class="mt-6 flex">
+            <AppStoreButton label={t.cta.appStore} ct="blog-payment-retry-tldr" />
+          </div>
+        </div>
+      </Reveal>
+
+      <div class="mx-auto mt-10 max-w-3xl prose-zb">
+        {
+          copy.sections.map((s, i) => (
+            <Reveal delay={i * 40}>
+              <h2>{s.h}</h2>
+              {s.p.split('\n\n').map((para) => (
+                <p>{para}</p>
+              ))}
+              {i === 1 && (
+                <div class="not-prose my-6 flex">
+                  <AppStoreButton label={t.cta.appStore} ct="blog-payment-retry-mid" />
+                </div>
+              )}
+            </Reveal>
+          ))
+        }
+
+        <Reveal>
+          <h2>Related questions</h2>
+        </Reveal>
+        <Reveal>
+          <FAQ items={copy.faqItems} />
+        </Reveal>
+      </div>
+    </Container>
+  </Section>
+
+  <FinalCta {lang} />
+</PageLayout>

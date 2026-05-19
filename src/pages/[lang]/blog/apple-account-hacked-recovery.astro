@@ -1,0 +1,150 @@
+---
+import PageLayout from '../../../layouts/PageLayout.astro';
+import PageHeader from '../../../components/PageHeader.astro';
+import Container from '../../../components/Container.astro';
+import Section from '../../../components/Section.astro';
+import FAQ from '../../../components/FAQ.astro';
+import Reveal from '../../../components/Reveal.astro';
+import FinalCta from '../../../components/FinalCta.astro';
+import AppStoreButton from '../../../components/AppStoreButton.astro';
+import { getDict, LOCALES, type Locale } from '../../../i18n';
+import { articleSchema, faqSchema, breadcrumbSchema } from '../../../lib/schema';
+import { DOMAIN } from '../../../lib/siteConfig';
+
+export function getStaticPaths() {
+  return LOCALES.map((lang) => ({ params: { lang } }));
+}
+
+const lang = Astro.params.lang as Locale;
+const t = getDict(lang);
+const slug = 'apple-account-hacked-recovery';
+const path = `/${lang}/blog/${slug}/`;
+const published = '2026-05-19T00:00:00Z';
+
+const copy = {
+  title: 'Apple account hacked: lock it down, recover funds, prevent re-entry',
+  description:
+    'Your Apple ID is compromised, unauthorized charges are rolling in, and you need to act in the next 30 minutes. Here is the exact order of operations.',
+  eyebrow: 'Security',
+  tldr:
+    'Move fast in this order: change your Apple ID password, sign every device out remotely, enable 2FA on a phone number only you control, then report every unauthorized charge through reportaproblem.apple.com. Apple\'s fraud team usually refunds confirmed unauthorized purchases; bank disputes should be a last resort because they can disable your Apple ID.',
+  sections: [
+    {
+      h: 'Step 1: immediate lockdown',
+      p: 'Within the first 5 minutes:\n\n1. iforgot.apple.com from a desktop browser. Change your Apple ID password. Pick something not derived from any password you have used elsewhere. The attacker may have credentials from a different breach; you do not want to use a related password.\n\n2. Use a password manager to generate. 20+ characters, random. Do not store the new password in the same place the old one might have been compromised from.\n\n3. account.apple.com -> Devices section. Sign every device out that you do not currently have in your hand. The attacker is probably signed in somewhere; signing them out from your side closes their session immediately. Do not worry about signing yourself out of devices you own - you can sign back in afterwards with the new password.\n\n4. If you have 2FA already enabled, the attacker may have intercepted SMS codes. Move to step 2 below.\n\n5. If you do not have 2FA, enable it now: account.apple.com -> Sign-In & Security -> Two-Factor Authentication. The trusted phone number must be one only you control.\n\nDo this all before pursuing refunds. The attacker is potentially still running new charges while you read this; lock them out first.',
+    },
+    {
+      h: 'Step 2: secure 2FA and trusted contacts',
+      p: 'Even with 2FA on, you can still be compromised through:\n\n- SIM-swap attacks (attacker transfers your phone number to their device, intercepts SMS codes).\n- Old trusted phone numbers you no longer use (attacker had the old number assigned to them by the carrier).\n- Recovery contacts who themselves got compromised.\n\nHarden the auth surface:\n\n1. account.apple.com -> Sign-In & Security -> Trusted Phone Numbers. Remove any number you do not currently control (old work numbers, numbers from a previous country, parents\' numbers, ex-partner\'s numbers).\n\n2. Add a number only you have access to. If you suspect SIM-swap risk, add a phone number from a service like Google Voice or a secondary line - harder to SIM-swap than your primary cellular number.\n\n3. Recovery Contact: Settings -> [your name] -> Sign-In & Security -> Recovery Contact. Pick someone you trust with their own Apple device. They can verify on your behalf in future recoveries.\n\n4. Recovery Key: account.apple.com -> Sign-In & Security -> Recovery Key. Generate one and store it on paper somewhere physically safe. With a Recovery Key, Apple\'s account recovery process is much faster.',
+    },
+    {
+      h: 'Step 3: report and refund unauthorized charges',
+      p: 'Once the account is locked down, attend to the money. The route:\n\n1. reportaproblem.apple.com -> sign in with your (now-recovered) Apple ID.\n\n2. List every charge you do not recognize. For each:\n - Click "Report a Problem".\n - Reason: "I did not authorize this purchase".\n - Free-text: "Account was compromised on [date]. The attacker made this charge. I have changed my password and signed out all unauthorized devices."\n - Submit.\n\n3. Apple\'s fraud team has a higher refund approval rate than the standard refund queue. Unauthorized purchases reported within ~30 days of the breach are usually refunded.\n\n4. Refunds typically land back where the money came from. If charged to a card, the refund returns to that card. If charged to Apple Account balance, refund returns to balance.\n\nDo not use bank chargebacks for these charges. Even though they would work mechanically, the chargeback path triggers Apple\'s adversarial response and often results in the Apple ID being disabled. Once disabled, you lose access to every purchase ever made on the account, every subscription, and balance. Reportaproblem is slower but does not have this side effect.',
+    },
+    {
+      h: 'Step 4: clean up authorized devices and tokens',
+      p: 'The attacker may have left behind persistent footholds. Walk through and revoke each:\n\n1. account.apple.com -> Devices. Confirm only your own devices are listed. Remove any unknown ones (the lockdown step in Step 1 covers this; revisit to confirm).\n\n2. account.apple.com -> Sign in with Apple. This shows every third-party app or service you have signed in to using your Apple ID. Review the list; revoke any you do not recognize. Attackers sometimes use Sign in with Apple to maintain access through third-party services even after you change the Apple ID password.\n\n3. account.apple.com -> App-Specific Passwords. Any app-specific password the attacker created stays valid until revoked. Revoke all of them and regenerate new ones for the apps you actually need (older Mail clients, third-party calendar apps that do not support 2FA).\n\n4. Settings -> [your name] -> iCloud -> Manage Storage -> Family. If the attacker added themselves to your family, remove them. Family Sharing connections grant payment-method access to the organizer\'s card.\n\n5. Subscriptions tab. Verify nothing is subscribed that you did not subscribe to. Attackers sometimes start subscriptions to apps they own to generate revenue.',
+    },
+    {
+      h: 'The Apple Cash scam pattern',
+      p: 'A specific variant worth knowing: the "TikTok For Business" Apple Cash scam. The pattern:\n\n1. Attacker poses as TikTok For Business (or similar legitimate-sounding brand) and asks for an Apple Cash payment.\n2. Victim sends $X via Apple Cash thinking it is a business transaction.\n3. The recipient is actually a scammer who immediately moves the money to a bank or other Apple Cash account, beyond Apple\'s reversibility.\n4. Apple Cash transactions are like cash; recovery is much harder than card-based recovery.\n\nIf this happened to you specifically:\n\n1. Report through the Wallet app: open Wallet -> Apple Cash card -> tap the transaction -> Report an Issue. Apple\'s Apple Cash team is separate from iTunes Store support.\n2. Contact Goldman Sachs (the issuing bank for Apple Cash) directly if Apple does not produce a refund within 7 days. They have their own dispute process.\n3. File with the FTC and local police. The TikTok For Business scam is a tracked pattern; multi-victim reports get coordinated.\n4. Disable Apple Cash temporarily: Wallet -> Apple Cash card -> Card Details (...) -> Pause Apple Cash. Prevents further drains while you investigate.\n\nApple Cash recovery rate is materially lower than App Store fraud recovery. Document everything; treat it as a possible total loss.',
+    },
+    {
+      h: 'Why standard chat support cannot help',
+      p: 'AppleCare front-line chat agents handle device repair, software help, and general account questions. They cannot:\n\n- Lift account disables.\n- Reverse Apple Cash transactions.\n- Approve refunds for unauthorized purchases (they refer you to reportaproblem).\n- Access Apple ID security tooling.\n\nThe team that can is iTunes Store support, particularly the fraud and security specialists. To reach them:\n\n1. getsupport.apple.com (not the Apple Support app, which routes to general AppleCare).\n2. Choose "Apple Account" -> "Security & Compromised Account".\n3. Request a callback. Specify "Senior Advisor" if the case has any complication: prior disable, large dollar amount, recurring fraud, ongoing unauthorized access.\n\nWhen the agent picks up:\n\n- Lead with: "My Apple ID was compromised on [date]. I have changed the password and signed all devices out. I need to file unauthorized-purchase refunds and confirm the account is no longer at risk."\n- Have ready: the list of unauthorized charges, the new password (do not give it; just confirm you have changed it), the device list you reviewed.\n- Ask: "Is there anything else on the account I should clean up? Any open sessions, recovery contacts, app-specific passwords?"\n\nA good Senior Advisor call takes 30-45 minutes and lifts most of the residual risk in one pass.',
+    },
+  ],
+  faqItems: [
+    {
+      q: 'Should I file a chargeback with my bank for unauthorized Apple charges?',
+      a: 'Almost never. Bank chargebacks for Apple charges trigger Apple\'s adversarial fraud response and often result in the Apple ID being disabled entirely. Use reportaproblem.apple.com first; only fall back to bank chargeback if you are willing to abandon the Apple ID.',
+    },
+    {
+      q: 'How long do I have to report unauthorized purchases?',
+      a: 'Apple\'s policy is 60 days; in practice, recent reports (within 30 days) approve at the highest rate. After 60 days, recovery becomes much harder. Report as soon as you discover the breach.',
+    },
+    {
+      q: 'My Apple ID was used to make purchases on a device that is not mine. Can Apple tell me whose device?',
+      a: 'Apple has the device identifier and approximate location (IP-based, not GPS) but generally will not share specifics with you. For law enforcement investigations, Apple cooperates with subpoenas. If the breach is part of a larger pattern (stalking, ongoing harassment), file a police report and let them request the data.',
+    },
+    {
+      q: 'Will my iCloud Photos and data be wiped during account recovery?',
+      a: 'No. Account recovery is verification, not data wipe. Photos, Mail, Drive, and purchases all stay. The only data risk is if the attacker explicitly deleted things before you regained access - you would need to restore from a recent iCloud backup if so.',
+    },
+    {
+      q: 'If I had Family Sharing, are the other family members also at risk?',
+      a: 'Possibly. The attacker had access to the organizer\'s payment method, which billed family purchases. If you were the organizer, alert all family members. They should also change their Apple ID passwords as a precaution; if the attacker had broader access, they may have crossed into family accounts.',
+    },
+  ],
+};
+---
+
+<PageLayout
+  title={`${copy.title} - Zero Balance`}
+  description={copy.description}
+  {lang}
+  {path}
+  schema={[
+    articleSchema({ title: copy.title, description: copy.description, slug, lang, datePublished: published }),
+    faqSchema(copy.faqItems),
+    breadcrumbSchema([
+      { name: 'Home', url: `${DOMAIN}/${lang}/` },
+      { name: 'Blog', url: `${DOMAIN}/${lang}/blog/` },
+      { name: copy.title, url: `${DOMAIN}${path}` },
+    ]),
+  ]}
+  ogType="article"
+  publishedTime={published}
+  modifiedTime={published}
+  keywords={[
+    'apple account hacked',
+    'unauthorized apple charges',
+    'apple id compromised what to do',
+    'apple cash scam recovery',
+    'apple account security breach',
+    ...t.keywords.support,
+  ]}
+>
+  <PageHeader eyebrow={copy.eyebrow} title={copy.title} description={copy.description} />
+
+  <Section>
+    <Container>
+      <Reveal class="mx-auto max-w-3xl">
+        <div class="rounded-2xl border border-[var(--border)] bg-[var(--brand-soft)]/40 p-6 md:p-8">
+          <p class="text-sm font-semibold tracking-wide text-[var(--brand-strong)] uppercase">TL;DR</p>
+          <p class="mt-3 text-lg leading-relaxed text-[var(--fg)]">{copy.tldr}</p>
+          <div class="mt-6 flex">
+            <AppStoreButton label={t.cta.appStore} ct="blog-hacked-recovery-tldr" />
+          </div>
+        </div>
+      </Reveal>
+
+      <div class="mx-auto mt-10 max-w-3xl prose-zb">
+        {
+          copy.sections.map((s, i) => (
+            <Reveal delay={i * 40}>
+              <h2>{s.h}</h2>
+              {s.p.split('\n\n').map((para) => (
+                <p>{para}</p>
+              ))}
+              {i === 2 && (
+                <div class="not-prose my-6 flex">
+                  <AppStoreButton label={t.cta.appStore} ct="blog-hacked-recovery-mid" />
+                </div>
+              )}
+            </Reveal>
+          ))
+        }
+
+        <Reveal>
+          <h2>Related questions</h2>
+        </Reveal>
+        <Reveal>
+          <FAQ items={copy.faqItems} />
+        </Reveal>
+      </div>
+    </Container>
+  </Section>
+
+  <FinalCta {lang} />
+</PageLayout>

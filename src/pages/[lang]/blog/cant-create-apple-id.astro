@@ -1,0 +1,150 @@
+---
+import PageLayout from '../../../layouts/PageLayout.astro';
+import PageHeader from '../../../components/PageHeader.astro';
+import Container from '../../../components/Container.astro';
+import Section from '../../../components/Section.astro';
+import FAQ from '../../../components/FAQ.astro';
+import Reveal from '../../../components/Reveal.astro';
+import FinalCta from '../../../components/FinalCta.astro';
+import AppStoreButton from '../../../components/AppStoreButton.astro';
+import { getDict, LOCALES, type Locale } from '../../../i18n';
+import { articleSchema, faqSchema, breadcrumbSchema } from '../../../lib/schema';
+import { DOMAIN } from '../../../lib/siteConfig';
+
+export function getStaticPaths() {
+  return LOCALES.map((lang) => ({ params: { lang } }));
+}
+
+const lang = Astro.params.lang as Locale;
+const t = getDict(lang);
+const slug = 'cant-create-apple-id';
+const path = `/${lang}/blog/${slug}/`;
+const published = '2026-05-19T00:00:00Z';
+
+const copy = {
+  title: 'Cannot create an Apple ID: every silent blocker and the fix',
+  description:
+    'Apple ID creation fails with cryptic errors. Here are the rate limits, region rules, and email/phone constraints Apple does not document, plus what works.',
+  eyebrow: 'Account setup',
+  tldr:
+    'Apple silently limits how many Apple IDs one phone number can verify, blocks burner email domains, and rejects creation from VPN/region-mismatched IPs. Use a real email, a phone Apple has not seen on many accounts, and disable VPN; if it still fails, wait 24 hours and try from a device that has never had an Apple ID on it.',
+  sections: [
+    {
+      h: 'The blockers Apple does not surface',
+      p: 'When Apple ID creation fails, the error usually reads something generic ("Could not create Apple ID at this time", "Please try again later", "Verification failed"). Underneath, Apple is enforcing several specific rules without telling you which one tripped:\n\n1. Phone number reuse cap. A single phone number can verify only a few Apple IDs. The exact limit is not published; user reports cluster at 3-5. After that, the number silently fails verification for new accounts.\n\n2. Email domain blocks. Disposable email domains (Mailinator, 10minutemail, Guerrilla Mail, Yopmail), some privacy-relay services, and occasionally certain corporate domains are on Apple\'s blocked list. Apple does not say "your email domain is blocked"; it just fails the form.\n\n3. IP/region mismatch. If the IP geolocates to a country different from the country selected in the form, Apple flags the attempt as suspicious and bounces it. VPNs are the most common trigger.\n\n4. Recent deletion cooldown. If you deleted an Apple ID on the same device or with the same email recently, there is a ~24 hour cooldown before a new one can be created. The form does not explain this.\n\n5. Age-gate. Under-13 users cannot create a standalone Apple ID; Apple requires Family Sharing creation flow. Apple silently bounces standalone attempts for users who entered under-13 birthdates.\n\n6. Device fingerprint flags. If a device was previously used to abuse account creation (mass-creating fake IDs for App Store fraud), Apple flags new attempts from that device for extended review.',
+    },
+    {
+      h: 'The phone number reuse limit',
+      p: 'The most common blocker. Apple uses your phone number for verification during account creation; if the number has already been used to verify multiple Apple IDs, the system silently refuses to verify a new one.\n\nThe limit is not published. User reports converge on 3-5 Apple IDs per phone number, though there are scattered reports of higher and lower thresholds. Apple appears to track the number, the device it last verified from, and the recency of past verifications - all factor in.\n\nWorkarounds:\n\n- Use a different phone number. If you live with family or friends, ask to use their number for the verification step; they receive the code and forward it to you.\n\n- Set up a Google Voice number (US), a temporary cellular SIM, or a long-term secondary number for account-creation purposes.\n\n- Wait. The reuse counter appears to age out, slowly. A number that has hit the limit becomes usable again after some months.\n\n- For users in regions where Google Voice does not work: pre-paid SIM cards (Lyca, GiffGaff, etc.) work and are cheap. Just confirm the SIM\'s number receives international SMS if you are creating from outside the SIM\'s country.',
+    },
+    {
+      h: 'Real device vs fresh browser',
+      p: 'Apple\'s account creation flow exists in several places, and they have different reliability:\n\n- Real iPhone or iPad in initial setup: most reliable. Apple\'s onboarding flow is the canonical path.\n\n- Apple Music for Android: works, but the form is older and rejects more emails than the iOS flow.\n\n- appleid.apple.com from a desktop browser: less reliable than iOS. Apple\'s anti-abuse rules are tuned to web traffic patterns and bounce a higher rate of legitimate sign-ups.\n\n- iTunes for Windows: still works in 2026 (Apple has not killed it), and sometimes creates accounts the web flow refuses.\n\nIf the iOS flow rejects you, try the desktop web. If web rejects, try iTunes for Windows. If all three reject, the issue is not the surface - it is the account fingerprint Apple is checking.\n\nA fresh device that has never had an Apple ID on it has the cleanest fingerprint. If you have access to one (a friend\'s iPhone, an iPad you have not set up yet), creating there often works when your usual device does not. The new Apple ID then syncs to your usual device once you sign in.',
+    },
+    {
+      h: 'Real email vs aliased',
+      p: 'Apple distinguishes between several email categories:\n\n- Real personal email from a major provider (Gmail, iCloud, Outlook, Yahoo, Proton from a paid account): always accepted.\n\n- Corporate email from a recognizable employer domain: accepted, with occasional flagging.\n\n- Educational email (.edu, .ac.uk): accepted but sometimes throttled.\n\n- Disposable / temp email (Mailinator, 10minutemail, etc.): blocked.\n\n- Hide My Email aliases from Apple\'s own iCloud+: accepted (Apple obviously knows their own aliases are valid).\n\n- Third-party aliasing (SimpleLogin, Anonaddy, Firefox Relay, DuckDuckGo Email): variable. Some domains are blocked; others not yet. Apple updates the block list periodically.\n\n- Plus-addressed Gmail (e.g. yourname+test@gmail.com): accepted but Apple normalizes them, so all + variants count as one email for reuse purposes.\n\nIf the form rejects your email with no specific error, try a different one. The first thing to verify is that you can receive email at the address (send yourself a test email first; if it does not arrive, the form will fail later when Apple sends the verification).',
+    },
+    {
+      h: 'VPN, IP, and region issues',
+      p: 'Apple\'s form expects the IP to geolocate to the country you selected. If the IP says you are in the US and the form says Russia, Apple flags it as suspicious and bounces.\n\nFixes:\n\n1. Turn off VPN. Even commercial VPN services (NordVPN, ExpressVPN, ProtonVPN) sometimes get IPs Apple has on a watchlist due to past abuse. Turn off and retry on your normal home connection.\n\n2. Mobile data vs Wi-Fi. Cellular IPs from major carriers are usually clean. If your home Wi-Fi has any history of abuse (multiple Apple ID creations from the same IP), switch to cellular and retry.\n\n3. Match the country you selected with where you actually are. If you are physically in the US, select the US storefront. If you need a different storefront, change the Apple ID country after creation rather than lying about your current country in the form.\n\n4. Public Wi-Fi at coffee shops, libraries, or airports sometimes has unusable IPs because too many random users created Apple IDs there. Use a private network if possible.\n\n5. Corporate networks sometimes block parts of Apple\'s verification flow (specifically, SSL inspection that breaks Apple\'s TLS pinning). Use cellular or a personal network outside corporate firewalls.',
+    },
+    {
+      h: 'When you must contact Apple Account Security',
+      p: 'Some blockers cannot be fixed from the user side:\n\n- Your IP range is on Apple\'s suspicious-IP list. Switching networks helps, but if the broader region is flagged (small country, post-Soviet states sometimes, certain ISPs known for hosting fraud), the rest of the routes also fail.\n\n- Your phone number is on a heavily-used carrier (e.g., reused too many times by past customers of a prepaid network).\n\n- Apple\'s automated system has flagged you specifically (rare, but happens to users who repeatedly tried different routes - the flagging compounds).\n\nFor these, contact Apple Account Security via getsupport.apple.com -> "Apple Account" -> "Create an Apple ID". An agent can sometimes override the silent block in real-time during the call, especially if you explain your situation calmly and have not made many recent attempts (which dig the hole deeper).\n\nFor under-13 children, do not try the standalone path. Use the family flow: Settings -> Family -> Add Member -> Create Child Account. The age gate is hard - Apple will not let an under-13 have a standalone Apple ID.',
+    },
+  ],
+  faqItems: [
+    {
+      q: 'How long do I have to wait if Apple recently blocked me from creating an account?',
+      a: '24 hours minimum for the recent-deletion cooldown; longer if the block is more severe. Each failed attempt sometimes extends the wait. Do not retry repeatedly - it makes the eventual success harder.',
+    },
+    {
+      q: 'Can I use my regular Gmail address even though I have used it for other Apple IDs in the past?',
+      a: 'No. Apple normalizes email addresses; an email that was the primary on a previous Apple ID cannot be reused as the primary on a new one. Use a different email or a Gmail "+" alias (though Apple may catch that too).',
+    },
+    {
+      q: 'Why does Apple need my phone number? Can I skip that step?',
+      a: 'You cannot skip it. The phone number is the primary verification method for 2FA. Apple requires it. If you have no phone, the recovery contact path requires another Apple device user to verify on your behalf, but you still need to enter some number.',
+    },
+    {
+      q: 'Apple created the account but immediately suspended it. Why?',
+      a: 'Apple\'s fraud system sometimes flags new accounts based on the device fingerprint, IP history, or behavioral patterns during creation (too-fast tab switching, etc.). Contact Account Security with proof of identity to lift the suspension.',
+    },
+    {
+      q: 'Can I create an Apple ID without an iPhone?',
+      a: 'Yes. appleid.apple.com from any browser creates an account that works for iCloud web, Apple Music for Android, and any future iPhone you sign in with. The flow is less reliable than iOS but works.',
+    },
+  ],
+};
+---
+
+<PageLayout
+  title={`${copy.title} - Zero Balance`}
+  description={copy.description}
+  {lang}
+  {path}
+  schema={[
+    articleSchema({ title: copy.title, description: copy.description, slug, lang, datePublished: published }),
+    faqSchema(copy.faqItems),
+    breadcrumbSchema([
+      { name: 'Home', url: `${DOMAIN}/${lang}/` },
+      { name: 'Blog', url: `${DOMAIN}/${lang}/blog/` },
+      { name: copy.title, url: `${DOMAIN}${path}` },
+    ]),
+  ]}
+  ogType="article"
+  publishedTime={published}
+  modifiedTime={published}
+  keywords={[
+    'cant create apple id',
+    'apple id creation failed',
+    'wont let me make apple account',
+    'apple id phone number reuse',
+    'apple id verification failed',
+    ...t.keywords.support,
+  ]}
+>
+  <PageHeader eyebrow={copy.eyebrow} title={copy.title} description={copy.description} />
+
+  <Section>
+    <Container>
+      <Reveal class="mx-auto max-w-3xl">
+        <div class="rounded-2xl border border-[var(--border)] bg-[var(--brand-soft)]/40 p-6 md:p-8">
+          <p class="text-sm font-semibold tracking-wide text-[var(--brand-strong)] uppercase">TL;DR</p>
+          <p class="mt-3 text-lg leading-relaxed text-[var(--fg)]">{copy.tldr}</p>
+          <div class="mt-6 flex">
+            <AppStoreButton label={t.cta.appStore} ct="blog-create-apple-id-tldr" />
+          </div>
+        </div>
+      </Reveal>
+
+      <div class="mx-auto mt-10 max-w-3xl prose-zb">
+        {
+          copy.sections.map((s, i) => (
+            <Reveal delay={i * 40}>
+              <h2>{s.h}</h2>
+              {s.p.split('\n\n').map((para) => (
+                <p>{para}</p>
+              ))}
+              {i === 1 && (
+                <div class="not-prose my-6 flex">
+                  <AppStoreButton label={t.cta.appStore} ct="blog-create-apple-id-mid" />
+                </div>
+              )}
+            </Reveal>
+          ))
+        }
+
+        <Reveal>
+          <h2>Related questions</h2>
+        </Reveal>
+        <Reveal>
+          <FAQ items={copy.faqItems} />
+        </Reveal>
+      </div>
+    </Container>
+  </Section>
+
+  <FinalCta {lang} />
+</PageLayout>

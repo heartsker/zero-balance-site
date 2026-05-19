@@ -1,0 +1,146 @@
+---
+import PageLayout from '../../../layouts/PageLayout.astro';
+import PageHeader from '../../../components/PageHeader.astro';
+import Container from '../../../components/Container.astro';
+import Section from '../../../components/Section.astro';
+import FAQ from '../../../components/FAQ.astro';
+import Reveal from '../../../components/Reveal.astro';
+import FinalCta from '../../../components/FinalCta.astro';
+import AppStoreButton from '../../../components/AppStoreButton.astro';
+import { getDict, LOCALES, type Locale } from '../../../i18n';
+import { articleSchema, faqSchema, breadcrumbSchema } from '../../../lib/schema';
+import { DOMAIN } from '../../../lib/siteConfig';
+
+export function getStaticPaths() {
+  return LOCALES.map((lang) => ({ params: { lang } }));
+}
+
+const lang = Astro.params.lang as Locale;
+const t = getDict(lang);
+const slug = 'apple-id-locked-verification-code-loop';
+const path = `/${lang}/blog/${slug}/`;
+const published = '2026-05-19T00:00:00Z';
+
+const copy = {
+  title: 'Apple ID locked after verification code loop: how to get back in',
+  description:
+    'Apple keeps rejecting your verification codes and now the account is locked. Here is why the loop happens and how to escape it without losing the account.',
+  eyebrow: 'Account recovery',
+  tldr:
+    'Most "verification code" lockouts come from the wrong code source - SMS to an old number or an autofill grabbing an unrelated code. Pull the code from a trusted device\'s banner instead of typing it; if you are already locked, start account recovery at iforgot.apple.com.',
+  sections: [
+    {
+      h: 'Why the loop happens',
+      p: 'Apple\'s 2FA flow sends two different things at the same time, and which one you should use depends on what devices you own.\n\n- If you have a trusted Apple device (iPhone, iPad, Mac), Apple pushes a 6-digit verification code as a system notification on every signed-in device. This is the code Apple wants when you sign in on a new device. It appears as a banner with a map showing the approximate sign-in location.\n\n- If you do not have a trusted Apple device, Apple falls back to SMS to a trusted phone number on file. The SMS code is the one to use in that case.\n\nThe loop happens when both fire at once and the user uses the wrong one. Specifically: iOS autofill grabs the SMS code and inserts it into the sign-in field. But the field actually wants the device-pushed code, not the SMS one. Apple rejects the SMS code with a generic "incorrect code" error. The user retries, autofill grabs the SMS again, the cycle repeats, and after a few attempts the account auto-locks.\n\nClock drift is the other major cause - if the trusted device\'s clock is wrong by more than a few minutes, the time-based codes do not match Apple\'s server.',
+    },
+    {
+      h: 'First aid before you lock yourself out',
+      p: 'If you have just started getting "incorrect code" errors but the account is not locked yet:\n\n1. Stop autofilling. Tap the code from the trusted-device notification manually rather than letting iOS paste an SMS code. The trusted-device code shows in a banner that you can tap "Allow" on, or read off the device-pushed verification screen.\n\n2. Check that the trusted device\'s clock is set to automatic: Settings -> General -> Date & Time -> Set Automatically. Clock drift breaks 2FA.\n\n3. Make sure cellular data or Wi-Fi is on. The trusted device needs to be online to receive the push.\n\n4. If you cannot find the trusted device push, sign in to icloud.com on another device first; Apple sends the push to any signed-in device, not only iPhones.\n\n5. If your trusted phone number is no longer in service or has been transferred (you got a new SIM with a new number, or your old carrier sold the number), the SMS path is broken until you update the trusted phone on file.\n\nGetting one code right resets the failed-attempt counter.',
+    },
+    {
+      h: 'If you are already locked',
+      p: 'Apple auto-locks after several failed verification attempts in a short window. The message reads "Apple ID locked for security reasons" or similar. The recovery path is iforgot.apple.com.\n\nThe automated flow:\n\n1. iforgot.apple.com -> enter your Apple ID email.\n2. Apple asks you to verify identity via trusted phone number or trusted device push.\n3. If verification succeeds, the lock lifts and you set a new password (recommended even if the lock was just from bad codes).\n4. If verification fails, Apple offers "Account Recovery" - a slower path that requires a waiting period (24 hours minimum, sometimes several days) while Apple verifies you out-of-band.\n\nAccount Recovery is annoying but reliable. Apple emails you when the period ends and walks you through resetting the account. Do not start Account Recovery casually - it locks you out of the account during the waiting period.\n\nIf the trusted phone number is no longer accessible to you, Account Recovery is the only path. It is also the path for users without any trusted Apple device.',
+    },
+    {
+      h: 'The Android-only edge case',
+      p: 'Users who only have Android devices (typically Apple Music for Android subscribers, or users who use iCloud-on-the-web from Android) hit a specific variant of the loop. Apple sends the verification code to the trusted phone number by SMS - but the sign-in flow on the Android device expects the code to come from a trusted Apple device, which the user does not have.\n\nThe fix is to use a path that knows you have no Apple device:\n\n- appleid.apple.com from a desktop browser. The web flow lets you receive the code by SMS as the primary option, not the fallback. The desktop sign-in succeeds; once in, you can manage subscriptions and account settings.\n\n- For the Apple Music for Android app specifically, sign in once at appleid.apple.com from desktop, then restart the Android app. The app sometimes picks up the desktop session without needing its own 2FA attempt.\n\n- Long term, set up a trusted phone number you fully control, and add a recovery contact (someone with an Apple device who can verify on your behalf). Settings -> [your name] -> Sign-In & Security -> Account Recovery.',
+    },
+    {
+      h: 'When to call Apple vs wait',
+      p: 'Most lockouts are solvable through iforgot.apple.com without contacting Apple. Skip the support call if:\n\n- You have a trusted phone number you currently control and access to at least one trusted device.\n- The lock just happened and is from a single short window of bad attempts.\n- Account Recovery is offering you a reasonable waiting period (24-72 hours).\n\nCall Apple if:\n\n- The trusted phone number is no longer yours and you cannot recover it from your carrier.\n- iforgot.apple.com refuses to verify you even with correct answers.\n- Account Recovery is offering you a waiting period longer than 7 days (sometimes Apple does this for accounts with high purchase volume; an agent can sometimes shorten it).\n- The account has subscriptions or balance that will expire/forfeit during the recovery waiting period.\n\nApple support route: getsupport.apple.com -> "Apple ID" -> "Can\'t sign in" -> request a callback.',
+    },
+  ],
+  faqItems: [
+    {
+      q: 'Will my data be deleted while the account is in Account Recovery?',
+      a: 'No. Account Recovery is a verification waiting period, not a data wipe. Your iCloud Photos, Mail, Drive, and purchases stay in place. The account is just inaccessible to you (and to anyone else) until the period ends.',
+    },
+    {
+      q: 'How long is the Account Recovery waiting period?',
+      a: 'Apple\'s minimum is 24 hours. The exact length depends on the account state and Apple\'s assessment of how to verify you. New accounts with little history sometimes wait a few days; accounts with detailed purchase history often clear in 24 hours.',
+    },
+    {
+      q: 'Can I still receive iMessages while my Apple ID is locked?',
+      a: 'Yes, on devices that were already signed in before the lock. New sign-ins are blocked. So your iPhone keeps receiving iMessages as long as you do not sign out. Other Apple services on already-signed-in devices generally continue to work.',
+    },
+    {
+      q: 'My trusted phone number is now in another country. Does that affect anything?',
+      a: 'If the number still works (still receives SMS), no. Apple sends to the number, not the country. If you have moved and the number was abandoned with your old carrier, you have to update the trusted phone via Account Recovery before SMS-based verification will work again.',
+    },
+    {
+      q: 'Should I set up a recovery contact to prevent this?',
+      a: 'Yes. Settings -> [your name] -> Sign-In & Security -> Recovery Contact. Pick someone with an Apple device who can verify on your behalf without going through Account Recovery. It bypasses the multi-day waiting period in most lockout scenarios.',
+    },
+  ],
+};
+---
+
+<PageLayout
+  title={`${copy.title} - Zero Balance`}
+  description={copy.description}
+  {lang}
+  {path}
+  schema={[
+    articleSchema({ title: copy.title, description: copy.description, slug, lang, datePublished: published }),
+    faqSchema(copy.faqItems),
+    breadcrumbSchema([
+      { name: 'Home', url: `${DOMAIN}/${lang}/` },
+      { name: 'Blog', url: `${DOMAIN}/${lang}/blog/` },
+      { name: copy.title, url: `${DOMAIN}${path}` },
+    ]),
+  ]}
+  ogType="article"
+  publishedTime={published}
+  modifiedTime={published}
+  keywords={[
+    'apple id locked',
+    'verification code loop',
+    'apple id sign in loop fix',
+    'apple id account recovery',
+    'iforgot apple com locked',
+    ...t.keywords.support,
+  ]}
+>
+  <PageHeader eyebrow={copy.eyebrow} title={copy.title} description={copy.description} />
+
+  <Section>
+    <Container>
+      <Reveal class="mx-auto max-w-3xl">
+        <div class="rounded-2xl border border-[var(--border)] bg-[var(--brand-soft)]/40 p-6 md:p-8">
+          <p class="text-sm font-semibold tracking-wide text-[var(--brand-strong)] uppercase">TL;DR</p>
+          <p class="mt-3 text-lg leading-relaxed text-[var(--fg)]">{copy.tldr}</p>
+          <div class="mt-6 flex">
+            <AppStoreButton label={t.cta.appStore} ct="blog-verification-loop-tldr" />
+          </div>
+        </div>
+      </Reveal>
+
+      <div class="mx-auto mt-10 max-w-3xl prose-zb">
+        {
+          copy.sections.map((s, i) => (
+            <Reveal delay={i * 40}>
+              <h2>{s.h}</h2>
+              {s.p.split('\n\n').map((para) => (
+                <p>{para}</p>
+              ))}
+              {i === 2 && (
+                <div class="not-prose my-6 flex">
+                  <AppStoreButton label={t.cta.appStore} ct="blog-verification-loop-mid" />
+                </div>
+              )}
+            </Reveal>
+          ))
+        }
+
+        <Reveal>
+          <h2>Related questions</h2>
+        </Reveal>
+        <Reveal>
+          <FAQ items={copy.faqItems} />
+        </Reveal>
+      </div>
+    </Container>
+  </Section>
+
+  <FinalCta {lang} />
+</PageLayout>

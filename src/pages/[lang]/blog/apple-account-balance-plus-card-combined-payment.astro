@@ -1,0 +1,146 @@
+---
+import PageLayout from '../../../layouts/PageLayout.astro';
+import PageHeader from '../../../components/PageHeader.astro';
+import Container from '../../../components/Container.astro';
+import Section from '../../../components/Section.astro';
+import FAQ from '../../../components/FAQ.astro';
+import Reveal from '../../../components/Reveal.astro';
+import FinalCta from '../../../components/FinalCta.astro';
+import AppStoreButton from '../../../components/AppStoreButton.astro';
+import { getDict, LOCALES, type Locale } from '../../../i18n';
+import { articleSchema, faqSchema, breadcrumbSchema } from '../../../lib/schema';
+import { DOMAIN } from '../../../lib/siteConfig';
+
+export function getStaticPaths() {
+  return LOCALES.map((lang) => ({ params: { lang } }));
+}
+
+const lang = Astro.params.lang as Locale;
+const t = getDict(lang);
+const slug = 'apple-account-balance-plus-card-combined-payment';
+const path = `/${lang}/blog/${slug}/`;
+const published = '2026-05-19T00:00:00Z';
+
+const copy = {
+  title: 'Apple balance plus card: how combined payment works',
+  description:
+    'Apple charges your Apple Account balance first, then bills the card for the remainder. Here is the exact split, how to verify it, and why some charges skip the balance.',
+  eyebrow: 'Payment mechanics',
+  tldr:
+    'Apple always charges your Apple Account balance first and only bills your payment method for the remainder. If you see a full-amount charge on your card instead, the purchase was made under a different Apple ID, or it was a Family Sharing purchase that uses the organizer\'s card.',
+  sections: [
+    {
+      h: 'Default behavior: balance first, then card',
+      p: 'Apple\'s order of operations on every App Store, iTunes, and in-app purchase is the same: deduct from the Apple Account balance until it is exhausted, then charge the payment method on file for the remainder. This is automatic. There is no toggle to flip, no setting to enable, no checkout step that lets you bypass it.\n\nSay your balance is $12.00 and you tap "Buy" on a $30.00 app. The receipt that lands in your email afterwards will show two lines: $12.00 from Apple Account balance, $18.00 charged to card ending XXXX. Both lines roll up into the same purchase row in Account -> Purchase History.\n\nThe behavior is the same for subscriptions (renewal time pulls from balance first), in-app purchases (Apple\'s payment sheet shows the split before you confirm), Apple Music month-by-month renewals, and Apple One bundles. The one thing it does not apply to is physical hardware at apple.com - that flow is a different ledger.',
+    },
+    {
+      h: 'When Apple silently skips your balance',
+      p: 'There are a few cases where Apple seems to ignore the balance and charge the full amount to the card. Each has a real cause:\n\n- Family Sharing subscriptions billed under the organizer. If you are a family member buying a subscription that the organizer covers, Apple charges the organizer\'s payment method, not your balance. Your balance is not touched.\n\n- Different Apple ID logged into Media & Purchases. Settings -> Media & Purchases shows which Apple ID is processing App Store purchases. If that is not the Apple ID you think it is (common on iPads shared between household members), the balance Apple is checking belongs to that other account.\n\n- Subscriptions you started in a region with a different storefront. Apple uses the balance from the current storefront only; a USD balance does not cover a renewal billed in EUR.\n\n- Negative balance on the account. If a previous purchase failed to settle, the account is in arrears, and Apple charges the full amount to the card to clear the debt before any positive balance applies.',
+    },
+    {
+      h: 'Reading the receipt to confirm the split',
+      p: 'Every Apple purchase generates a receipt email from no_reply@email.apple.com. That receipt is the source of truth for how the charge was split. Look for two lines in the "Billed To" section:\n\n- Apple Account balance: $X.XX\n- Card ending in YYYY: $Z.ZZ\n\nIf only one line appears, the charge did not split. If both appear and the numbers do not match what you expected, the most likely cause is that the purchase price included tax that you did not factor in. Apple\'s App Store pricing on the listing is pre-tax in most US states; the receipt total is post-tax.\n\nTo audit historical splits, go to reportaproblem.apple.com -> sign in -> filter by date. Every line shows the price, the funding source, and the split. The same data is mirrored in Account -> Purchase History in the App Store app, but the web version is faster to scan.',
+    },
+    {
+      h: 'Why the App Store sometimes says "payment method declined" with a positive balance',
+      p: 'A surprisingly common failure: you have $12 of balance, you try to buy a $30 app, the App Store shows "your payment method was declined" - even though the balance alone would not have covered it.\n\nWhat happens under the hood: Apple submits a $18 auth charge to the card on file to cover the remainder. The card declines that auth (insufficient funds, fraud rule, expired card, blocked international transaction). Apple aborts the whole purchase rather than partially applying the balance. So you walk away with the same $12 balance, no app, and an error message that does not mention the balance at all.\n\nFix: address whatever declined the card. Update the expiry date, call the bank to allow Apple pre-auths, or switch to Apple Pay (different auth flow). Once the card is good for the $18, the next attempt completes and Apple charges both lines as expected.\n\nFor the leftover-balance case alone, where you do not want to add a card to clear a small remainder, [Zero Balance](https://apps.apple.com/app/apple-store/id6761912988?pt=128302223&ct=zerobalance-pro-site&mt=8) picks a combination of small in-app purchases that fits the balance exactly without needing the card at all.',
+    },
+    {
+      h: 'Where to verify your balance is being used',
+      p: 'Two places, in order:\n\n1. Settings -> [your name] -> Media & Purchases -> View Account. This shows your current balance at the top. If it dropped after a purchase, the balance was applied.\n\n2. account.apple.com -> Payments -> Apple Account balance. Same number, web-accessible, no iPhone needed.\n\nOne gotcha: the balance number Apple displays is what the account has at the moment you load the page. Pending charges that have authorized but not yet settled do not always reflect immediately. If you just bought something and the balance still shows the pre-purchase amount, wait a few minutes and reload.\n\nIf the balance line is missing from the View Account screen entirely, your balance is exactly $0.00. Apple hides the line when there is nothing to show.',
+    },
+  ],
+  faqItems: [
+    {
+      q: 'Can I make Apple charge the card first and save the balance for later?',
+      a: 'No. The order is fixed: balance first, card second. There is no setting, payment-flow option, or workaround that swaps the order. If you want to save the balance, do not make purchases at all - balance does not expire.',
+    },
+    {
+      q: 'Does the balance cover Apple One, iCloud+, and Apple TV+ renewals automatically?',
+      a: 'Yes, as long as the subscription is billed under your Apple ID (not a family organizer\'s payment method). Apple pulls from the balance every renewal cycle until it runs out, then falls back to your card.',
+    },
+    {
+      q: 'My balance covered the entire purchase but Apple still charged my card $1. Why?',
+      a: 'That is the Apple pre-auth charge for card validation. It is temporary and reverses within a few business days. Apple uses it to keep the card-on-file active even when no real charge needs to hit it.',
+    },
+    {
+      q: 'Can I split a single Apple Music renewal between balance and card on purpose?',
+      a: 'You cannot opt into the split - it happens automatically when the balance is less than the renewal price. If the balance is more, the renewal is fully balance-paid. If the balance is zero, the renewal is fully card-paid.',
+    },
+    {
+      q: 'Why does my receipt show a $0.00 balance line on a purchase even though I have credit?',
+      a: 'Two reasons: the purchase was made under a different Apple ID, or the balance belongs to a different storefront than the one the purchase ran through. Check Settings -> Media & Purchases to confirm which Apple ID is processing the buy.',
+    },
+  ],
+};
+---
+
+<PageLayout
+  title={`${copy.title} - Zero Balance`}
+  description={copy.description}
+  {lang}
+  {path}
+  schema={[
+    articleSchema({ title: copy.title, description: copy.description, slug, lang, datePublished: published }),
+    faqSchema(copy.faqItems),
+    breadcrumbSchema([
+      { name: 'Home', url: `${DOMAIN}/${lang}/` },
+      { name: 'Blog', url: `${DOMAIN}/${lang}/blog/` },
+      { name: copy.title, url: `${DOMAIN}${path}` },
+    ]),
+  ]}
+  ogType="article"
+  publishedTime={published}
+  modifiedTime={published}
+  keywords={[
+    'apple account balance plus card',
+    'partial balance app store',
+    'combine apple credit and credit card',
+    'apple combined payment split',
+    'how apple charges balance and card',
+    ...t.keywords.spend,
+  ]}
+>
+  <PageHeader eyebrow={copy.eyebrow} title={copy.title} description={copy.description} />
+
+  <Section>
+    <Container>
+      <Reveal class="mx-auto max-w-3xl">
+        <div class="rounded-2xl border border-[var(--border)] bg-[var(--brand-soft)]/40 p-6 md:p-8">
+          <p class="text-sm font-semibold tracking-wide text-[var(--brand-strong)] uppercase">TL;DR</p>
+          <p class="mt-3 text-lg leading-relaxed text-[var(--fg)]">{copy.tldr}</p>
+          <div class="mt-6 flex">
+            <AppStoreButton label={t.cta.appStore} ct="blog-combined-payment-tldr" />
+          </div>
+        </div>
+      </Reveal>
+
+      <div class="mx-auto mt-10 max-w-3xl prose-zb">
+        {
+          copy.sections.map((s, i) => (
+            <Reveal delay={i * 40}>
+              <h2>{s.h}</h2>
+              {s.p.split('\n\n').map((para) => (
+                <p>{para}</p>
+              ))}
+              {i === 3 && (
+                <div class="not-prose my-6 flex">
+                  <AppStoreButton label={t.cta.appStore} ct="blog-combined-payment-mid" />
+                </div>
+              )}
+            </Reveal>
+          ))
+        }
+
+        <Reveal>
+          <h2>Related questions</h2>
+        </Reveal>
+        <Reveal>
+          <FAQ items={copy.faqItems} />
+        </Reveal>
+      </div>
+    </Container>
+  </Section>
+
+  <FinalCta {lang} />
+</PageLayout>

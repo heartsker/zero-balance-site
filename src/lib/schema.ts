@@ -167,6 +167,42 @@ export function breadcrumbSchema(items: { name: string; url: string }[]) {
   };
 }
 
+export function articleSchema(opts: {
+  title: string;
+  description: string;
+  slug: string;
+  lang: Locale;
+  datePublished: string;
+  dateModified?: string;
+}) {
+  const url = `${DOMAIN}/${opts.lang}/blog/${opts.slug}/`;
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'Article',
+    headline: opts.title,
+    description: opts.description,
+    inLanguage: opts.lang,
+    url,
+    mainEntityOfPage: {
+      '@type': 'WebPage',
+      '@id': url,
+    },
+    datePublished: opts.datePublished,
+    dateModified: opts.dateModified ?? opts.datePublished,
+    author: PUBLISHER,
+    publisher: {
+      '@type': 'Organization',
+      name: APP_NAME,
+      url: DOMAIN,
+      logo: {
+        '@type': 'ImageObject',
+        url: `${DOMAIN}/icon.png`,
+      },
+    },
+    image: `${DOMAIN}/cover.png`,
+  };
+}
+
 export function qaPageSchema(opts: {
   question: string;
   answer: string;

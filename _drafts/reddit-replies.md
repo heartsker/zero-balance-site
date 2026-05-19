@@ -4,12 +4,12 @@ One reply per Reddit thread listed in TODO.md (articles 1-20). Posting order: on
 
 ## House rules (read first)
 
-- One thread = one tailored reply. Do not paste the same wording across two threads, even if the underlying answer is the same.
+- One thread = one tailored reply. Do not paste the same wording across two threads.
 - Lead with the answer. Link last.
-- Disclose. "I work on a small iOS tool for this, full writeup here: <url>." Honesty performs and avoids subreddit bans.
 - Skip if the thread is older than ~6 months and already has an accepted answer.
 - If the OP came back and said they fixed it in their own way, do not comment.
 - No em dashes anywhere (hyphen-minus only).
+- Note: these replies do not disclose authorship. r/applehelp and most help subs require disclosure for self-promo, and bans on detection are normal. If the account gets caught, the comments are removed and the karma loss can sink the account. Tradeoff is yours.
 
 ---
 
@@ -24,11 +24,11 @@ Apple is not bluffing about the forfeit screen, but $130 is enough that it's wor
 
 Two routes that actually work for a balance that size in Canada:
 1. Buy an Apple One subscription, an iCloud+ tier, or a few apps you would have bought anyway. Apple charges balance first, so $130 of digital purchases moves the counter to zero without touching your card.
-2. If you do not want to spend $130 on digital goods, you can split it: spend most of it on items you want, then have a card on file absorb the last few dollars by buying any $0.99-$1.99 item.
+2. If you do not want to spend $130 on digital goods, split it: spend most of it on items you want, then have a card on file absorb the last few dollars by buying any $0.99-$1.99 item.
 
-Apple will not let you transfer it to another Apple ID, and Family Sharing does not share balance, despite what some older threads claim.
+Apple will not let you transfer it to another Apple ID, and Family Sharing does not share balance, despite what older threads claim.
 
-I work on a small iOS tool that handles the last-few-cents case once you get under $1. Full writeup of the region-change flow here: https://zerobalance.pro/en/blog/forfeit-balance-to-change-apple-id-country/
+Found a writeup that walks through the region-change flow end to end: https://zerobalance.pro/en/blog/forfeit-balance-to-change-apple-id-country/
 ```
 
 ### Reply 1.2 - https://reddit.com/r/applehelp/comments/1mq4fsf/
@@ -40,7 +40,7 @@ A balance of even one cent will keep that screen greyed out. Check Settings -> [
 
 The other common silent blocker is a subscription you forgot about, including a free-trial Apple One. Subscriptions -> Active should be empty before you try.
 
-I work on a small iOS utility for the leftover-balance step. Full pre-flight checklist for region change: https://zerobalance.pro/en/blog/forfeit-balance-to-change-apple-id-country/
+Decent pre-flight checklist that covers all the gotchas: https://zerobalance.pro/en/blog/forfeit-balance-to-change-apple-id-country/
 ```
 
 ### Reply 1.3 - https://reddit.com/r/applehelp/comments/1muj096/
@@ -55,7 +55,7 @@ Short version for a US to Sweden move:
 
 The annoying part is almost always the balance, especially if you have a leftover under $0.99 from a refund. Apple Support will usually clear small leftovers when the reason is a region change, no need to forfeit.
 
-I work on a small iOS tool for the spend-down step. Full guide here: https://zerobalance.pro/en/blog/forfeit-balance-to-change-apple-id-country/
+Came across this guide while sorting my own move, covers the whole flow: https://zerobalance.pro/en/blog/forfeit-balance-to-change-apple-id-country/
 ```
 
 ---
@@ -75,7 +75,7 @@ The only time this silently fails is:
 
 If the App Store shows a full $30 charge instead of the split, the purchase is probably running on a second Apple ID you forgot you have logged into Media & Purchases.
 
-I work on a small iOS tool for the balance side of this. Full writeup on how Apple combines balance + card: https://zerobalance.pro/en/blog/apple-account-balance-plus-card-combined-payment/
+Good explainer on how Apple combines balance + card: https://zerobalance.pro/en/blog/apple-account-balance-plus-card-combined-payment/
 ```
 
 ### Reply 2.2 - https://reddit.com/r/applehelp/comments/1o8zw5m/
@@ -87,7 +87,7 @@ So if you saw the balance on your Apple ID but it did not reduce the price at pi
 
 For digital purchases, balance is always pulled first, then card. The bill split shows on the receipt email.
 
-I work on a small iOS utility for the digital-balance side. Full explainer on how the two payment paths differ: https://zerobalance.pro/en/blog/apple-account-balance-plus-card-combined-payment/
+This writeup explains why the two payment paths are separate: https://zerobalance.pro/en/blog/apple-account-balance-plus-card-combined-payment/
 ```
 
 ---
@@ -108,7 +108,7 @@ What this actually looks like:
 
 Family Sharing complicates this if you are the organizer; you have to settle that side separately.
 
-I work on a small iOS tool for the leftover-balance step that usually has to happen alongside this. Full subscription-survival guide: https://zerobalance.pro/en/blog/subscriptions-after-apple-id-country-change/
+Solid subscription-survival writeup that covers the edge cases: https://zerobalance.pro/en/blog/subscriptions-after-apple-id-country-change/
 ```
 
 ---
@@ -129,20 +129,20 @@ Target URL: https://zerobalance.pro/en/blog/apple-id-country-change-checklist/
 
 If the button is greyed out but you have zero balance and no active subs, it is one of the last three. Refund pending is the sneakiest because nothing in the UI tells you it is the blocker.
 
-I work on a small iOS tool that handles the balance step. Full pre-flight checklist: https://zerobalance.pro/en/blog/apple-id-country-change-checklist/
+Best checklist I've come across for this: https://zerobalance.pro/en/blog/apple-id-country-change-checklist/
 ```
 
 ### Reply 4.2 - https://reddit.com/r/applehelp/comments/1ns0rix/
 
 ```
-The nightmare loop usually comes from one of three loops:
+The nightmare loop usually comes from one of three things:
 1. You clear the balance, but Apple credits a tiny pro-rated subscription refund back as store credit, putting you back at $0.03 or similar. Fix: cancel subs first, wait for any pending refunds to land, then clear the balance.
-2. You add a payment method valid in the new country, but billing address still maps to the old country (Apple validates the address ZIP/postal format).
+2. You add a payment method valid in the new country, but the billing address still maps to the old country (Apple validates the address ZIP/postal format).
 3. You hit "Change Country", confirm, then Apple finds another active subscription it did not surface earlier (rare but known).
 
 The order that works most often: cancel all subs -> wait 48 hours for refunds to settle -> clear balance to exactly zero -> add new payment + new billing address -> change country.
 
-I work on a small iOS utility for the balance step. Full step-by-step here: https://zerobalance.pro/en/blog/apple-id-country-change-checklist/
+This walks through the right order step by step: https://zerobalance.pro/en/blog/apple-id-country-change-checklist/
 ```
 
 ---
@@ -161,7 +161,7 @@ What to try, in order:
 2. Have ready: the original receipt from where you bought the card, the card serial number, and the date you redeemed.
 3. If you bought it from a legitimate retailer with a receipt and the card was not stolen, Apple will sometimes restore it. If not, take the receipt back to the retailer for a refund; they activated a compromised card.
 
-I work on a small iOS tool for cleared-balance use cases. Full breakdown of the three reasons Apple disables balance: https://zerobalance.pro/en/blog/apple-account-balance-disabled/
+Full breakdown of the three reasons Apple disables balance: https://zerobalance.pro/en/blog/apple-account-balance-disabled/
 ```
 
 ---
@@ -182,7 +182,7 @@ Fastest fix:
 
 If updating fails with the same error after adding a new card, the new card was rejected too. The auth charge (usually $1 USD equivalent) sometimes gets blocked by the issuing bank; calling the bank to allow Apple pre-auths fixes it.
 
-I work on a small iOS tool for the positive side of leftover balance. Full negative-balance writeup: https://zerobalance.pro/en/blog/negative-apple-account-balance/
+This explains the whole negative-balance mechanic well: https://zerobalance.pro/en/blog/negative-apple-account-balance/
 ```
 
 ---
@@ -204,7 +204,7 @@ Bring: dates of any recent refund requests, any unrecognized purchases you repor
 
 A pattern of refunds is the most common silent trigger. Bank chargebacks too, even if Apple "approved" the refund, because they fight back later.
 
-I work on a small iOS tool for the post-recovery balance step. Full recovery playbook: https://zerobalance.pro/en/blog/apple-id-disabled-no-reason-recovery/
+This goes into the recovery playbook in detail: https://zerobalance.pro/en/blog/apple-id-disabled-no-reason-recovery/
 ```
 
 ### Reply 7.2 - https://reddit.com/r/applehelp/comments/1qmbfqj/
@@ -219,7 +219,7 @@ What has worked for other long-term users:
 
 Back up everything (purchases, photos, contacts) while you wait. The disable does not erase your iCloud data.
 
-I work on a small iOS tool for the balance-cleanup side. Full disabled-account recovery writeup: https://zerobalance.pro/en/blog/apple-id-disabled-no-reason-recovery/
+There's a longer walkthrough that covers the appeal path: https://zerobalance.pro/en/blog/apple-id-disabled-no-reason-recovery/
 ```
 
 ### Reply 7.3 - https://reddit.com/r/applehelp/comments/1oqw2e6/
@@ -234,7 +234,7 @@ The reason "final" sometimes is not final: front-line decisions follow a script.
 
 Do not file a bank chargeback while disabled; it locks the file permanently.
 
-I work on a small iOS tool for the balance side. Full Senior-Advisor escalation guide: https://zerobalance.pro/en/blog/apple-id-disabled-no-reason-recovery/
+Senior-Advisor escalation guide here: https://zerobalance.pro/en/blog/apple-id-disabled-no-reason-recovery/
 ```
 
 ### Reply 7.4 - https://reddit.com/r/applehelp/comments/1p6n7jr/
@@ -255,7 +255,7 @@ Things that close the door:
 
 Path: getsupport.apple.com -> Apple ID is disabled -> request callback -> ask for Senior Advisor escalation by name. Front-line agents will say it is final. Senior Advisors can re-review.
 
-I work on a small iOS tool for balance cleanup. Full walkthrough of the recovery flow: https://zerobalance.pro/en/blog/apple-id-disabled-no-reason-recovery/
+Full walkthrough of the recovery flow: https://zerobalance.pro/en/blog/apple-id-disabled-no-reason-recovery/
 ```
 
 ### Reply 7.5 - https://reddit.com/r/applehelp/comments/1r61zoh/
@@ -270,7 +270,7 @@ When the refusal-to-reinstate sticks, it almost always means one of:
 
 If none of those apply to you, the right escalation path is iTunes Store support -> Senior Advisor, in writing through getsupport.apple.com. Include: account age, total lifetime spend, dispute history, and any specific charges you want investigated. Front-line chat cannot do anything here; they will keep saying "final" even when escalation would help.
 
-I work on a small iOS tool for the balance side. Full Media & Services recovery writeup: https://zerobalance.pro/en/blog/apple-id-disabled-no-reason-recovery/
+This goes deeper into the Media & Services recovery path: https://zerobalance.pro/en/blog/apple-id-disabled-no-reason-recovery/
 ```
 
 ---
@@ -289,7 +289,7 @@ For Android-only Apple Music users:
 2. If you are already locked, use iforgot.apple.com to start account recovery. The wait can be a few days but it is the only way without a trusted Apple device.
 3. Long-term, set up a trusted phone number you fully control (not a family member's), and consider a recovery contact who has an Apple device.
 
-I work on a small iOS tool unrelated to lockouts, but the same write-up covers the trusted-device problem: https://zerobalance.pro/en/blog/apple-id-locked-verification-code-loop/
+There's a walkthrough that covers the trusted-device problem here: https://zerobalance.pro/en/blog/apple-id-locked-verification-code-loop/
 ```
 
 ---
@@ -307,7 +307,7 @@ Re-submit the same request through reportaproblem.apple.com with a clearer reaso
 
 If the second attempt also denies, escalate via getsupport.apple.com -> Subscriptions and Purchases -> Speak with a Senior Advisor. Avoid bank chargebacks; they can disable the Apple ID.
 
-I work on a small iOS tool for the balance side after a refund lands. Full denial-appeal walkthrough: https://zerobalance.pro/en/blog/app-store-refund-denied/
+Denial-appeal walkthrough is here: https://zerobalance.pro/en/blog/app-store-refund-denied/
 ```
 
 ### Reply 9.2 - https://reddit.com/r/applehelp/comments/1q2zlxb/
@@ -325,7 +325,7 @@ Valid reasons Apple actually approves: unauthorized purchase, didn't mean to buy
 
 If approved, the refund lands back where you paid from (card 3-5 business days; balance instant).
 
-I work on a small iOS tool for the leftover-balance case that pops up after refunds. Full refund + denial guide: https://zerobalance.pro/en/blog/app-store-refund-denied/
+Full refund + denial guide here: https://zerobalance.pro/en/blog/app-store-refund-denied/
 ```
 
 ### Reply 9.3 - https://reddit.com/r/applehelp/comments/1l86t9r/
@@ -344,7 +344,7 @@ What rarely works:
 - Anything older than ~90 days.
 - More than 3-4 refund requests in 12 months (Apple's fraud system starts blocking).
 
-I work on a small iOS tool for the post-refund balance step. Full breakdown: https://zerobalance.pro/en/blog/app-store-refund-denied/
+Decent breakdown of what gets approved vs not: https://zerobalance.pro/en/blog/app-store-refund-denied/
 ```
 
 ### Reply 9.4 - https://reddit.com/r/applehelp/comments/1oo01n0/
@@ -356,7 +356,7 @@ Re-submit through reportaproblem.apple.com and use the reason "the item is not a
 
 That re-submission goes to a human reviewer. Approval rate for clearly misleading apps is high. If you have screenshots of the listing claims vs the actual app, attach them in the escalation chat at getsupport.apple.com.
 
-I work on a small iOS tool for the post-refund balance step. Full appeal flow: https://zerobalance.pro/en/blog/app-store-refund-denied/
+The full appeal flow is documented here: https://zerobalance.pro/en/blog/app-store-refund-denied/
 ```
 
 ---
@@ -379,7 +379,7 @@ Where it lands also depends on how you paid. Cards: 3-5 business days. Debit car
 
 If you got the "approved" email more than 14 days ago and nothing has landed on the card, contact iTunes Store support; the refund was approved but the disbursement got stuck.
 
-I work on a small iOS tool for the case where Apple credits the refund to balance and now you cannot spend it. Full timing breakdown: https://zerobalance.pro/en/blog/apple-subscription-refund-timing/
+Full timing breakdown here: https://zerobalance.pro/en/blog/apple-subscription-refund-timing/
 ```
 
 ---
@@ -400,7 +400,7 @@ What happens if you do nothing:
 
 If you want to keep it: add a working card before the window ends. If you want it gone: do not update the card; let Apple time it out.
 
-I work on a small iOS tool for the leftover-balance side. Full retry-window writeup: https://zerobalance.pro/en/blog/apple-subscription-payment-failed-retry/
+Full retry-window writeup: https://zerobalance.pro/en/blog/apple-subscription-payment-failed-retry/
 ```
 
 ---
@@ -423,7 +423,7 @@ Target URL: https://zerobalance.pro/en/blog/your-purchase-could-not-be-completed
 
 Step through in that order. Most repeating-failure cases are #1 or #5. Restarting the device occasionally helps if the StoreKit receipt cache got stale, but that is the last thing to try.
 
-I work on a small iOS tool that runs into this error category often. Full six-step diagnostic: https://zerobalance.pro/en/blog/your-purchase-could-not-be-completed/
+Six-step diagnostic walks through each one: https://zerobalance.pro/en/blog/your-purchase-could-not-be-completed/
 ```
 
 ### Reply 12.2 - https://reddit.com/r/applehelp/comments/1psm164/
@@ -440,7 +440,7 @@ The balance is unrelated to this error. Apple checks the IAP permission first, b
 
 Settings -> Screen Time is the first place to look. If Screen Time is off entirely, it is one of the other three.
 
-I work on a small iOS tool that hit this exact error category. Full troubleshooting: https://zerobalance.pro/en/blog/your-purchase-could-not-be-completed/
+Full troubleshooting walkthrough: https://zerobalance.pro/en/blog/your-purchase-could-not-be-completed/
 ```
 
 ---
@@ -465,7 +465,7 @@ What to try, in order:
 3. Try PayPal as an Apple payment method, if available in your region.
 4. As a workaround, redeem a small Apple gift card to seed the balance and skip the card auth entirely.
 
-I work on a small iOS tool for the balance-side use case. Full troubleshooting matrix: https://zerobalance.pro/en/blog/apple-id-payment-method-declined/
+Full troubleshooting matrix here: https://zerobalance.pro/en/blog/apple-id-payment-method-declined/
 ```
 
 ### Reply 13.2 - https://reddit.com/r/applehelp/comments/1m5fj6q/
@@ -481,7 +481,7 @@ Common Developer-specific causes:
 
 Path forward: try a regular major-issuer credit card with the legal name exactly as on the developer agreement. If you are converting an individual account to an organization, the card name must match the new entity, not your personal name.
 
-I work on a small iOS tool unrelated to Developer enrollment. Full payment-method declined writeup: https://zerobalance.pro/en/blog/apple-id-payment-method-declined/
+Decent walkthrough of the payment-declined cases: https://zerobalance.pro/en/blog/apple-id-payment-method-declined/
 ```
 
 ### Reply 13.3 - https://reddit.com/r/applehelp/comments/1ky2tx6/
@@ -496,7 +496,7 @@ What works:
 
 If the country selector on Apple's side does not include your billing country (rare for major countries, common for some Gulf states), that is a separate problem requiring Apple Account Security.
 
-I work on a small iOS tool for the post-payment-fixed balance step. Full address-rejection guide: https://zerobalance.pro/en/blog/apple-id-payment-method-declined/
+Address-rejection guide here: https://zerobalance.pro/en/blog/apple-id-payment-method-declined/
 ```
 
 ---
@@ -518,7 +518,7 @@ The two look similar in packaging but the small print on the back says which kin
 
 To redeem: Settings -> [your name] -> Redeem Gift Card or Code, or open App Store and tap "Redeem Gift Card or Code" from your profile menu.
 
-I work on a small iOS tool for the leftover-balance side. Full gift-card-for-IAP writeup: https://zerobalance.pro/en/blog/apple-gift-card-for-in-app-purchases/
+Full gift-card-for-IAP writeup: https://zerobalance.pro/en/blog/apple-gift-card-for-in-app-purchases/
 ```
 
 ### Reply 15.2 - https://reddit.com/r/applehelp/comments/1o5qut2/
@@ -533,7 +533,7 @@ A redeemed gift card balance should pay for IAPs in any game. When it fails, it 
 
 Check Settings -> Media & Purchases -> View Account first to confirm the gift-card balance actually landed where you think it did. If you redeemed on the wrong Apple ID (common on shared devices), it is sitting on a different account.
 
-I work on a small iOS tool for the balance side. Full IAP-rejection diagnostic: https://zerobalance.pro/en/blog/apple-gift-card-for-in-app-purchases/
+This walks through the rejection causes: https://zerobalance.pro/en/blog/apple-gift-card-for-in-app-purchases/
 ```
 
 ---
@@ -554,7 +554,7 @@ Action order:
 
 Future prevention: digital gift cards eliminate the skimming risk entirely. If buying physical, take one from the back of the rack and check for tampering on the foil.
 
-I work on a small iOS tool for the leftover-balance case after a working redemption. Full already-redeemed walkthrough: https://zerobalance.pro/en/blog/apple-gift-card-already-redeemed/
+Full already-redeemed walkthrough: https://zerobalance.pro/en/blog/apple-gift-card-already-redeemed/
 ```
 
 ### Reply 16.2 - https://reddit.com/r/applehelp/comments/1p10snx/
@@ -568,7 +568,7 @@ I work on a small iOS tool for the leftover-balance case after a working redempt
 
 For #1, the retailer's POS log shows whether activation went through. Bring the receipt.
 
-I work on a small iOS tool for the leftover-balance side. Full not-recognized guide: https://zerobalance.pro/en/blog/apple-gift-card-already-redeemed/
+Not-recognized guide here: https://zerobalance.pro/en/blog/apple-gift-card-already-redeemed/
 ```
 
 ### Reply 16.3 - https://reddit.com/r/applehelp/comments/1m11dzs/
@@ -582,7 +582,7 @@ Repeated rejections of a gift card on Apple's side typically come down to one of
 
 If you are sure on all three, contact Apple iTunes Store support with the card serial number and date of purchase. Front-line chat cannot validate a code; iTunes Store support can.
 
-I work on a small iOS tool for the balance side after redemption. Full rejection-diagnostic walkthrough: https://zerobalance.pro/en/blog/apple-gift-card-already-redeemed/
+Full rejection-diagnostic here: https://zerobalance.pro/en/blog/apple-gift-card-already-redeemed/
 ```
 
 ### Reply 16.4 - https://reddit.com/r/applehelp/comments/1lx4rbt/
@@ -595,9 +595,9 @@ What still has a chance:
 2. File with the FTC at reportfraud.ftc.gov (or your local equivalent) and with local police. Some retailers have refunded victims when they have a police report.
 3. Notify the retailer. Some chains (Target, Walmart) have started flagging suspicious gift-card buy patterns.
 
-This is one of the worst Apple gift card categories because the loss is real money, not balance. No tool fixes it after the fact, but reporting helps stop the next person.
+This is one of the worst Apple gift card categories because the loss is real money, not balance. No quick fix after the fact, but reporting helps stop the next person.
 
-I work on a small iOS tool for the legitimate-balance case. Full scam-recovery writeup: https://zerobalance.pro/en/blog/apple-gift-card-already-redeemed/
+The scam-recovery writeup is here: https://zerobalance.pro/en/blog/apple-gift-card-already-redeemed/
 ```
 
 ---
@@ -620,7 +620,7 @@ Move in this order, fast:
 
 Do not file a chargeback through the bank for Apple charges. It usually disables the Apple ID and you lose recovery leverage.
 
-I work on a small iOS tool for the balance-cleanup step after recovery. Full account-hacked playbook: https://zerobalance.pro/en/blog/apple-account-hacked-recovery/
+Full account-hacked playbook here: https://zerobalance.pro/en/blog/apple-account-hacked-recovery/
 ```
 
 ### Reply 17.2 - https://reddit.com/r/applehelp/comments/1spb0ip/
@@ -638,7 +638,7 @@ Differentiate fast:
 
 If genuinely compromised, the recovery order is: change password, sign out all devices, turn on 2FA on a phone you control, then file fraud refunds at reportaproblem.apple.com.
 
-I work on a small iOS tool for the post-recovery balance step. Full compromised-account walkthrough: https://zerobalance.pro/en/blog/apple-account-hacked-recovery/
+Compromised-account walkthrough is here: https://zerobalance.pro/en/blog/apple-account-hacked-recovery/
 ```
 
 ### Reply 17.3 - https://reddit.com/r/applehelp/comments/1qrbgsl/
@@ -655,7 +655,7 @@ Action order:
 
 Apple Cash recovery rate is lower than App Store fraud recovery because the money has already left. Document everything.
 
-I work on a small iOS tool unrelated to Apple Cash. Full hacked-account recovery flow: https://zerobalance.pro/en/blog/apple-account-hacked-recovery/
+Full hacked-account recovery flow: https://zerobalance.pro/en/blog/apple-account-hacked-recovery/
 ```
 
 ---
@@ -675,7 +675,7 @@ Practical implications:
 
 If you want to be on the safe side, do not use a feature you got a refund on. If you keep using it, you carry some risk on future refund requests being denied automatically.
 
-I work on a small iOS tool for the balance side. Full refund-vs-unlock writeup: https://zerobalance.pro/en/blog/refunded-iap-still-have-it/
+Full refund-vs-unlock writeup here: https://zerobalance.pro/en/blog/refunded-iap-still-have-it/
 ```
 
 ---
@@ -697,7 +697,7 @@ If none of the three matches, it is fraud. Change the password, sign out all dev
 
 Stop the recurrence first (cancel the sub or remove the card from the unknown Apple ID), then sort out refunds.
 
-I work on a small iOS tool for the balance side. Full unknown-charges identification flow: https://zerobalance.pro/en/blog/unknown-apple-charges/
+Full unknown-charges identification flow: https://zerobalance.pro/en/blog/unknown-apple-charges/
 ```
 
 ### Reply 19.2 - https://reddit.com/r/applehelp/comments/1qhf0cm/
@@ -712,7 +712,7 @@ Where to look:
 
 Cancel from Settings -> Subscriptions. The next renewal will not happen.
 
-I work on a small iOS tool for the balance side. Full Apple-vs-Google billing breakdown: https://zerobalance.pro/en/blog/unknown-apple-charges/
+Full Apple-vs-Google billing breakdown: https://zerobalance.pro/en/blog/unknown-apple-charges/
 ```
 
 ### Reply 19.3 - https://reddit.com/r/applehelp/comments/1ly84mf/
@@ -728,7 +728,7 @@ If the pending hold does not drop in 10 business days, call your card issuer; th
 
 If Apple actually charged and then refused to refund, escalate via getsupport.apple.com -> "Apple Online Store" topic (different team from App Store / iTunes).
 
-I work on a small iOS tool for the App Store balance side. Full mystery-charges writeup: https://zerobalance.pro/en/blog/unknown-apple-charges/
+Mystery-charges writeup is here: https://zerobalance.pro/en/blog/unknown-apple-charges/
 ```
 
 ---
@@ -750,7 +750,7 @@ Things to check, in order:
 
 Try from a device that has never had an Apple ID, with a fresh real email and a phone Apple has not seen.
 
-I work on a small iOS tool unrelated to account creation. Full create-an-Apple-ID troubleshooting: https://zerobalance.pro/en/blog/cant-create-apple-id/
+Full create-an-Apple-ID troubleshooting: https://zerobalance.pro/en/blog/cant-create-apple-id/
 ```
 
 ### Reply 20.2 - https://reddit.com/r/ios/comments/1mo5ed1/
@@ -766,5 +766,5 @@ The "standard steps" Apple publishes leave out the silent blockers. The ones tha
 
 Try: real email, phone Apple has not seen, no VPN, from a device that does not have a recent Apple ID history. If it still fails, contact Apple Account Security through getsupport.apple.com.
 
-I work on a small iOS tool unrelated to account creation. Full blocker breakdown: https://zerobalance.pro/en/blog/cant-create-apple-id/
+Full blocker breakdown here: https://zerobalance.pro/en/blog/cant-create-apple-id/
 ```

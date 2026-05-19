@@ -1,0 +1,150 @@
+---
+import PageLayout from '../../../layouts/PageLayout.astro';
+import PageHeader from '../../../components/PageHeader.astro';
+import Container from '../../../components/Container.astro';
+import Section from '../../../components/Section.astro';
+import FAQ from '../../../components/FAQ.astro';
+import Reveal from '../../../components/Reveal.astro';
+import FinalCta from '../../../components/FinalCta.astro';
+import AppStoreButton from '../../../components/AppStoreButton.astro';
+import { getDict, LOCALES, type Locale } from '../../../i18n';
+import { articleSchema, faqSchema, breadcrumbSchema } from '../../../lib/schema';
+import { DOMAIN } from '../../../lib/siteConfig';
+
+export function getStaticPaths() {
+  return LOCALES.map((lang) => ({ params: { lang } }));
+}
+
+const lang = Astro.params.lang as Locale;
+const t = getDict(lang);
+const slug = 'unknown-apple-charges';
+const path = `/${lang}/blog/${slug}/`;
+const published = '2026-05-19T00:00:00Z';
+
+const copy = {
+  title: 'Random Apple charges you do not recognize: how to identify them',
+  description:
+    'APPLE.COM/BILL charges you cannot place are almost always a forgotten subscription, a Family Sharing member, or fraud. Here is how to figure out which.',
+  eyebrow: 'Mystery charges',
+  tldr:
+    'Almost every "unknown" Apple charge resolves to one of three things: a forgotten subscription, a Family Sharing member\'s purchase, or fraud. Start at reportaproblem.apple.com - it lists everything billed against your Apple ID, including IAPs and renewals.',
+  sections: [
+    {
+      h: 'Step 1: identify the charge at reportaproblem',
+      p: 'Every charge that ran through Apple is visible at reportaproblem.apple.com - including in-app purchases, subscription renewals, app purchases, and pre-orders. It is the most complete view Apple offers, more complete than Settings -> Subscriptions or Account -> Purchase History.\n\nFlow:\n\n1. reportaproblem.apple.com -> sign in with the Apple ID that has the card on file.\n2. The default view shows recent purchases. Filter by date to find the charge amount and date that matches your bank statement.\n3. Each row shows the merchant name (the actual app or service), the date, the amount, and the funding source.\n\nIf you find the charge here, you have your answer - the row tells you what was bought and when. If the merchant name matches an app you use, the next step is to find why it billed (subscription, IAP, or one-time purchase).\n\nIf you do NOT find the charge here, it means the charge did not run through your Apple ID. Move to Step 4 (fraud or non-Apple merchant).',
+    },
+    {
+      h: 'Step 2: check Family Sharing',
+      p: 'If you are a Family Sharing organizer, every family member\'s purchase bills your card by default. This is the most common cause of "I never bought this" charges in families.\n\nWhere to check:\n\n1. Settings -> [your name] -> Family Sharing -> [each member].\n2. Each member\'s Purchase History shows what they bought, when, and how much. Apple aggregates this for the organizer view.\n3. Match dates and amounts against the unknown charges.\n\nKids\' purchases are the most common (Roblox Robux, mobile game IAPs, ad-removal upgrades). Teens and partners sometimes buy apps without realizing the charge goes through the organizer.\n\nWhat to do if you find the source:\n\n- Talk to the family member. Confirm they intended the purchase.\n- If unintentional: file a refund at reportaproblem.apple.com under the affected purchase. Mark the reason as "purchase made by family member without my knowledge". Apple\'s family-refund approval rate is high.\n- Prevent future surprises: turn on Ask to Buy for kids in Settings -> Family -> [child] -> Ask to Buy. Every purchase by the kid then requires your approval.',
+    },
+    {
+      h: 'Step 3: check other Apple IDs',
+      p: 'Many users have multiple Apple IDs accumulated over the years:\n\n- A work Apple ID created when you joined a company.\n- An Apple ID created for a kid before Family Sharing existed for that age.\n- A separate Apple ID just for iCloud, with App Store on a different one.\n- An old Apple ID from before you knew about Apple ID merging (which Apple does not actually offer).\n\nIf the charge does not appear under your main Apple ID at reportaproblem, sign out and sign in with each other Apple ID you can remember. Many "unknown charges" turn out to be on a forgotten secondary Apple ID that still has your card linked.\n\nHow to find old Apple IDs:\n\n- Email search for "Welcome to Apple ID" or "Your Apple ID has been created". These emails confirm Apple ID creation.\n- Email search for "Your receipt from Apple" - the receipts go to the Apple ID\'s email, which is sometimes a different address than your primary one.\n- Search your password manager for Apple ID entries.\n- account.apple.com -> sign in -> Personal Information -> Reachable At. This shows all emails associated with the current Apple ID; some users find they have a forgotten primary email that traces to a different account.',
+    },
+    {
+      h: 'Step 4: if none of those match, it is fraud',
+      p: 'When the charge is not visible at reportaproblem under any of your Apple IDs, not from Family Sharing, and not from a forgotten account, you are looking at one of two things:\n\n1. Someone else\'s purchase ran through your card. The card was compromised separately from your Apple ID; the attacker added your card to their own Apple ID and bought through their account. You see "APPLE.COM/BILL" on your statement but the underlying Apple ID is theirs.\n\n2. The "APPLE.COM/BILL" line is misleading. Some non-Apple merchants use the Apple Pay system to charge cards; the descriptor on your statement might show as Apple but the actual merchant is different. Check the full descriptor on your statement; sometimes there are additional words after APPLE.COM/BILL that clarify.\n\nFor case 1, the fix is on the card side. Call your bank, dispute the charge as fraud, replace the card. Apple cannot do anything because the Apple ID involved is not yours - Apple\'s tooling cannot reach across accounts to refund a charge another account benefited from.\n\nFor case 2, identify the actual merchant and contact them directly.\n\nIn either case, the priority is to stop the recurring source. Replace the card; the attacker\'s Apple ID will fail on the next charge attempt.',
+    },
+    {
+      h: 'The "recurring Google charges via Apple" pattern',
+      p: 'A specific confusing case worth knowing: Google products subscribed via the App Store.\n\nGoogle products (YouTube Premium, Google One, Google Play games) can be subscribed to from either Google\'s own billing or Apple\'s billing. If you subscribed via the iOS app, Apple is the merchant of record. Your statement shows APPLE.COM/BILL even though the underlying service is Google\'s.\n\nWhere this shows up:\n\n- YouTube Premium signed up on iPhone in the YouTube app: billed by Apple, charge says APPLE.COM/BILL, subscription managed in Settings -> Subscriptions.\n- YouTube Premium signed up on the web at youtube.com: billed by Google, charge says GOOGLE *YOUTUBE PREMIUM, subscription managed at youtube.com.\n\nThe two are entirely separate subscriptions in entirely separate billing systems. Cancelling one does not cancel the other. People sometimes pay for both for years without realizing.\n\nIf you see Google-product charges from Apple and Apple support says "this is Google, contact Google": they are wrong if the subscription was started through the iOS app. Push back and direct them to your Subscriptions tab; the subscription should be there.',
+    },
+    {
+      h: 'Cross-platform subscription confusion',
+      p: 'Several apps run subscriptions on multiple billing systems and users can end up paying twice:\n\n- Headspace, Calm, and many meditation apps: subscriptions startable on iOS (Apple billing), web (Stripe billing), or Android (Google Play). If a user starts on iOS but later logs in on the web and starts a "free trial" that converts, both subscriptions are active.\n\n- Spotify: web sign-up bills Stripe; iOS app sign-up used to bill Apple (Spotify pulled out of iOS billing in 2016, so newer signups bill the web).\n\n- Netflix: similar history. iOS app billed Apple until 2018; new signups must go through the web.\n\nIf you find a charge in your bank statement under APPLE.COM/BILL and the same app charges you again under a different descriptor: you have two active subscriptions. Cancel one; the Apple side via Settings -> Subscriptions, the web side via the app\'s own account page.\n\nThis is a common cause of "double-billed" complaints. Apple processed one; the app processed another; both are valid charges, just for two different subscriptions you accidentally created.',
+    },
+  ],
+  faqItems: [
+    {
+      q: 'My statement shows APPLE.COM/BILL but I never bought anything from Apple. Is this fraud?',
+      a: 'Maybe. First check reportaproblem.apple.com under every Apple ID you have. If the charge is not there under any of your accounts, then yes - someone else\'s Apple ID is being billed to your card. Dispute with the bank and replace the card.',
+    },
+    {
+      q: 'Can I tell Apple to stop charging my card without knowing which subscription it is?',
+      a: 'Yes. Remove the card from every Apple ID at account.apple.com -> Payment & Shipping. Subscriptions billing to that card will fail on next renewal and either pause (16-day grace) or expire. This is a blunt tool; it also stops legitimate subscriptions you want.',
+    },
+    {
+      q: 'I cancelled the subscription but Apple still charged me this month. Why?',
+      a: 'You probably cancelled after the renewal date. Apple charges at the start of each period; cancelling mid-period stops the next renewal but does not refund the current period. To refund, request via reportaproblem.apple.com citing "did not realize subscription would renew".',
+    },
+    {
+      q: 'My kid says they did not make the purchases that match my unknown charges. Should I believe them?',
+      a: 'Verify before refunding. Apple\'s Family Sharing Purchase History under the kid\'s account shows the device, app, and time. If everything checks out and the kid genuinely did not make them, the kid\'s Apple ID may be compromised separately - check the kid\'s sign-in security.',
+    },
+    {
+      q: 'How do I find a subscription I cannot remember signing up for?',
+      a: 'Settings -> [your name] -> Subscriptions shows every active App Store-billed subscription. reportaproblem.apple.com shows the same plus historical. If a charge is recurring and not in either, it is not Apple-billed.',
+    },
+  ],
+};
+---
+
+<PageLayout
+  title={`${copy.title} - Zero Balance`}
+  description={copy.description}
+  {lang}
+  {path}
+  schema={[
+    articleSchema({ title: copy.title, description: copy.description, slug, lang, datePublished: published }),
+    faqSchema(copy.faqItems),
+    breadcrumbSchema([
+      { name: 'Home', url: `${DOMAIN}/${lang}/` },
+      { name: 'Blog', url: `${DOMAIN}/${lang}/blog/` },
+      { name: copy.title, url: `${DOMAIN}${path}` },
+    ]),
+  ]}
+  ogType="article"
+  publishedTime={published}
+  modifiedTime={published}
+  keywords={[
+    'unknown charge apple',
+    'apple.com bill charge',
+    'apple charge i did not make',
+    'apple subscription identify',
+    'forgotten apple subscription',
+    ...t.keywords.support,
+  ]}
+>
+  <PageHeader eyebrow={copy.eyebrow} title={copy.title} description={copy.description} />
+
+  <Section>
+    <Container>
+      <Reveal class="mx-auto max-w-3xl">
+        <div class="rounded-2xl border border-[var(--border)] bg-[var(--brand-soft)]/40 p-6 md:p-8">
+          <p class="text-sm font-semibold tracking-wide text-[var(--brand-strong)] uppercase">TL;DR</p>
+          <p class="mt-3 text-lg leading-relaxed text-[var(--fg)]">{copy.tldr}</p>
+          <div class="mt-6 flex">
+            <AppStoreButton label={t.cta.appStore} ct="blog-unknown-charges-tldr" />
+          </div>
+        </div>
+      </Reveal>
+
+      <div class="mx-auto mt-10 max-w-3xl prose-zb">
+        {
+          copy.sections.map((s, i) => (
+            <Reveal delay={i * 40}>
+              <h2>{s.h}</h2>
+              {s.p.split('\n\n').map((para) => (
+                <p>{para}</p>
+              ))}
+              {i === 2 && (
+                <div class="not-prose my-6 flex">
+                  <AppStoreButton label={t.cta.appStore} ct="blog-unknown-charges-mid" />
+                </div>
+              )}
+            </Reveal>
+          ))
+        }
+
+        <Reveal>
+          <h2>Related questions</h2>
+        </Reveal>
+        <Reveal>
+          <FAQ items={copy.faqItems} />
+        </Reveal>
+      </div>
+    </Container>
+  </Section>
+
+  <FinalCta {lang} />
+</PageLayout>

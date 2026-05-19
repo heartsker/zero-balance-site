@@ -1,0 +1,146 @@
+---
+import PageLayout from '../../../layouts/PageLayout.astro';
+import PageHeader from '../../../components/PageHeader.astro';
+import Container from '../../../components/Container.astro';
+import Section from '../../../components/Section.astro';
+import FAQ from '../../../components/FAQ.astro';
+import Reveal from '../../../components/Reveal.astro';
+import FinalCta from '../../../components/FinalCta.astro';
+import AppStoreButton from '../../../components/AppStoreButton.astro';
+import { getDict, LOCALES, type Locale } from '../../../i18n';
+import { articleSchema, faqSchema, breadcrumbSchema } from '../../../lib/schema';
+import { DOMAIN } from '../../../lib/siteConfig';
+
+export function getStaticPaths() {
+  return LOCALES.map((lang) => ({ params: { lang } }));
+}
+
+const lang = Astro.params.lang as Locale;
+const t = getDict(lang);
+const slug = 'app-store-refund-denied';
+const path = `/${lang}/blog/${slug}/`;
+const published = '2026-05-19T00:00:00Z';
+
+const copy = {
+  title: 'How to get an App Store refund (and what to do when Apple denies it)',
+  description:
+    'Apple denied your App Store refund. Here is the channel that actually works, the re-submission trick, and when to escalate vs accept the loss.',
+  eyebrow: 'Refunds',
+  tldr:
+    'Always request through reportaproblem.apple.com, not Settings. If Apple\'s first automated decision denies you, you can re-submit with a clearer explanation - that second request goes to a human reviewer and is often approved. Chargebacks via your bank work but can disable your Apple ID entirely.',
+  sections: [
+    {
+      h: 'The official channel: reportaproblem.apple.com',
+      p: 'Apple wants every refund request to start at reportaproblem.apple.com. That is the URL on the Apple Help pages, the URL the support agents point to, and the route that produces fastest decisions. The "Report a Problem" link inside Settings on iPhone goes to the same place, but starting from the website is faster on a laptop.\n\nFlow:\n\n1. reportaproblem.apple.com (or its country-specific subdomain like reportaproblem.apple.com/cy).\n2. Sign in with the Apple ID that made the purchase. If you have multiple Apple IDs, the purchase is only visible from the one that made it.\n3. Find the row of the purchase in question. Recent purchases default to the top; older ones need date filtering.\n4. Click "Report a Problem" next to the row.\n5. Pick a reason from the dropdown.\n6. Optionally add a free-text explanation (some reasons require it).\n7. Submit.\n\nThe decision lands by email within minutes (for auto-approved cases) up to 48 hours (for human-reviewed cases). Approved refunds go back to the original payment method - card refunds take 3-5 business days, debit cards up to 10, PayPal 3-7, Apple Account balance instant.',
+    },
+    {
+      h: 'What Apple considers valid grounds',
+      p: 'Apple\'s refund policy on paper is strict. In practice, certain reasons get approved at high rates:\n\n- Unauthorized purchase: someone other than the account owner made the purchase. Approval rate is high, especially for kids\' purchases on shared family devices, where Apple has a specific code path.\n\n- Did not mean to buy: accidental tap, kid\'s hand on the device, fat finger on a confirmation sheet. Approved if recent (within ~14 days) and not part of a pattern.\n\n- Content did not load: paid for an app that never functioned, paid for an in-app currency that did not deliver, paid for a movie that did not start. Approved when the failure is on the app/content side.\n\n- Free trial converted unexpectedly: signed up for a free trial and the conversion-to-paid happened before you could cancel. Approved if requested within ~14 days of conversion.\n\n- The item was misrepresented: app description claimed features it does not have, in-app currency converted at a different rate than advertised. Approved when you cite specifics.\n\nReasons Apple does not approve:\n\n- "I changed my mind" / buyer\'s remorse.\n- "I forgot to cancel a subscription" without other context (sometimes approves; framing matters).\n- Anything older than ~90 days.\n- Refund volume on the account in the last 12 months is too high.',
+    },
+    {
+      h: 'Why a denial happens',
+      p: 'The first refund decision at reportaproblem is automated. Apple\'s system buckets the request by reason, time elapsed, refund history, and a few other signals. Auto-approval applies in clear cases. Auto-denial applies when:\n\n- The reason picked from the dropdown is "ineligible category" (often buyer\'s remorse-shaped requests).\n- The account has had several refunds in the recent past.\n- The purchase is older than the soft 90-day window.\n- The dollar amount is unusually high relative to account history.\n- The user has previously had a refund granted then disputed at the bank.\n\nThe auto-denial is final on the first attempt. The trick: re-submitting the same request gets routed to a human reviewer who can override the bucket. Same form, same purchase, slightly clearer reason. Human reviewers approve cases the auto-system declines, particularly when the explanation field includes a specific story (not "please refund this").',
+    },
+    {
+      h: 'How to appeal: the re-submission',
+      p: 'When a refund is denied, do this:\n\n1. Return to reportaproblem.apple.com.\n2. Find the same purchase row. Apple shows a "request was denied" badge.\n3. Click "Report a Problem" again. The form opens for a new request on the same purchase.\n4. Pick a different reason from the dropdown if any other reason fits. If the original was "did not mean to buy" and you got denied, switch to "the item is not as described" or "I did not authorize this purchase" if either is true.\n5. In the free-text field, write 3-5 sentences explaining specifically what happened. Reviewers spend ~30 seconds per case; brevity helps.\n6. Submit.\n\nThe second request goes to a human reviewer. Approval rate on re-submissions with a clearer reason is materially higher than first-pass auto-decisions. Decisions land within 24-72 hours.\n\nIf the second attempt is also denied: escalate via getsupport.apple.com -> Subscriptions and Purchases -> Speak with a Senior Advisor. Senior Advisors can overturn front-line denials. This works best for high-value purchases ($50+); for small amounts, the time investment outweighs the recovery.',
+    },
+    {
+      h: 'When (and when not) to chargeback through your bank',
+      p: 'You can dispute Apple charges through your card-issuing bank as a fraudulent or unauthorized transaction. This works mechanically: the bank takes the money back from Apple and gives it to you. The downside is severe.\n\nApple treats bank chargebacks as adversarial. The typical sequence:\n\n1. Bank withdraws money from Apple\'s side.\n2. Apple sees the chargeback notification.\n3. Apple\'s fraud system flags the Apple ID associated with the disputed charge.\n4. The Apple ID is disabled for purchases - sometimes for the full account.\n5. Apple now shows "purchase pending" against the account because the charge that funded prior purchases got reversed. The negative balance blocks all App Store activity.\n6. Restoring the account requires paying Apple back (clearing the negative balance) plus support escalation to lift the disable.\n\nNet outcome: you got a small refund and lost access to everything you bought, every subscription, and the Apple ID itself.\n\nWhen a chargeback makes sense:\n\n- You no longer use Apple at all and are willing to abandon the Apple ID.\n- The amount is high enough that losing the account is worth it.\n- The unauthorized charge is fraud (someone else used your card on someone else\'s Apple ID) where your Apple ID is not the one taking the loss.\n\nWhen it does not: anything else. Use reportaproblem and re-submit denials. The Senior Advisor escalation path exists precisely so chargebacks are not necessary.',
+    },
+  ],
+  faqItems: [
+    {
+      q: 'How many refund requests can I make before Apple starts denying them automatically?',
+      a: 'Apple does not publish the threshold but user reports cluster around 3-4 refund requests per 12 months before the auto-system gets stricter. Above ~5-6 the account may be flagged for review. Single legitimate cases rarely trigger.',
+    },
+    {
+      q: 'Can I refund a free trial that converted to paid?',
+      a: 'Yes, if you request within ~14 days of conversion. Apple approves these at high rate when the reason is framed as "did not realize subscription would auto-renew". The further past the conversion you go, the lower the approval rate.',
+    },
+    {
+      q: 'If my refund is approved, where does the money go?',
+      a: 'Back to the original payment method: 3-5 business days on credit cards, up to 10 on debit, 3-7 on PayPal. If the original payment came from Apple Account balance, the refund lands back in balance instantly.',
+    },
+    {
+      q: 'Will Apple refund a subscription if I cancelled too late?',
+      a: 'Sometimes. The grounds Apple approves are: free trial converted without your knowledge, you forgot but cancelled within ~14 days of renewal, you cancelled but Apple billed anyway. "I forgot for two months" usually does not get approved.',
+    },
+    {
+      q: 'Can I refund Apple One but keep Apple Music alone?',
+      a: 'No - Apple One is bundled. Refunding the bundle refunds the whole bundle, not parts of it. If you want to switch from Apple One to standalone Apple Music, cancel Apple One (no refund) and subscribe to Apple Music separately going forward.',
+    },
+  ],
+};
+---
+
+<PageLayout
+  title={`${copy.title} - Zero Balance`}
+  description={copy.description}
+  {lang}
+  {path}
+  schema={[
+    articleSchema({ title: copy.title, description: copy.description, slug, lang, datePublished: published }),
+    faqSchema(copy.faqItems),
+    breadcrumbSchema([
+      { name: 'Home', url: `${DOMAIN}/${lang}/` },
+      { name: 'Blog', url: `${DOMAIN}/${lang}/blog/` },
+      { name: copy.title, url: `${DOMAIN}${path}` },
+    ]),
+  ]}
+  ogType="article"
+  publishedTime={published}
+  modifiedTime={published}
+  keywords={[
+    'app store refund',
+    'reportaproblem apple',
+    'app store refund denied appeal',
+    'apple refund denied',
+    'how to refund apple purchase',
+    ...t.keywords.support,
+  ]}
+>
+  <PageHeader eyebrow={copy.eyebrow} title={copy.title} description={copy.description} />
+
+  <Section>
+    <Container>
+      <Reveal class="mx-auto max-w-3xl">
+        <div class="rounded-2xl border border-[var(--border)] bg-[var(--brand-soft)]/40 p-6 md:p-8">
+          <p class="text-sm font-semibold tracking-wide text-[var(--brand-strong)] uppercase">TL;DR</p>
+          <p class="mt-3 text-lg leading-relaxed text-[var(--fg)]">{copy.tldr}</p>
+          <div class="mt-6 flex">
+            <AppStoreButton label={t.cta.appStore} ct="blog-refund-denied-tldr" />
+          </div>
+        </div>
+      </Reveal>
+
+      <div class="mx-auto mt-10 max-w-3xl prose-zb">
+        {
+          copy.sections.map((s, i) => (
+            <Reveal delay={i * 40}>
+              <h2>{s.h}</h2>
+              {s.p.split('\n\n').map((para) => (
+                <p>{para}</p>
+              ))}
+              {i === 2 && (
+                <div class="not-prose my-6 flex">
+                  <AppStoreButton label={t.cta.appStore} ct="blog-refund-denied-mid" />
+                </div>
+              )}
+            </Reveal>
+          ))
+        }
+
+        <Reveal>
+          <h2>Related questions</h2>
+        </Reveal>
+        <Reveal>
+          <FAQ items={copy.faqItems} />
+        </Reveal>
+      </div>
+    </Container>
+  </Section>
+
+  <FinalCta {lang} />
+</PageLayout>

@@ -50,7 +50,7 @@ A daily-ish Q&A blog targeting Apple ecosystem pain points (App Store, Apple ID,
   - https://reddit.com/r/applehelp/comments/1ppfp6e/ - r/applehelp - User in Canada being asked to forfeit $130 to change country.
   - https://reddit.com/r/applehelp/comments/1mq4fsf/ - r/applehelp - Country selection locked despite the user being in a new country.
   - https://reddit.com/r/applehelp/comments/1muj096/ - r/applehelp - US → Sweden mover asking if everything (payment, region) can be switched.
-- **Status:** ☐ not started
+- **Status:** ☑ shipped (2026-05-19) - https://zerobalance.pro/en/blog/forfeit-balance-to-change-apple-id-country/
 
 ### 2. Trying to buy an app with partial Apple Account balance - how combined payment works
 - **Slug:** `apple-account-balance-plus-card-combined-payment`
@@ -68,7 +68,7 @@ A daily-ish Q&A blog targeting Apple ecosystem pain points (App Store, Apple ID,
 - **Reddit threads to reference & comment on:**
   - https://reddit.com/r/applehelp/comments/1q6i6ro/ - r/applehelp - User with $12 balance trying to buy a $30 app, doesn't know how Apple combines.
   - https://reddit.com/r/applehelp/comments/1o8zw5m/ - r/applehelp - Confusing interaction between balance and Apple Store pickup.
-- **Status:** ☐ not started
+- **Status:** ☑ shipped (2026-05-19) - https://zerobalance.pro/en/blog/apple-account-balance-plus-card-combined-payment/
 
 ### 3. Will my subscriptions cancel if I change Apple ID country
 - **Slug:** `subscriptions-after-apple-id-country-change`
@@ -86,7 +86,7 @@ A daily-ish Q&A blog targeting Apple ecosystem pain points (App Store, Apple ID,
 - **Short answer (TL;DR):** Yes - Apple forces you to cancel every active subscription before it will switch your country, and any free trial ends immediately. Cancellation means "no auto-renew"; you keep access until the current period ends, then re-subscribe in the new region if it's available.
 - **Reddit threads to reference & comment on:**
   - https://reddit.com/r/applehelp/comments/1s1cnvv/ - r/applehelp - User uncertain whether subs survive a country change.
-- **Status:** ☐ not started
+- **Status:** ☑ shipped (2026-05-19) - https://zerobalance.pro/en/blog/subscriptions-after-apple-id-country-change/
 
 ### 4. Apple ID country change requirements - complete 2026 checklist
 - **Slug:** `apple-id-country-change-checklist`
@@ -108,7 +108,7 @@ A daily-ish Q&A blog targeting Apple ecosystem pain points (App Store, Apple ID,
 - **Reddit threads to reference & comment on:**
   - https://reddit.com/r/applehelp/comments/1l71yh8/ - r/applehelp - Region change blocked despite everything looking cancelled.
   - https://reddit.com/r/applehelp/comments/1ns0rix/ - r/applehelp - User describing "region change nightmare" with many failures.
-- **Status:** ☐ not started
+- **Status:** ☑ shipped (2026-05-19) - https://zerobalance.pro/en/blog/apple-id-country-change-checklist/
 
 ### 5. Why your Apple Account balance is "disabled" and how to fix it
 - **Slug:** `apple-account-balance-disabled`
@@ -125,7 +125,7 @@ A daily-ish Q&A blog targeting Apple ecosystem pain points (App Store, Apple ID,
 - **Short answer (TL;DR):** A disabled Apple Account balance almost always means Apple's fraud system flagged the source - usually a gift card that was later reported stolen, or a chargeback on the card that funded the credit. Only Apple iTunes Store support can restore it; contact them with the original receipt.
 - **Reddit threads to reference & comment on:**
   - https://reddit.com/r/applehelp/comments/1rerraa/ - r/applehelp - User's gift-card balance disabled out of nowhere.
-- **Status:** ☐ not started
+- **Status:** ☑ shipped (2026-05-19) - https://zerobalance.pro/en/blog/apple-account-balance-disabled/
 
 ### 6. Negative Apple Account balance - what it means and how to clear it
 - **Slug:** `negative-apple-account-balance`
@@ -142,7 +142,7 @@ A daily-ish Q&A blog targeting Apple ecosystem pain points (App Store, Apple ID,
 - **Short answer (TL;DR):** A negative Apple Account balance means a previous successful purchase later failed to settle (usually a declined card or chargeback reversal). Add a working payment method and Apple will automatically settle the debt; until then, updates and new downloads are blocked.
 - **Reddit threads to reference & comment on:**
   - https://reddit.com/r/applehelp/comments/1ta6fdc/ - r/applehelp - App Store update blocked due to negative balance.
-- **Status:** ☐ not started
+- **Status:** ☑ shipped (2026-05-19) - https://zerobalance.pro/en/blog/negative-apple-account-balance/
 
 ### 7. Apple ID disabled with no reason - recovery playbook
 - **Slug:** `apple-id-disabled-no-reason-recovery`
@@ -163,7 +163,7 @@ A daily-ish Q&A blog targeting Apple ecosystem pain points (App Store, Apple ID,
   - https://reddit.com/r/applehelp/comments/1oqw2e6/ - r/applehelp - Chat support says decision is absolute.
   - https://reddit.com/r/applehelp/comments/1p6n7jr/ - r/applehelp - User asking if they're just out of luck.
   - https://reddit.com/r/applehelp/comments/1r61zoh/ - r/applehelp - Apple Media & Services disabled, refuses to reinstate.
-- **Status:** ☐ not started
+- **Status:** ☑ shipped (2026-05-19) - https://zerobalance.pro/en/blog/apple-id-disabled-no-reason-recovery/
 
 ### 8. Apple ID locked after verification code loop - how to get back in
 - **Slug:** `apple-id-locked-verification-code-loop`
@@ -180,7 +180,7 @@ A daily-ish Q&A blog targeting Apple ecosystem pain points (App Store, Apple ID,
 - **Short answer (TL;DR):** Most "verification code" lockouts come from the wrong code source - SMS to an old number or an autofill grabbing an unrelated code. Pull the code from a trusted device's banner instead of typing it; if you're already locked, start account recovery at iforgot.apple.com.
 - **Reddit threads to reference & comment on:**
   - https://reddit.com/r/applehelp/comments/1qu0pp3/ - r/applehelp - Android Apple Music user locked in a verification loop.
-- **Status:** ☐ not started
+- **Status:** ☑ shipped (2026-05-19) - https://zerobalance.pro/en/blog/apple-id-locked-verification-code-loop/
 
 ### 9. How to get an App Store refund (and what to do when Apple denies it)
 - **Slug:** `app-store-refund-denied`
@@ -201,7 +201,7 @@ A daily-ish Q&A blog targeting Apple ecosystem pain points (App Store, Apple ID,
   - https://reddit.com/r/applehelp/comments/1q2zlxb/ - r/applehelp - User asking the basic "how do I refund" question.
   - https://reddit.com/r/applehelp/comments/1l86t9r/ - r/applehelp - Community warning about strict refund policy.
   - https://reddit.com/r/applehelp/comments/1oo01n0/ - r/applehelp - Refund denied for a copycat "SORA 2" app.
-- **Status:** ☐ not started
+- **Status:** ☑ shipped (2026-05-19) - https://zerobalance.pro/en/blog/app-store-refund-denied/
 
 ### 10. How long does an Apple subscription refund take
 - **Slug:** `apple-subscription-refund-timing`
@@ -217,7 +217,7 @@ A daily-ish Q&A blog targeting Apple ecosystem pain points (App Store, Apple ID,
 - **Short answer (TL;DR):** If Apple refunds to your Apple Account balance, it shows up immediately. Refunds to a credit card take 3-5 business days, debit cards up to 10, and PayPal up to 7. If 14 days have passed and nothing has landed, contact Apple - the refund was approved but never sent.
 - **Reddit threads to reference & comment on:**
   - https://reddit.com/r/applehelp/comments/1nmg4gl/ - r/applehelp - Community asking about sub-24h refunds.
-- **Status:** ☐ not started
+- **Status:** ☑ shipped (2026-05-19) - https://zerobalance.pro/en/blog/apple-subscription-refund-timing/
 
 ### 11. Subscription still active after payment fails - how long does Apple retry billing
 - **Slug:** `apple-subscription-payment-failed-retry`
@@ -234,7 +234,7 @@ A daily-ish Q&A blog targeting Apple ecosystem pain points (App Store, Apple ID,
 - **Short answer (TL;DR):** Apple keeps a failed-payment subscription active for up to 16 days while it retries the card. You still have full access during that window. If you don't update your payment method, the subscription pauses and you lose access; it can be resumed by paying the past-due amount.
 - **Reddit threads to reference & comment on:**
   - https://reddit.com/r/applehelp/comments/1mcw3x1/ - r/applehelp - Subscription remains active after repeated billing failures.
-- **Status:** ☐ not started
+- **Status:** ☑ shipped (2026-05-19) - https://zerobalance.pro/en/blog/apple-subscription-payment-failed-retry/
 
 ### 12. "Your purchase could not be completed" - every cause and fix
 - **Slug:** `your-purchase-could-not-be-completed`
@@ -251,7 +251,7 @@ A daily-ish Q&A blog targeting Apple ecosystem pain points (App Store, Apple ID,
 - **Reddit threads to reference & comment on:**
   - https://reddit.com/r/applehelp/comments/1ovus4u/ - r/applehelp - Repeated "could not be completed" failures with no detail.
   - https://reddit.com/r/applehelp/comments/1psm164/ - r/applehelp - "Apple account not enabled for in app payments" despite balance.
-- **Status:** ☐ not started
+- **Status:** ☑ shipped (2026-05-19) - https://zerobalance.pro/en/blog/your-purchase-could-not-be-completed/
 
 ### 13. Payment method declined on Apple ID - full troubleshooting guide
 - **Slug:** `apple-id-payment-method-declined`
@@ -271,7 +271,7 @@ A daily-ish Q&A blog targeting Apple ecosystem pain points (App Store, Apple ID,
   - https://reddit.com/r/applehelp/comments/1q0eclx/ - r/applehelp - Every payment method failing.
   - https://reddit.com/r/applehelp/comments/1m5fj6q/ - r/applehelp - Apple Developer payment authorization failed.
   - https://reddit.com/r/applehelp/comments/1ky2tx6/ - r/applehelp - Billing address rejected for phone format.
-- **Status:** ☐ not started
+- **Status:** ☑ shipped (2026-05-19) - https://zerobalance.pro/en/blog/apple-id-payment-method-declined/
 
 ### 14. How to set Apple ID payment method to "None" (and when Apple won't let you)
 - **Slug:** `apple-id-payment-method-none`
@@ -287,7 +287,7 @@ A daily-ish Q&A blog targeting Apple ecosystem pain points (App Store, Apple ID,
 - **Short answer (TL;DR):** "None" only appears when your Apple ID has no active subscriptions, no outstanding balance, and you aren't the Family Sharing payer. Cancel subscriptions, settle the balance, and pass off the payer role - then "None" shows up under Payment & Shipping.
 - **Reddit threads to reference & comment on:**
   - (Will collect during writing - several threads in articles 4, 6, 13 touch this.)
-- **Status:** ☐ not started
+- **Status:** ☑ shipped (2026-05-19) - https://zerobalance.pro/en/blog/apple-id-payment-method-none/
 
 ### 15. Can you use an Apple gift card for in-app purchases? Yes - here's the catch
 - **Slug:** `apple-gift-card-for-in-app-purchases`
@@ -305,7 +305,7 @@ A daily-ish Q&A blog targeting Apple ecosystem pain points (App Store, Apple ID,
 - **Reddit threads to reference & comment on:**
   - https://reddit.com/r/applehelp/comments/1qkg4v2/ - r/applehelp - User unsure if gift card works for IAP.
   - https://reddit.com/r/applehelp/comments/1o5qut2/ - r/applehelp - Gift card rejected on a game IAP.
-- **Status:** ☐ not started
+- **Status:** ☑ shipped (2026-05-19) - https://zerobalance.pro/en/blog/apple-gift-card-for-in-app-purchases/
 
 ### 16. "This gift card has already been redeemed" - what to try before giving up
 - **Slug:** `apple-gift-card-already-redeemed`
@@ -326,7 +326,7 @@ A daily-ish Q&A blog targeting Apple ecosystem pain points (App Store, Apple ID,
   - https://reddit.com/r/applehelp/comments/1p10snx/ - r/applehelp - Can't redeem - code not recognized.
   - https://reddit.com/r/applehelp/comments/1m11dzs/ - r/applehelp - Apple repeatedly rejects gift card.
   - https://reddit.com/r/applehelp/comments/1lx4rbt/ - r/applehelp - User victim of gift card scam.
-- **Status:** ☐ not started
+- **Status:** ☑ shipped (2026-05-19) - https://zerobalance.pro/en/blog/apple-gift-card-already-redeemed/
 
 ### 17. Apple account hacked - lock it down, get refunds, prevent re-entry
 - **Slug:** `apple-account-hacked-recovery`
@@ -347,7 +347,7 @@ A daily-ish Q&A blog targeting Apple ecosystem pain points (App Store, Apple ID,
   - https://reddit.com/r/applehelp/comments/1sai7sh/ - r/applehelp - Hacker stole Apple account.
   - https://reddit.com/r/applehelp/comments/1spb0ip/ - r/applehelp - Compromised account, unknown activity.
   - https://reddit.com/r/applehelp/comments/1qrbgsl/ - r/applehelp - $300 stolen via "TikTok For Business" Apple Cash scam.
-- **Status:** ☐ not started
+- **Status:** ☑ shipped (2026-05-19) - https://zerobalance.pro/en/blog/apple-account-hacked-recovery/
 
 ### 18. Refunded an in-app purchase but still have it? Here's why
 - **Slug:** `refunded-iap-still-have-it`
@@ -364,7 +364,7 @@ A daily-ish Q&A blog targeting Apple ecosystem pain points (App Store, Apple ID,
 - **Short answer (TL;DR):** Apple refunds the money but only notifies the app; whether the app revokes the unlock is up to its developers. Old or indie apps often never revoke. Apple will not penalize you for one refund where the app didn't follow through, but a pattern of refund-then-keep is one of the most common triggers for an Apple ID disable.
 - **Reddit threads to reference & comment on:**
   - https://reddit.com/r/applehelp/comments/1rannts/ - r/applehelp - Refund went through but the IAP still works.
-- **Status:** ☐ not started
+- **Status:** ☑ shipped (2026-05-19) - https://zerobalance.pro/en/blog/refunded-iap-still-have-it/
 
 ### 19. Random charges from Apple you don't recognize - how to identify and stop them
 - **Slug:** `unknown-apple-charges`
@@ -383,7 +383,7 @@ A daily-ish Q&A blog targeting Apple ecosystem pain points (App Store, Apple ID,
   - https://reddit.com/r/applehelp/comments/1p649jz/ - r/applehelp - Unwanted recurring deductions.
   - https://reddit.com/r/applehelp/comments/1qhf0cm/ - r/applehelp - Mystery Google charges with Apple support deflecting.
   - https://reddit.com/r/applehelp/comments/1ly84mf/ - r/applehelp - Cancelled order, money not refunded.
-- **Status:** ☐ not started
+- **Status:** ☑ shipped (2026-05-19) - https://zerobalance.pro/en/blog/unknown-apple-charges/
 
 ### 20. Can't create an Apple ID - every blocker and what to do
 - **Slug:** `cant-create-apple-id`
@@ -401,7 +401,7 @@ A daily-ish Q&A blog targeting Apple ecosystem pain points (App Store, Apple ID,
 - **Reddit threads to reference & comment on:**
   - https://reddit.com/r/applehelp/comments/1lsgftb/ - r/applehelp - Desperately trying to create an Apple account.
   - https://reddit.com/r/ios/comments/1mo5ed1/ - r/ios - Can't make an Apple ID despite following standard steps.
-- **Status:** ☐ not started
+- **Status:** ☑ shipped (2026-05-19) - https://zerobalance.pro/en/blog/cant-create-apple-id/
 
 ---
 
