@@ -1,0 +1,134 @@
+---
+import PageLayout from '../../layouts/PageLayout.astro';
+import PageHeader from '../../components/PageHeader.astro';
+import Container from '../../components/Container.astro';
+import Section from '../../components/Section.astro';
+import FAQ from '../../components/FAQ.astro';
+import Reveal from '../../components/Reveal.astro';
+import FinalCta from '../../components/FinalCta.astro';
+import AppStoreButton from '../../components/AppStoreButton.astro';
+import { getDict, LOCALES, type Locale } from '../../i18n';
+import { faqSchema } from '../../lib/schema';
+
+export function getStaticPaths() {
+  return LOCALES.map((lang) => ({ params: { lang } }));
+}
+
+const lang = Astro.params.lang as Locale;
+const t = getDict(lang);
+const path = `/${lang}/reset-apple-id-balance/`;
+
+const copy = {
+  title: 'How to reset your Apple Account balance to exactly $0.00',
+  description:
+    'Reset your Apple Account balance to exactly $0.00 - whether you have a few cents, a few dollars, or a stuck gift card residue. Three routes that actually work in 2026, and the one Apple uses for region-change requests.',
+  eyebrow: 'Guide',
+  tldrTitle: 'TL;DR',
+  tldr:
+    'Three routes work: (A) ask Apple Support to clear it - reliable under ~$1 with a region-change reason; (B) spend it manually - only hits exact zero if you have a card on file to absorb the overshoot, because Apple\'s minimum IAP price is $0.29 and balances below that cannot be matched alone; (C) overshoot a $0.99 song so the card pays the difference. Family Sharing, "balance transfer" services, and Apple-credit-to-cash sites do not work.',
+  sections: [
+    {
+      h: 'Why people need to reset the balance',
+      p: 'Three common reasons:\n\n1. Changing App Store country or region. Apple\'s region switcher refuses to proceed until the balance is exactly $0.00 - even one cent blocks the change.\n\n2. Closing the Apple Account. The account-deletion flow requires a zero balance.\n\n3. Leaving the Apple credit ecosystem. You do not plan to use the balance and want it cleared.\n\nThe first is the most common reason this page gets read. Apple\'s official region-change help page (support.apple.com/en-us/118283) confirms the zero-balance requirement. What it does not tell you is what to do when your balance is smaller than the cheapest item on the store - and that is the actually hard case.',
+    },
+    {
+      h: 'Step 0 - confirm the exact balance',
+      p: 'Before anything else, write down the exact amount including fractional cents. On iPhone: open the App Store, tap your profile picture, the balance is shown directly below your name. If no line is visible, the balance is already $0.00 - region change should be unblocked.\n\nIf the balance shows but the region change is still blocked, you may have a second blocker: an active subscription, a pending refund, a pre-order, or family-organizer status. Those are separate from the balance and have to be cleared in parallel.',
+    },
+    {
+      h: 'Route A - ask Apple Support to clear it',
+      p: 'This is the cleanest path when the balance is small and you have a real reason. Apple absorbs the money; you walk away at $0.00.\n\nSteps:\n\n1. Go to getsupport.apple.com.\n2. In the search field type "clear Apple ID balance" or "empty balance".\n3. Pick the "Clear Apple ID balance" topic.\n4. Choose chat (fastest) or schedule a callback.\n5. When the agent connects, lead with the reason - "I am trying to change my Apple Account country but I have a $0.47 leftover I cannot spend." Reasons centered on region change are honored more often than "I just want it gone."\n6. Verify your identity. The agent either clears it on the spot or escalates to a tier-2 agent.\n\nSuccess rate: very high for amounts under $1 with a region-change reason. Lower for balances of several dollars or vague cleanup requests. If the first agent refuses, hang up and try again the next day - outcomes vary by individual agent.',
+    },
+    {
+      h: 'Route B - spend it down (with or without a card)',
+      p: 'The hard part of route B is Apple\'s discrete pricing. The App Store IAP minimum is $0.29, then $0.39, $0.49, $0.79, $0.89, $0.99 - then $0.50 increments going up. There is no $0.01, $0.05, $0.09, or $0.19 tier despite what older forum threads say. Apple expanded to 900 price points in late 2022 but the $0.29 floor stayed.\n\nWithout a card on file, that means: any residual smaller than $0.29 cannot be spent. Buy what you can in $0.29-and-up tiers, accept that the last few cents may sit forever.\n\nWith a card on file, route B becomes route C below.\n\nZero Balance is a free iOS app I built specifically for this matching problem. It ships with 10 small in-app purchases - Cosmic Cocoa $0.29, Nebula Nibbles $0.39, Star Sprinkles $0.49, Galaxy Feast $0.79, Sunbeam Patch $0.90, Toast Pebble $0.95, Hearth Orb $1.00, Giggle Bubble $1.09, Meteor Pop $1.19, Cozy Pin $1.49 (or local-currency equivalents). You enter your remaining balance, the app picks the combination that gets closest, and the plan-review screen shows the exact overage or residual before any purchase is confirmed. No Apple ID login, no ads, no tracking.',
+    },
+    {
+      h: 'Route C - overshoot with a card on file',
+      p: 'If a credit or debit card is attached to your Apple Account in the current region, this is the surgical option:\n\n1. Find any item priced above your remaining balance - a $0.99 song from iTunes, a $1.99 app, any sub-tier IAP.\n2. Tap Get or Buy and confirm with Face ID / Touch ID / passcode.\n3. Apple debits the entire balance first, then charges the remainder to your card.\n4. Open the App Store, tap your profile picture, confirm the balance line is gone (or reads $0.00).\n\nThe receipt will show "$X.YZ from balance, $0.ZZ charged to card" - that split is the proof it landed exactly. The card has to belong to the current store region; a US card cannot pay the overshoot on a UK store balance.',
+    },
+    {
+      h: 'What not to do',
+      p: 'A few approaches that look promising but fail:\n\n- Family Sharing. Apple Account balance is per-Apple-ID. Family Sharing shares purchased apps, Apple Music, iCloud Storage, and subscriptions, but not balance. Each family member has a separate balance and pays from their own first.\n\n- "Balance transfer" services. There is no Apple-sanctioned way to move balance between Apple IDs. Anyone offering this service is running a scam or phishing for your Apple ID password.\n\n- Apple-credit-to-cash sites. These either fail outright, take a 20-30% cut, or steal the redemption codes.\n\n- Buying an Apple Gift Card with your balance. Apple disabled this around 2019 to prevent fraud laundering. You cannot recycle balance into a fresh gift card.\n\n- Redeeming more gift cards "to use up" the existing balance. This makes the leftover bigger, not smaller, unless you have already worked out the exact item you will buy with the combined total.',
+    },
+  ],
+  faqLead: 'Related questions',
+  faqItems: [
+    {
+      q: 'How small a balance will Apple Support clear?',
+      a: 'There is no published threshold. Anecdotally anything under $1 USD equivalent is cleared most of the time when paired with a region-change reason. For amounts of several dollars expect more questions or a polite refusal.',
+    },
+    {
+      q: 'Will resetting the balance refund money to my card?',
+      a: 'No. Route A: Apple keeps the money. Routes B and C: you spent it on purchases that go to your Apple ID. None of the three put cash back on the card.',
+    },
+    {
+      q: 'My balance line disappeared from the App Store screen. Is that zero?',
+      a: 'Yes. The App Store hides the Apple Account balance line entirely when the balance is exactly $0.00. If the line is gone, you are at zero.',
+    },
+    {
+      q: 'I reset the balance but my region change is still blocked. Why?',
+      a: 'Other blockers exist independently of the balance: an active subscription, a pending refund, a pre-order, or family-organizer status. Each has to be cleared separately before the region change unblocks.',
+    },
+    {
+      q: 'Does Zero Balance read my Apple Account balance automatically?',
+      a: 'No. You type the amount in yourself. The app never has access to your Apple ID, your purchase history, or your balance - it just runs the matching algorithm against the number you type.',
+    },
+  ],
+};
+---
+
+<PageLayout
+  title={`${copy.title} - Zero Balance`}
+  description={copy.description}
+  {lang}
+  {path}
+  schema={faqSchema(copy.faqItems)}
+  ogType="article"
+  keywords={[...t.keywords.wontGoToZero, ...t.keywords.site]}
+>
+  <PageHeader eyebrow={copy.eyebrow} title={copy.title} description={copy.description} />
+
+  <Section>
+    <Container>
+      <Reveal class="mx-auto max-w-3xl">
+        <div class="rounded-2xl border border-[var(--border)] bg-[var(--brand-soft)]/40 p-6 md:p-8">
+          <p class="text-sm font-semibold tracking-wide text-[var(--brand-strong)] uppercase">
+            {copy.tldrTitle}
+          </p>
+          <p class="mt-3 text-lg leading-relaxed text-[var(--fg)]">{copy.tldr}</p>
+          <div class="mt-6 flex">
+            <AppStoreButton label={t.cta.appStore} ct="outreach-applediscussions-reset" />
+          </div>
+        </div>
+      </Reveal>
+
+      <div class="mx-auto mt-10 max-w-3xl prose-zb">
+        {
+          copy.sections.map((s, i) => (
+            <Reveal delay={i * 40}>
+              <h2>{s.h}</h2>
+              {s.p.split('\n\n').map((para) => (
+                <p>{para}</p>
+              ))}
+              {i === 3 && (
+                <div class="not-prose my-6 flex">
+                  <AppStoreButton label={t.cta.appStore} ct="outreach-applediscussions-reset-mid" />
+                </div>
+              )}
+            </Reveal>
+          ))
+        }
+
+        <Reveal>
+          <h2>{copy.faqLead}</h2>
+        </Reveal>
+        <Reveal>
+          <FAQ items={copy.faqItems} />
+        </Reveal>
+      </div>
+    </Container>
+  </Section>
+
+  <FinalCta {lang} />
+</PageLayout>
