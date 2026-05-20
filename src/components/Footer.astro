@@ -54,15 +54,18 @@ const legalLinks = [
           href={localizedPath(lang, '')}
           class="inline-flex items-center gap-2 font-semibold tracking-tight"
         >
-          <img
-            src="/icon.png"
-            alt=""
-            width="32"
-            height="32"
-            class="h-8 w-8 rounded-lg shadow-sm"
-            loading="lazy"
-            decoding="async"
-          />
+          <picture>
+            <source srcset="/icon-dark.png" media="(prefers-color-scheme: dark)" />
+            <img
+              src="/icon.png"
+              alt=""
+              width="32"
+              height="32"
+              class="h-8 w-8 rounded-lg shadow-sm"
+              loading="lazy"
+              decoding="async"
+            />
+          </picture>
           <span>Zero Balance</span>
         </a>
         <p class="mt-3 max-w-xs text-sm text-[var(--muted)]">{t.footer.tagline}</p>

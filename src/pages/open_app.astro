@@ -16,7 +16,9 @@ const REDIRECT_DELAY_MS = 1400;
     <meta name="robots" content="noindex" />
     <meta name="theme-color" content={ACCENT} />
     <link rel="icon" href="/favicon.ico" sizes="any" />
+    <link rel="icon" href="/favicon-dark.ico" sizes="any" media="(prefers-color-scheme: dark)" />
     <link rel="icon" type="image/png" sizes="192x192" href="/favicon-192.png" />
+    <link rel="icon" type="image/png" sizes="192x192" href="/favicon-dark-192.png" media="(prefers-color-scheme: dark)" />
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
     <link rel="manifest" href="/site.webmanifest" />
     <meta name="apple-itunes-app" content={`app-id=${APP_ID}, app-argument=${DOMAIN}/open_app/`} />
@@ -36,13 +38,16 @@ const REDIRECT_DELAY_MS = 1400;
   <body class="bg-aurora">
     <main class="relative min-h-[100dvh] grid place-items-center px-6 py-12">
       <div class="text-center max-w-md">
-        <img
-          src="/icon.png"
-          alt={`${APP_NAME} app icon`}
-          width="96"
-          height="96"
-          class="hero-rise hero-rise-1 mx-auto h-24 w-24 rounded-[1.25rem] shadow-[0_20px_50px_-15px_rgba(122,77,230,0.55)] ring-1 ring-black/5"
-        />
+        <picture>
+          <source srcset="/icon-dark.png" media="(prefers-color-scheme: dark)" />
+          <img
+            src="/icon.png"
+            alt={`${APP_NAME} app icon`}
+            width="96"
+            height="96"
+            class="hero-rise hero-rise-1 mx-auto h-24 w-24 rounded-[1.25rem] shadow-[0_20px_50px_-15px_rgba(122,77,230,0.55)] ring-1 ring-black/5"
+          />
+        </picture>
 
         <h1 class="hero-rise hero-rise-2 mt-7 h2 text-balance">
           Opening {APP_NAME}<span class="dots" aria-hidden="true"><span>.</span><span>.</span><span>.</span></span>

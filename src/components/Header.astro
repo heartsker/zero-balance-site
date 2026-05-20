@@ -28,15 +28,18 @@ const navLinks = [
       class="inline-flex items-center gap-2 font-semibold tracking-tight"
       aria-label="Zero Balance home"
     >
-      <img
-        src="/icon.png"
-        alt=""
-        width="32"
-        height="32"
-        class="h-8 w-8 rounded-lg shadow-sm"
-        loading="eager"
-        decoding="async"
-      />
+      <picture>
+        <source srcset="/icon-dark.png" media="(prefers-color-scheme: dark)" />
+        <img
+          src="/icon.png"
+          alt=""
+          width="32"
+          height="32"
+          class="h-8 w-8 rounded-lg shadow-sm"
+          loading="eager"
+          decoding="async"
+        />
+      </picture>
       <span class="text-base md:text-lg">Zero Balance</span>
     </a>
 
