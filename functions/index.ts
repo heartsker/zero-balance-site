@@ -1,6 +1,8 @@
 // Cloudflare Pages Function for the root path `/`.
 // Picks the user's locale at the edge and redirects to /<lang>/.
-// Priority: zb_locale cookie -> CF-IPCountry header -> Accept-Language header -> 'en'.
+// Priority: zb_locale cookie -> Accept-Language header -> CF-IPCountry header -> 'en'.
+// Accept-Language beats geo on purpose: VPNs make the region signal unreliable,
+// while the browser's language preference reflects what the user actually reads.
 //
 // PagesFunction is provided by Cloudflare's runtime at deploy time. We
 // declare a minimal local fallback so `astro check` passes without
@@ -72,8 +74,8 @@ function pickFromCountry(country: string | null): Locale | null {
   return COUNTRY_TO_LOCALE[country.toUpperCase()] ?? null;
 }
 
-function pickFromAcceptLanguage(header: string | null): Locale {
-  if (!header) return DEFAULT_LOCALE;
+function pickFromAcceptLanguage(header: string | null): Locale | null {
+  if (!header) return null;
   const tags = header.split(',').map((part) => {
     const [tag, ...params] = part.trim().split(';');
     const qParam = params.find((p) => p.trim().startsWith('q='));
@@ -88,16 +90,18 @@ function pickFromAcceptLanguage(header: string | null): Locale {
     const match = LOCALES.find((l) => l.toLowerCase() === primary || l.toLowerCase().split('-')[0] === primary);
     if (match) return match;
   }
-  return DEFAULT_LOCALE;
+  return null;
 }
 
 export const onRequestGet: CloudflarePagesFunction = (context) => {
   const url = new URL(context.request.url);
   const headers = context.request.headers;
 
-  const fromCookie = readCookieLocale(headers.get('cookie'));
-  const fromCountry = fromCookie ?? pickFromCountry(headers.get('cf-ipcountry'));
-  const locale = fromCountry ?? pickFromAcceptLanguage(headers.get('accept-language'));
+  const locale =
+    readCookieLocale(headers.get('cookie')) ??
+    pickFromAcceptLanguage(headers.get('accept-language')) ??
+    pickFromCountry(headers.get('cf-ipcountry')) ??
+    DEFAULT_LOCALE;
 
   return Response.redirect(new URL(`/${locale}/`, url).toString(), 302);
 };
