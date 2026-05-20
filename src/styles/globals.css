@@ -205,8 +205,10 @@ a {
   overflow-y: visible;
   scroll-snap-type: x mandatory;
   -webkit-overflow-scrolling: touch;
-  padding: 1rem 0.25rem 1.5rem 1.5rem;
-  margin: -1rem -0.25rem -1.5rem;
+  padding-block: 1rem 1.5rem;
+  padding-inline: 1.5rem 0.25rem;
+  margin-block: -1rem -1.5rem;
+  margin-inline: -0.25rem;
   scrollbar-width: none;
   scroll-padding-inline-start: 1.5rem;
   scroll-padding-inline-end: 0.25rem;
@@ -250,7 +252,7 @@ a {
   }
 
   .hero-rail {
-    margin-right: calc(-1 * (max((100vw - 72rem) / 2, 0px) + 2rem));
+    margin-inline-end: calc(-1 * (max((100vw - 72rem) / 2, 0px) + 2rem));
     -webkit-mask-image: linear-gradient(
       to right,
       transparent 0,
@@ -260,6 +262,23 @@ a {
     );
     mask-image: linear-gradient(
       to right,
+      transparent 0,
+      #000 28px,
+      #000 calc(100% - 36px),
+      transparent 100%
+    );
+  }
+
+  [dir='rtl'] .hero-rail {
+    -webkit-mask-image: linear-gradient(
+      to left,
+      transparent 0,
+      #000 28px,
+      #000 calc(100% - 36px),
+      transparent 100%
+    );
+    mask-image: linear-gradient(
+      to left,
       transparent 0,
       #000 28px,
       #000 calc(100% - 36px),
