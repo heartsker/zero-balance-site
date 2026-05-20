@@ -4,7 +4,7 @@ interface Props {
   as?: keyof HTMLElementTagNameMap;
 }
 
-const { class: className = '', as: Tag = 'div' } = Astro.props;
+const { class: className = '', as: Tag = 'div' }: Props = Astro.props;
 ---
 
 <Tag class:list={['mx-auto w-full max-w-6xl px-5 md:px-8', className]}>
