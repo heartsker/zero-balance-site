@@ -1,19 +1,21 @@
-// Cloudflare Pages Function for the root path `/`.
-// Picks the user's locale at the edge and redirects to /<lang>/.
-// Handles every method (GET, HEAD, ...) so HEAD probes and link checkers
-// get the same 302 instead of falling through to the static 404 page.
-// Priority: zb_locale cookie -> Accept-Language header -> CF-IPCountry header -> 'en'.
-// Accept-Language beats geo on purpose: VPNs make the region signal unreliable,
-// while the browser's language preference reflects what the user actually reads.
+// Cloudflare Worker entry for the static site.
 //
-// PagesFunction is provided by Cloudflare's runtime at deploy time. We
-// declare a minimal local fallback so `astro check` passes without
-// pulling in @cloudflare/workers-types.
+// This project is deployed as a Worker with static assets (not Cloudflare
+// Pages), so a Pages-style `functions/` directory is never invoked. The Worker
+// serves the prebuilt Astro output from the ASSETS binding, and special-cases
+// the root path `/` to redirect to the visitor's locale (`/<lang>/`).
+//
+// Locale priority: zb_locale cookie -> Accept-Language header -> geo (CF country)
+// -> 'en'. Accept-Language beats geo on purpose: VPNs make the region signal
+// unreliable, while the browser's language preference reflects what the user
+// actually reads.
+//
+// Types are declared locally so `astro check` (which typechecks `**/*`) passes
+// without pulling in @cloudflare/workers-types.
 
-type CloudflarePagesContext = {
-  request: Request;
-};
-type CloudflarePagesFunction = (ctx: CloudflarePagesContext) => Response | Promise<Response>;
+interface Env {
+  ASSETS: { fetch(request: Request): Promise<Response> };
+}
 
 type Locale =
   | 'en'
@@ -71,7 +73,7 @@ function readCookieLocale(cookieHeader: string | null): Locale | null {
   return (LOCALES as readonly string[]).includes(value) ? (value as Locale) : null;
 }
 
-function pickFromCountry(country: string | null): Locale | null {
+function pickFromCountry(country: string | null | undefined): Locale | null {
   if (!country) return null;
   return COUNTRY_TO_LOCALE[country.toUpperCase()] ?? null;
 }
@@ -89,21 +91,33 @@ function pickFromAcceptLanguage(header: string | null): Locale | null {
     if (tag.startsWith('pt-br')) return 'pt-BR';
     if (tag.startsWith('pt')) return 'pt-BR';
     const primary = tag.split('-')[0];
-    const match = LOCALES.find((l) => l.toLowerCase() === primary || l.toLowerCase().split('-')[0] === primary);
+    const match = LOCALES.find(
+      (l) => l.toLowerCase() === primary || l.toLowerCase().split('-')[0] === primary,
+    );
     if (match) return match;
   }
   return null;
 }
 
-export const onRequest: CloudflarePagesFunction = (context) => {
-  const url = new URL(context.request.url);
-  const headers = context.request.headers;
+export default {
+  fetch(request: Request, env: Env): Response | Promise<Response> {
+    const url = new URL(request.url);
 
-  const locale =
-    readCookieLocale(headers.get('cookie')) ??
-    pickFromAcceptLanguage(headers.get('accept-language')) ??
-    pickFromCountry(headers.get('cf-ipcountry')) ??
-    DEFAULT_LOCALE;
+    // Only the bare root is dynamic; everything else is a static asset.
+    if (url.pathname === '/') {
+      const headers = request.headers;
+      const cfCountry = (request as { cf?: { country?: string } }).cf?.country
+        ?? headers.get('cf-ipcountry');
 
-  return Response.redirect(new URL(`/${locale}/`, url).toString(), 302);
+      const locale =
+        readCookieLocale(headers.get('cookie')) ??
+        pickFromAcceptLanguage(headers.get('accept-language')) ??
+        pickFromCountry(cfCountry) ??
+        DEFAULT_LOCALE;
+
+      return Response.redirect(new URL(`/${locale}/`, url).toString(), 302);
+    }
+
+    return env.ASSETS.fetch(request);
+  },
 };

@@ -1,14 +1,20 @@
-# Cloudflare Pages project configuration.
+# Cloudflare Worker configuration (this site is a Worker with static assets,
+# NOT a Cloudflare Pages project).
 #
-# `pages_build_output_dir` makes this a Wrangler-configured Pages project, which
-# is what reliably gets the root `/functions` directory compiled and deployed.
-# Without it (no config + uncommitted dist), deploys can ship the static assets
-# while silently dropping the Pages Function, so the apex `/` 404s instead of
-# running the edge locale redirect in functions/index.ts.
-#
-# Works for both deploy paths:
-#   - Direct upload:  `npx wrangler pages deploy`  (reads this file)
-#   - Git integration: Cloudflare reads this file during the build
+# `wrangler deploy` uploads the prebuilt Astro output in ./dist as static assets
+# and deploys the Worker in worker/index.ts. Static assets are served first;
+# any request that does not match an asset (notably the bare root `/`) is handled
+# by the Worker, which redirects `/` to the visitor's locale.
 name = "zero-balance-site"
+main = "worker/index.ts"
 compatibility_date = "2026-05-21"
-pages_build_output_dir = "dist"
+
+[assets]
+directory = "./dist"
+binding = "ASSETS"
+# Serve dist/404.html for unknown paths instead of an empty 404.
+not_found_handling = "404-page"
+
+# Keep Workers Logs on (matches the project's prior remote setting).
+[observability]
+enabled = true
