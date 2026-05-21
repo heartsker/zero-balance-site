@@ -14,6 +14,11 @@ directory = "./dist"
 binding = "ASSETS"
 # Serve dist/404.html for unknown paths instead of an empty 404.
 not_found_handling = "404-page"
+# Run the Worker BEFORE static-asset matching for the bare root only. Without
+# this, browser navigations to `/` (Sec-Fetch-Mode: navigate) hit the 404-page
+# fallback before the Worker, so the locale redirect never runs. Every other
+# path still serves static assets directly.
+run_worker_first = ["/"]
 
 # Keep Workers Logs on (matches the project's prior remote setting).
 [observability]

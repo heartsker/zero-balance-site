@@ -115,7 +115,16 @@ export default {
         pickFromCountry(cfCountry) ??
         DEFAULT_LOCALE;
 
-      return Response.redirect(new URL(`/${locale}/`, url).toString(), 302);
+      // The target depends on cookie/Accept-Language/geo, so this redirect is
+      // per-visitor and must never be cached by the edge or the browser.
+      return new Response(null, {
+        status: 302,
+        headers: {
+          Location: new URL(`/${locale}/`, url).toString(),
+          'Cache-Control': 'no-store',
+          Vary: 'Accept-Language, Cookie',
+        },
+      });
     }
 
     return env.ASSETS.fetch(request);
