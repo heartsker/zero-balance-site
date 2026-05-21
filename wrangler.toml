@@ -1,0 +1,14 @@
+# Cloudflare Pages project configuration.
+#
+# `pages_build_output_dir` makes this a Wrangler-configured Pages project, which
+# is what reliably gets the root `/functions` directory compiled and deployed.
+# Without it (no config + uncommitted dist), deploys can ship the static assets
+# while silently dropping the Pages Function, so the apex `/` 404s instead of
+# running the edge locale redirect in functions/index.ts.
+#
+# Works for both deploy paths:
+#   - Direct upload:  `npx wrangler pages deploy`  (reads this file)
+#   - Git integration: Cloudflare reads this file during the build
+name = "zero-balance-site"
+compatibility_date = "2026-05-21"
+pages_build_output_dir = "dist"

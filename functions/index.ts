@@ -1,5 +1,7 @@
 // Cloudflare Pages Function for the root path `/`.
 // Picks the user's locale at the edge and redirects to /<lang>/.
+// Handles every method (GET, HEAD, ...) so HEAD probes and link checkers
+// get the same 302 instead of falling through to the static 404 page.
 // Priority: zb_locale cookie -> Accept-Language header -> CF-IPCountry header -> 'en'.
 // Accept-Language beats geo on purpose: VPNs make the region signal unreliable,
 // while the browser's language preference reflects what the user actually reads.
@@ -93,7 +95,7 @@ function pickFromAcceptLanguage(header: string | null): Locale | null {
   return null;
 }
 
-export const onRequestGet: CloudflarePagesFunction = (context) => {
+export const onRequest: CloudflarePagesFunction = (context) => {
   const url = new URL(context.request.url);
   const headers = context.request.headers;
 
