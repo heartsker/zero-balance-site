@@ -270,6 +270,10 @@ const ptBR: Dict = {
       help: 'Ajuda',
       legal: 'Legal',
     },
+    contact: {
+      title: 'Tem uma pergunta ou uma história para compartilhar?',
+      body: 'Travou com um saldo ou zerou o seu com o Zero Balance? Vamos adorar ler sua pergunta ou sua história. Escreva para a gente quando quiser.',
+    },
     rights: 'Todos os direitos reservados.',
   },
   langSwitcher: {

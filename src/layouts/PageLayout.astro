@@ -18,6 +18,7 @@ interface Props {
   publishedTime?: string;
   modifiedTime?: string;
   schema?: Record<string, unknown> | Record<string, unknown>[];
+  locales?: Locale[];
 }
 
 const {
@@ -32,6 +33,7 @@ const {
   publishedTime,
   modifiedTime,
   schema,
+  locales,
 } = Astro.props;
 ---
 
@@ -47,12 +49,13 @@ const {
   {publishedTime}
   {modifiedTime}
   {schema}
+  {locales}
 >
-  <Header {lang} {path} />
+  <Header {lang} {path} {locales} />
   <main id="main">
     <slot />
   </main>
-  <Footer {lang} {path} />
+  <Footer {lang} {path} {locales} />
   <StickyMobileCta {lang} />
   <QrFloater {lang} />
 </BaseLayout>

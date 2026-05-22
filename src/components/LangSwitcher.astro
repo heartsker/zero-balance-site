@@ -14,9 +14,11 @@ import {
 interface Props {
   current: Locale;
   path: string;
+  /** Locales this page is actually built in. Defaults to every site locale. */
+  locales?: Locale[];
 }
 
-const { current, path } = Astro.props;
+const { current, path, locales = [...LOCALES] } = Astro.props;
 const baseRoute = stripLocale(path);
 const t = getDict(current);
 ---
@@ -46,7 +48,7 @@ const t = getDict(current);
     data-lang-switcher-menu
   >
     {
-      LOCALES.map((loc) => {
+      locales.map((loc) => {
         const isActive = loc === current;
         return (
           <li>

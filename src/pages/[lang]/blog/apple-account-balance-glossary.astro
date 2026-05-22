@@ -1,0 +1,347 @@
+---
+import PageLayout from '../../../layouts/PageLayout.astro';
+import PageHeader from '../../../components/PageHeader.astro';
+import Container from '../../../components/Container.astro';
+import Section from '../../../components/Section.astro';
+import FAQ from '../../../components/FAQ.astro';
+import Reveal from '../../../components/Reveal.astro';
+import FinalCta from '../../../components/FinalCta.astro';
+import AppStoreButton from '../../../components/AppStoreButton.astro';
+import { getDict, type Locale } from '../../../i18n';
+import { articleSchema, faqSchema, breadcrumbSchema } from '../../../lib/schema';
+import { DOMAIN } from '../../../lib/siteConfig';
+
+const PAGE_LOCALES = ['en', 'ru'] as const;
+type PageLocale = (typeof PAGE_LOCALES)[number];
+
+export function getStaticPaths() {
+  return (['en', 'ru'] as const).map((lang) => ({ params: { lang } }));
+}
+
+const lang = Astro.params.lang as PageLocale;
+const t = getDict(lang as Locale);
+const slug = 'apple-account-balance-glossary';
+const path = `/${lang}/blog/${slug}/`;
+const published = '2026-05-21T00:00:00Z';
+
+interface Copy {
+  title: string;
+  description: string;
+  eyebrow: string;
+  storyLabel: string;
+  tldr: string;
+  bcHome: string;
+  bcBlog: string;
+  intro: string;
+  terms: { h: string; p: string }[];
+  outro: string;
+  faqHeading: string;
+  faqItems: { q: string; a: string }[];
+  relatedHeading: string;
+  related: { label: string; href: string }[];
+  keywords: string[];
+}
+
+const COPY: Record<PageLocale, Copy> = {
+  en: {
+    title: 'The Apple Account balance glossary I wish I had at the start',
+    description:
+      'Storefront, residue, consumable IAP, region lock - the jargon around Apple Account balance confused me for weeks. Here is every term in plain English, from someone who just wanted their balance gone.',
+    eyebrow: 'User story',
+    storyLabel: 'Why I wrote this',
+    tldr:
+      'Trying to clear a small stuck balance, I kept hitting words I did not understand: storefront, residue, consumable IAP, region lock. Once the terms clicked, the fix was obvious. Here is the plain-English glossary that got me there, plus the app that did the actual clearing.',
+    bcHome: 'Home',
+    bcBlog: 'Blog',
+    intro:
+      'I am not a developer. I just had a small leftover balance I could not get rid of, and every guide I opened assumed I already spoke Apple. So I started keeping my own list of definitions as I figured them out. This is that list, cleaned up. Each entry is short on purpose.',
+    terms: [
+      {
+        h: 'Apple Account (formerly Apple ID)',
+        p: 'The account that owns your purchases, subscriptions, and balance across iCloud, the App Store, and Apple\'s other services. Apple renamed "Apple ID" to "Apple Account" in 2024, but you will see both names used interchangeably everywhere, including inside Settings.',
+      },
+      {
+        h: 'Apple Account balance',
+        p: 'The pool of store credit attached to your account. You can spend it on apps, in-app purchases, subscriptions, music, movies, books, and iCloud storage. You cannot withdraw it, move it to another account, or turn it into cash. This was the thing I was trying to get rid of.',
+      },
+      {
+        h: 'Store credit',
+        p: 'Just another name for your Apple Account balance. Apple uses the two terms interchangeably across its interface and support pages.',
+      },
+      {
+        h: 'Gift card residue',
+        p: 'The small leftover after you spend most of a gift card. Redeem $25, spend $24.22 across a few purchases, and $0.78 is stranded. This residue is the single most common reason people end up stuck at the zero-balance problem - it was mine.',
+      },
+      {
+        h: 'IAP (in-app purchase)',
+        p: 'A purchase made inside an app rather than buying the app itself. Apple processes every IAP through the App Store, charging your balance first and your payment method second.',
+      },
+      {
+        h: 'Consumable IAP',
+        p: 'An in-app purchase that is used up and can be bought again - game coins, app credits, single-use boosts. Consumables matter here because they are the only category with prices below the $0.99 app floor, which is why they can match a tiny leftover.',
+      },
+      {
+        h: 'Non-consumable IAP',
+        p: 'An in-app purchase you buy once and keep forever, like removing ads or unlocking a feature. You cannot buy it twice on the same account, so it is no help for clearing repeated small amounts.',
+      },
+      {
+        h: 'Subscription',
+        p: 'A recurring in-app purchase that renews on a schedule. It draws from your balance first, then charges your payment method for the difference. A half-cancelled subscription is a classic source of leftover credit.',
+      },
+      {
+        h: 'Storefront',
+        p: 'The country-specific version of the App Store you see. Each storefront has its own catalogue, its own pricing, and its own currency, and your account belongs to exactly one at a time.',
+      },
+      {
+        h: 'Region',
+        p: 'In Apple\'s interface, region means the same thing as storefront. "Change region" and "change country" both move your account from one storefront to another - and both are blocked until your balance is exactly $0.00.',
+      },
+      {
+        h: 'Storefront-locked credit',
+        p: 'Balance can only be spent in the storefront where it was added. That is why you cannot carry a USD balance with you when you move to, say, the UK App Store. The credit does not travel.',
+      },
+      {
+        h: 'Pro-rated charge',
+        p: 'A partial charge when you start or cancel a subscription mid-period. These produce odd fractional amounts that the interface rounds to two decimals, which can leave a stubborn one-or-two-cent remainder.',
+      },
+      {
+        h: 'Family Sharing',
+        p: 'A feature that lets up to six accounts share purchases, subscriptions, and iCloud storage. It does not share balance - this is the most-Googled myth in the whole topic, and believing it cost me an afternoon.',
+      },
+      {
+        h: 'Apple refund',
+        p: 'Apple\'s refund flow at reportaproblem.apple.com. When a refund is granted, the money returns as store credit, not to your card - which is itself a brand-new source of leftover balance.',
+      },
+      {
+        h: 'Zero out / empty balance',
+        p: 'The action of bringing your balance to exactly $0.00. These phrases show up in Apple Support\'s own topics and in community forums. It is the thing you actually want when nothing on the store matches your remainder.',
+      },
+    ],
+    outro:
+      'The term that unlocked it for me was "consumable IAP". Once I understood that those tiny purchases were the only things priced below a dollar, the answer was just to combine a few of them to match my exact leftover. Zero Balance does that automatically: you type the amount, it builds the plan, you confirm each purchase through Apple\'s own sheet, and the balance hits zero.',
+    faqHeading: 'A few things people still ask me',
+    faqItems: [
+      {
+        q: 'Is "Apple ID" different from "Apple Account"?',
+        a: 'No. Apple renamed Apple ID to Apple Account in 2024. They are the same account; only the label changed, and older menus and emails still say Apple ID.',
+      },
+      {
+        q: 'Why can a small balance block so much?',
+        a: 'Several Apple actions - changing country, closing the account - require a balance of exactly $0.00. The system treats $0.01 the same as $100, so even gift card residue blocks them.',
+      },
+      {
+        q: 'Why are consumable in-app purchases the key to clearing cents?',
+        a: 'They are the only purchase type priced below the $0.99 app minimum. Because they can be stacked, a few of them can add up to an exact leftover that no single app could match.',
+      },
+    ],
+    relatedHeading: 'Where to go next',
+    related: [
+      { label: 'How to spend leftover Apple Account balance', href: '/spend-apple-account-balance/' },
+      { label: 'Changing your Apple ID country with a balance', href: '/change-apple-id-country-with-balance/' },
+      { label: 'Removing a leftover Apple ID balance', href: '/remove-leftover-apple-id-balance/' },
+      { label: 'What to do with a leftover Apple gift card', href: '/leftover-apple-gift-card/' },
+      { label: 'The Family Sharing balance myth', href: '/family-sharing-apple-balance-myth/' },
+      { label: 'Frequently asked questions', href: '/faq/' },
+    ],
+    keywords: [
+      'apple account balance terms',
+      'apple id balance glossary',
+      'what is store credit apple',
+      'what is consumable iap',
+      'apple storefront meaning',
+    ],
+  },
+  ru: {
+    title: 'Глоссарий по балансу Apple Account, которого мне не хватало в начале',
+    description:
+      'Сторфронт, остаток, расходуемая встроенная покупка, привязка к региону - терминология вокруг баланса Apple Account путала меня неделями. Вот все термины простыми словами от человека, который просто хотел избавиться от баланса.',
+    eyebrow: 'История пользователя',
+    storyLabel: 'Зачем я это написал',
+    tldr:
+      'Пытаясь убрать небольшой застрявший остаток, я постоянно натыкался на непонятные слова: сторфронт, остаток, расходуемая встроенная покупка, привязка к региону. Как только термины сложились, решение стало очевидным. Вот тот самый глоссарий простыми словами, плюс приложение, которое и сделало всю работу.',
+    bcHome: 'Главная',
+    bcBlog: 'Блог',
+    intro:
+      'Я не разработчик. У меня просто остался небольшой баланс, от которого я не мог избавиться, а каждый гайд считал, что я уже свободно говорю на языке Apple. Поэтому я начал вести свой список определений по мере того, как разбирался. Это он, приведённый в порядок. Каждый пункт намеренно короткий.',
+    terms: [
+      {
+        h: 'Apple Account (раньше Apple ID)',
+        p: 'Аккаунт, которому принадлежат ваши покупки, подписки и баланс в iCloud, App Store и других сервисах Apple. В 2024 году Apple переименовала "Apple ID" в "Apple Account", но оба названия используются как синонимы повсюду, в том числе в Настройках.',
+      },
+      {
+        h: 'Баланс Apple Account',
+        p: 'Запас кредита магазина, привязанный к аккаунту. Его можно тратить на приложения, встроенные покупки, подписки, музыку, фильмы, книги и хранилище iCloud. Его нельзя вывести, перевести на другой аккаунт или превратить в наличные. Именно от него я и пытался избавиться.',
+      },
+      {
+        h: 'Кредит магазина (store credit)',
+        p: 'Просто другое название баланса Apple Account. Apple использует оба термина как синонимы в интерфейсе и на страницах поддержки.',
+      },
+      {
+        h: 'Остаток от подарочной карты',
+        p: 'Небольшой остаток после того, как вы потратили почти всю подарочную карту. Активируете 25 долларов, тратите 24,22 на несколько покупок - и 0,78 застревают. Этот остаток - самая частая причина, по которой люди упираются в проблему нулевого баланса. Так было и у меня.',
+      },
+      {
+        h: 'Встроенная покупка (IAP)',
+        p: 'Покупка внутри приложения, а не покупка самого приложения. Apple проводит каждую встроенную покупку через App Store, списывая сначала с баланса, а потом со способа оплаты.',
+      },
+      {
+        h: 'Расходуемая встроенная покупка',
+        p: 'Встроенная покупка, которая тратится и может быть куплена снова: игровые монеты, кредиты в приложении, разовые усиления. Они важны здесь, потому что это единственная категория с ценами ниже порога приложений в 0,99 доллара, поэтому ими можно набрать крошечный остаток.',
+      },
+      {
+        h: 'Нерасходуемая встроенная покупка',
+        p: 'Встроенная покупка, которую покупаешь один раз и оставляешь навсегда, например отключение рекламы или разблокировка функции. На одном аккаунте её нельзя купить дважды, поэтому для обнуления мелких сумм она бесполезна.',
+      },
+      {
+        h: 'Подписка',
+        p: 'Повторяющаяся встроенная покупка, которая продлевается по расписанию. Сначала списывает с баланса, потом берёт разницу со способа оплаты. Наполовину отменённая подписка - классический источник остатка кредита.',
+      },
+      {
+        h: 'Сторфронт (storefront)',
+        p: 'Версия App Store для конкретной страны. У каждого сторфронта свой каталог, своя цена и своя валюта, и ваш аккаунт в любой момент относится ровно к одному.',
+      },
+      {
+        h: 'Регион',
+        p: 'В интерфейсе Apple регион означает то же, что и сторфронт. "Сменить регион" и "сменить страну" одинаково переносят аккаунт из одного сторфронта в другой, и оба заблокированы, пока баланс не станет ровно 0,00.',
+      },
+      {
+        h: 'Кредит, привязанный к сторфронту',
+        p: 'Баланс можно тратить только в том сторфронте, где он был добавлен. Поэтому нельзя забрать долларовый баланс с собой при переезде, например, в британский App Store. Кредит не путешествует.',
+      },
+      {
+        h: 'Пропорциональное списание',
+        p: 'Частичное списание при начале или отмене подписки в середине периода. Оно даёт дробные суммы, которые интерфейс округляет до двух знаков, из-за чего может остаться упрямый остаток в один-два цента.',
+      },
+      {
+        h: 'Семейный доступ',
+        p: 'Функция, позволяющая до шести аккаунтов делить покупки, подписки и хранилище iCloud. Балансом она не делится - это самый частый миф во всей теме, и вера в него стоила мне полдня.',
+      },
+      {
+        h: 'Возврат Apple',
+        p: 'Процедура возврата на reportaproblem.apple.com. Когда возврат одобрен, деньги приходят как кредит магазина, а не на карту - и это сам по себе новый источник остатка баланса.',
+      },
+      {
+        h: 'Обнулить / опустошить баланс',
+        p: 'Действие, которое приводит баланс ровно к 0,00. Эти формулировки встречаются в темах поддержки Apple и на форумах сообщества. Это именно то, что нужно, когда в магазине нет ничего под ваш остаток.',
+      },
+    ],
+    outro:
+      'Термином, который всё для меня прояснил, оказалась "расходуемая встроенная покупка". Как только я понял, что только эти крошечные покупки стоят меньше доллара, ответ свёлся к тому, чтобы собрать несколько из них под мой точный остаток. Zero Balance делает это автоматически: вы вводите сумму, приложение строит план, вы подтверждаете каждую покупку через окно Apple, и баланс уходит в ноль.',
+    faqHeading: 'О чём меня ещё спрашивают',
+    faqItems: [
+      {
+        q: 'Apple ID и Apple Account - это разное?',
+        a: 'Нет. В 2024 году Apple переименовала Apple ID в Apple Account. Это один и тот же аккаунт, изменилось только название, а старые меню и письма всё ещё пишут Apple ID.',
+      },
+      {
+        q: 'Почему небольшой баланс блокирует так много всего?',
+        a: 'Несколько действий Apple - смена страны, закрытие аккаунта - требуют баланса ровно 0,00. Система считает 0,01 тем же, что и 100 долларов, поэтому даже остаток от подарочной карты их блокирует.',
+      },
+      {
+        q: 'Почему расходуемые встроенные покупки - ключ к обнулению центов?',
+        a: 'Это единственный тип покупок дешевле минимума приложений в 0,99 доллара. Поскольку их можно складывать, несколькими из них можно набрать точный остаток, который не подходит ни под одно приложение.',
+      },
+    ],
+    relatedHeading: 'Куда идти дальше',
+    related: [
+      { label: 'Как потратить остаток баланса Apple Account', href: '/spend-apple-account-balance/' },
+      { label: 'Смена страны Apple ID с балансом', href: '/change-apple-id-country-with-balance/' },
+      { label: 'Как убрать остаток баланса Apple ID', href: '/remove-leftover-apple-id-balance/' },
+      { label: 'Что делать с остатком на подарочной карте Apple', href: '/leftover-apple-gift-card/' },
+      { label: 'Миф о балансе и семейном доступе', href: '/family-sharing-apple-balance-myth/' },
+      { label: 'Частые вопросы', href: '/faq/' },
+    ],
+    keywords: [
+      'термины баланса apple account',
+      'глоссарий баланса apple id',
+      'что такое кредит магазина apple',
+      'что такое расходуемая встроенная покупка',
+      'что такое сторфронт apple',
+    ],
+  },
+};
+
+const c = COPY[lang];
+const midIndex = Math.floor(c.terms.length / 2);
+---
+
+<PageLayout
+  title={`${c.title} - Zero Balance`}
+  description={c.description}
+  {lang}
+  {path}
+  locales={[...PAGE_LOCALES]}
+  schema={[
+    articleSchema({ title: c.title, description: c.description, slug, lang, datePublished: published }),
+    faqSchema(c.faqItems),
+    breadcrumbSchema([
+      { name: c.bcHome, url: `${DOMAIN}/${lang}/` },
+      { name: c.bcBlog, url: `${DOMAIN}/${lang}/blog/` },
+      { name: c.title, url: `${DOMAIN}${path}` },
+    ]),
+  ]}
+  ogType="article"
+  publishedTime={published}
+  modifiedTime={published}
+  keywords={[...c.keywords, ...t.keywords.support]}
+>
+  <PageHeader eyebrow={c.eyebrow} title={c.title} description={c.description} />
+
+  <Section>
+    <Container>
+      <Reveal class="mx-auto max-w-3xl">
+        <div class="rounded-2xl border border-[var(--border)] bg-[var(--brand-soft)]/40 p-6 md:p-8">
+          <p class="text-sm font-semibold tracking-wide text-[var(--brand-strong)] uppercase">{c.storyLabel}</p>
+          <p class="mt-3 text-lg leading-relaxed text-[var(--fg)]">{c.tldr}</p>
+          <div class="mt-6 flex">
+            <AppStoreButton label={t.cta.appStore} ct="blog-glossary-story-tldr" />
+          </div>
+        </div>
+      </Reveal>
+
+      <div class="mx-auto mt-10 max-w-3xl prose-zb">
+        <Reveal>
+          <p>{c.intro}</p>
+        </Reveal>
+
+        {
+          c.terms.map((s, i) => (
+            <Reveal delay={i * 30}>
+              <h2>{s.h}</h2>
+              <p>{s.p}</p>
+              {i === midIndex && (
+                <div class="not-prose my-6 flex">
+                  <AppStoreButton label={t.cta.appStore} ct="blog-glossary-story-mid" />
+                </div>
+              )}
+            </Reveal>
+          ))
+        }
+
+        <Reveal>
+          <p>{c.outro}</p>
+        </Reveal>
+
+        <Reveal>
+          <h2>{c.faqHeading}</h2>
+        </Reveal>
+        <Reveal>
+          <FAQ items={c.faqItems} />
+        </Reveal>
+
+        <Reveal>
+          <h2>{c.relatedHeading}</h2>
+          <ul>
+            {c.related.map((r) => (
+              <li>
+                <a href={`/${lang}${r.href}`}>{r.label}</a>
+              </li>
+            ))}
+          </ul>
+        </Reveal>
+      </div>
+    </Container>
+  </Section>
+
+  <FinalCta {lang} />
+</PageLayout>

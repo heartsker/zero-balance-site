@@ -6,9 +6,10 @@ import AppStoreButton from './AppStoreButton.astro';
 interface Props {
   lang: Locale;
   path: string;
+  locales?: Locale[];
 }
 
-const { lang, path } = Astro.props;
+const { lang, path, locales } = Astro.props;
 const t = getDict(lang);
 
 const navLinks = [
@@ -54,7 +55,7 @@ const navLinks = [
     </nav>
 
     <div class="flex items-center gap-2 md:gap-3">
-      <LangSwitcher current={lang} path={path} />
+      <LangSwitcher current={lang} path={path} {locales} />
       <div class="hidden sm:block">
         <AppStoreButton label={t.cta.appStoreShort} />
       </div>

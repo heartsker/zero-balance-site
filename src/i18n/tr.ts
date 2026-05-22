@@ -270,6 +270,10 @@ const tr: Dict = {
       help: 'Yardım',
       legal: 'Yasal',
     },
+    contact: {
+      title: 'Bir sorunuz ya da paylaşacak bir hikâyeniz mi var?',
+      body: 'Bir bakiyeye mi takıldınız yoksa Zero Balance ile bakiyenizi sıfırladınız mı? Sorunuzu ya da hikâyenizi duymak isteriz. İstediğiniz zaman bize e-posta gönderin.',
+    },
     rights: 'Tüm hakları saklıdır.',
   },
   langSwitcher: {

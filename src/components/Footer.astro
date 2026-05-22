@@ -8,9 +8,10 @@ interface Props {
   lang: Locale;
   path: string;
   showAbout?: boolean;
+  locales?: Locale[];
 }
 
-const { lang, path, showAbout = true } = Astro.props;
+const { lang, path, showAbout = true, locales } = Astro.props;
 const t = getDict(lang);
 const year = new Date().getFullYear();
 
@@ -48,7 +49,26 @@ const legalLinks = [
 {showAbout && <AboutBoilerplate {lang} variant="compact" />}
 <footer class="border-t border-[var(--border)] bg-[var(--surface)]">
   <div class="mx-auto w-full max-w-6xl px-5 py-12 md:px-8 md:py-16">
-    <div class="grid grid-cols-2 gap-10 md:grid-cols-4">
+    <div class="rounded-2xl border border-[var(--border)] bg-[var(--brand-soft)]/40 p-6 md:flex md:items-center md:justify-between md:gap-6 md:p-8">
+      <div>
+        <p class="text-lg font-semibold text-balance text-[var(--fg)]">{t.footer.contact.title}</p>
+        <p class="mt-1.5 max-w-xl text-sm text-pretty text-[var(--muted)]">{t.footer.contact.body}</p>
+      </div>
+      <a href={`mailto:${SUPPORT_EMAIL}`} class="cta mt-5 w-full justify-center md:mt-0 md:w-auto md:shrink-0">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+          <path
+            d="M3 7l9 6 9-6M4 5h16a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1Z"
+            stroke="currentColor"
+            stroke-width="1.7"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+        </svg>
+        <span>{SUPPORT_EMAIL}</span>
+      </a>
+    </div>
+
+    <div class="mt-12 grid grid-cols-2 gap-10 md:mt-16 md:grid-cols-4">
       <div class="col-span-2 md:col-span-1">
         <a
           href={localizedPath(lang, '')}
@@ -67,7 +87,7 @@ const legalLinks = [
         </a>
         <p class="mt-3 max-w-xs text-sm text-[var(--muted)]">{t.footer.tagline}</p>
         <div class="mt-5">
-          <LangSwitcher current={lang} path={path} />
+          <LangSwitcher current={lang} path={path} {locales} />
         </div>
       </div>
 
@@ -113,14 +133,6 @@ const legalLinks = [
               </li>
             ))
           }
-          <li>
-            <a
-              href={`mailto:${SUPPORT_EMAIL}`}
-              class="text-[var(--muted)] transition-colors hover:text-[var(--fg)]"
-            >
-              {SUPPORT_EMAIL}
-            </a>
-          </li>
         </ul>
       </div>
     </div>

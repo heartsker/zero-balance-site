@@ -270,6 +270,10 @@ const it: Dict = {
       help: 'Aiuto',
       legal: 'Legale',
     },
+    contact: {
+      title: 'Hai una domanda o una storia da raccontare?',
+      body: 'Bloccato con un saldo o lo hai azzerato con Zero Balance? Ci farebbe piacere leggere la tua domanda o la tua storia. Scrivici quando vuoi.',
+    },
     rights: 'Tutti i diritti riservati.',
   },
   langSwitcher: {

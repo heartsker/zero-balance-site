@@ -1,0 +1,257 @@
+---
+import PageLayout from '../../../layouts/PageLayout.astro';
+import PageHeader from '../../../components/PageHeader.astro';
+import Container from '../../../components/Container.astro';
+import Section from '../../../components/Section.astro';
+import FAQ from '../../../components/FAQ.astro';
+import Reveal from '../../../components/Reveal.astro';
+import FinalCta from '../../../components/FinalCta.astro';
+import AppStoreButton from '../../../components/AppStoreButton.astro';
+import { getDict, type Locale } from '../../../i18n';
+import { articleSchema, faqSchema, breadcrumbSchema } from '../../../lib/schema';
+import { DOMAIN } from '../../../lib/siteConfig';
+
+const PAGE_LOCALES = ['en', 'ru'] as const;
+type PageLocale = (typeof PAGE_LOCALES)[number];
+
+export function getStaticPaths() {
+  return (['en', 'ru'] as const).map((lang) => ({ params: { lang } }));
+}
+
+const lang = Astro.params.lang as PageLocale;
+const t = getDict(lang as Locale);
+const slug = 'how-i-cleared-stuck-usd-cents';
+const path = `/${lang}/blog/${slug}/`;
+const published = '2026-05-21T00:00:00Z';
+
+interface Copy {
+  title: string;
+  description: string;
+  eyebrow: string;
+  storyLabel: string;
+  tldr: string;
+  bcHome: string;
+  bcBlog: string;
+  sections: { h: string; p: string }[];
+  faqHeading: string;
+  faqItems: { q: string; a: string }[];
+  relatedHeading: string;
+  related: { label: string; href: string }[];
+  keywords: string[];
+}
+
+const COPY: Record<PageLocale, Copy> = {
+  en: {
+    title: 'How I cleared the stubborn cents stuck on my US Apple Account',
+    description:
+      'I had $0.78 on a US App Store account with no single item priced to match it. Here is exactly how I cleared a small USD remainder to $0.00 without calling Apple.',
+    eyebrow: 'User story',
+    storyLabel: 'The short version',
+    tldr:
+      'On the US App Store the cheapest app is $0.99, so my $0.78 leftover had no single item to match it. I could not refund it or transfer it. After trying the obvious routes, Zero Balance stacked a $0.49 and a $0.29 in-app purchase to clear it to exactly $0.00 in under two minutes.',
+    bcHome: 'Home',
+    bcBlog: 'Blog',
+    sections: [
+      {
+        h: 'Why a tiny US leftover is so annoying',
+        p: 'The frustrating part of US App Store leftovers is the price floor. The cheapest standard app on the US store is $0.99. If you have $0.58, $0.78, or $0.98 sitting on the account, there is no single item you can buy to match it - App Store prices land on fixed tiers, never an arbitrary number.\n\nAnd you are boxed in from every other direction. You cannot refund a balance, you cannot transfer it to another account, and Apple\'s region-change blocker treats $0.01 exactly the same as $100. A few cents felt like nothing, but it sat there for weeks.',
+      },
+      {
+        h: 'Where my $0.78 even came from',
+        p: 'I went looking for the source because it bugged me. For most people it is one of a few things: a half-cancelled subscription that refunded the unused days as credit, a gift card you overspent (redeem $25, buy a $24.22 subscription, $0.78 stranded), or a refunded purchase that Apple returned as store credit instead of to the card.\n\nMine was the gift card kind. The math never lands on a round number, which is the whole reason the leftover is so hard to spend.',
+      },
+      {
+        h: 'The routes I tried first',
+        p: 'I worked through the obvious options before finding what stuck.\n\nBuy something and overshoot: find a $0.99 app, let Apple take the $0.78 from the balance and charge the remaining $0.21 to a card. This works only if you have a valid US payment method on the account. I had removed mine, so it was out.\n\nAsk Apple Support: at getsupport.apple.com you can ask them to clear a small balance. They keep the money. Success is high under a dollar, especially with a region-change reason, but it means a chat and some hold time, and the first agent did not action it for me.\n\nTop up to a round number: add enough credit to reach $0.99, then buy a $0.99 app. This works but it is backwards - you are adding your own money to escape a leftover. I did not want to do that.',
+      },
+      {
+        h: 'How Zero Balance matched the exact amount',
+        p: 'What finally worked was matching the leftover instead of overshooting it. Zero Balance combines small consumable in-app purchases - priced at tiers like $0.29, $0.49 and $0.79 - across eight price points so they add up to your exact balance.\n\nThat is the part no single app can do: my $0.78 cleared as a $0.49 plus a $0.29 purchase, an exact match rather than a rounded one. I typed in the amount, the app showed the plan, and I confirmed each purchase through Apple\'s normal sheet with Face ID. No payment method needed, because the balance itself covered the purchases.\n\nUnder two minutes later the balance line was gone, which is how Apple shows $0.00.',
+      },
+      {
+        h: 'What never works for USD leftovers',
+        p: 'A few things people suggest that simply do not work, so you can skip them:\n\nFamily Sharing - balance is per-account, family members cannot spend yours. Apple Pay or bank transfer - balance cannot move to Apple Cash, Apple Pay, or a bank. Buying physical Apple products - balance only covers digital items, not an iPhone or accessory. And any "converter" service on Telegram or Discord is a scam that wants your Apple ID password.',
+      },
+    ],
+    faqHeading: 'Questions I see a lot',
+    faqItems: [
+      {
+        q: 'Will Apple ever sell items below $0.99 in the US App Store?',
+        a: 'Apple sets the minimum standard tier and has held $0.99 for over a decade. Only consumable in-app purchases dip below it, which is exactly why stacking them is how you match a sub-dollar leftover.',
+      },
+      {
+        q: 'My balance shows $0.00 but the region change is still blocked. Why?',
+        a: 'Other blockers exist: an active subscription, a pending refund, a pre-order, or being a Family Sharing organizer. Those are separate from the balance and must be cleared as well.',
+      },
+      {
+        q: 'Do these methods also work for GBP, EUR, or other currencies?',
+        a: 'Yes, with different price points - the smallest in-app price is £0.29 in the UK, and every currency has its own low tiers. The approach is the same: match the exact remainder with small purchases rather than overshoot it.',
+      },
+      {
+        q: 'Is it safe to let an app spend my balance?',
+        a: 'Every purchase still goes through Apple\'s own confirmation sheet, so you approve each one with Face ID. Zero Balance never sees your Apple ID password and does not track you - it just builds the combination for you.',
+      },
+    ],
+    relatedHeading: 'Related guides',
+    related: [
+      { label: 'Removing a leftover Apple ID balance', href: '/remove-leftover-apple-id-balance/' },
+      { label: 'How to spend leftover Apple Account balance', href: '/spend-apple-account-balance/' },
+      { label: 'Changing your Apple ID country with a balance', href: '/change-apple-id-country-with-balance/' },
+      { label: 'Every way to clear a balance, compared', href: '/alternatives/' },
+      { label: 'Frequently asked questions', href: '/faq/' },
+    ],
+    keywords: [
+      'clear small apple id balance usd',
+      'apple id balance 0.78 stuck',
+      'us app store balance cents',
+      'apple account balance under 1 dollar',
+      'spend leftover usd apple credit',
+    ],
+  },
+  ru: {
+    title: 'Как я убрал упрямые центы, застрявшие на моём аккаунте Apple в США',
+    description:
+      'На аккаунте App Store в США застряли 0,78 доллара, а отдельного товара под них не было. Рассказываю, как именно я обнулил небольшой долларовый остаток без звонка в Apple.',
+    eyebrow: 'История пользователя',
+    storyLabel: 'Если коротко',
+    tldr:
+      'В App Store США самое дешёвое приложение стоит 0,99 доллара, поэтому под мой остаток в 0,78 не было отдельного товара. Вернуть или перевести его было нельзя. Перепробовав очевидные варианты, я набрал сумму встроенными покупками на 0,49 и 0,29 доллара в Zero Balance и обнулил баланс ровно до 0,00 меньше чем за две минуты.',
+    bcHome: 'Главная',
+    bcBlog: 'Блог',
+    sections: [
+      {
+        h: 'Почему крошечный остаток в США так раздражает',
+        p: 'Самое неприятное в остатках App Store США - минимальная цена. Самое дешёвое обычное приложение в магазине США стоит 0,99 доллара. Если на аккаунте лежат 0,58, 0,78 или 0,98, отдельного товара под такую сумму нет - цены в App Store идут фиксированными уровнями, а не произвольным числом.\n\nИ со всех остальных сторон ты тоже зажат. Баланс нельзя вернуть, нельзя перевести на другой аккаунт, а блокировка смены региона считает 0,01 ровно тем же, что и 100 долларов. Пара центов казалась пустяком, но провисела неделями.',
+      },
+      {
+        h: 'Откуда вообще взялись эти 0,78',
+        p: 'Я полез искать источник, потому что меня это раздражало. У большинства это одно из нескольких: наполовину отменённая подписка, вернувшая неиспользованные дни кредитом; перерасход подарочной карты (активируете 25 долларов, покупаете подписку за 24,22, и 0,78 застревают); или возврат за покупку, который Apple вернула кредитом магазина, а не на карту.\n\nУ меня был вариант с подарочной картой. Сумма никогда не выходит круглой - именно поэтому остаток так трудно потратить.',
+      },
+      {
+        h: 'Что я попробовал сначала',
+        p: 'Я прошёл по очевидным вариантам, прежде чем нашёл рабочий.\n\nКупить с перерасходом: найти приложение за 0,99, чтобы Apple взяла 0,78 с баланса, а оставшиеся 0,21 - с карты. Это работает, только если на аккаунте есть действующий способ оплаты США. Свой я удалил, так что вариант отпал.\n\nОбратиться в поддержку Apple: на getsupport.apple.com можно попросить обнулить небольшой баланс. Деньги остаются у Apple. Шанс высок при сумме меньше доллара, особенно с причиной про смену региона, но это чат и ожидание, и первый агент мне это не сделал.\n\nДополнить до круглой суммы: добавить кредита до 0,99 и купить приложение за 0,99. Работает, но это шиворот-навыворот - вы добавляете свои деньги, чтобы избавиться от остатка. Я этого не хотел.',
+      },
+      {
+        h: 'Как Zero Balance набрал точную сумму',
+        p: 'В итоге сработало именно сопоставление остатка, а не перерасход. Zero Balance объединяет маленькие расходуемые встроенные покупки - по ценам вроде 0,29, 0,49 и 0,79 доллара - по восьми ценовым точкам так, чтобы они дали ваш точный баланс.\n\nЭто как раз то, чего не может ни одно отдельное приложение: мои 0,78 закрылись как 0,49 плюс 0,29 - это точное совпадение, а не округление. Я ввёл сумму, приложение показало план, и я подтвердил каждую покупку через обычное окно Apple по Face ID. Способ оплаты не нужен, потому что покупки покрывал сам баланс.\n\nМеньше чем через две минуты строка баланса исчезла - так Apple показывает 0,00.',
+      },
+      {
+        h: 'Что с долларовыми остатками не работает никогда',
+        p: 'Несколько советов, которые попросту не работают, чтобы вы их пропустили:\n\nСемейный доступ - баланс привязан к аккаунту, члены семьи не могут тратить ваш. Apple Pay или перевод в банк - баланс нельзя перенести в Apple Cash, Apple Pay или на счёт. Покупка физических товаров Apple - баланс покрывает только цифровое, не iPhone и не аксессуар. А любая услуга-"конвертер" в Telegram или Discord - мошенничество, которому нужен ваш пароль от Apple ID.',
+      },
+    ],
+    faqHeading: 'Частые вопросы',
+    faqItems: [
+      {
+        q: 'Появятся ли в App Store США товары дешевле 0,99?',
+        a: 'Apple задаёт минимальный обычный уровень и держит 0,99 больше десяти лет. Ниже опускаются только расходуемые встроенные покупки - именно поэтому набор из них и есть способ закрыть остаток меньше доллара.',
+      },
+      {
+        q: 'Баланс показывает 0,00, но смена региона всё ещё заблокирована. Почему?',
+        a: 'Есть и другие блокировки: активная подписка, незавершённый возврат, предзаказ или статус организатора семейного доступа. Это отдельно от баланса, и это тоже нужно убрать.',
+      },
+      {
+        q: 'Работают ли эти способы для GBP, EUR и других валют?',
+        a: 'Да, с другими ценовыми точками: самая маленькая встроенная покупка в Великобритании - £0,29, и у каждой валюты свои низкие уровни. Подход тот же: набирать точный остаток маленькими покупками, а не перерасходом.',
+      },
+      {
+        q: 'Безопасно ли позволять приложению тратить мой баланс?',
+        a: 'Каждая покупка всё равно проходит через окно подтверждения Apple, так что вы одобряете её по Face ID. Zero Balance не видит ваш пароль от Apple ID и не отслеживает вас - оно лишь подбирает комбинацию.',
+      },
+    ],
+    relatedHeading: 'Похожие гайды',
+    related: [
+      { label: 'Как убрать остаток баланса Apple ID', href: '/remove-leftover-apple-id-balance/' },
+      { label: 'Как потратить остаток баланса Apple Account', href: '/spend-apple-account-balance/' },
+      { label: 'Смена страны Apple ID с балансом', href: '/change-apple-id-country-with-balance/' },
+      { label: 'Все способы обнулить баланс, сравнение', href: '/alternatives/' },
+      { label: 'Частые вопросы', href: '/faq/' },
+    ],
+    keywords: [
+      'обнулить небольшой баланс apple id usd',
+      'баланс apple id 0.78 застрял',
+      'центы на балансе app store сша',
+      'баланс apple account меньше доллара',
+      'потратить остаток долларового баланса apple',
+    ],
+  },
+};
+
+const c = COPY[lang];
+const midIndex = Math.floor(c.sections.length / 2);
+---
+
+<PageLayout
+  title={`${c.title} - Zero Balance`}
+  description={c.description}
+  {lang}
+  {path}
+  locales={[...PAGE_LOCALES]}
+  schema={[
+    articleSchema({ title: c.title, description: c.description, slug, lang, datePublished: published }),
+    faqSchema(c.faqItems),
+    breadcrumbSchema([
+      { name: c.bcHome, url: `${DOMAIN}/${lang}/` },
+      { name: c.bcBlog, url: `${DOMAIN}/${lang}/blog/` },
+      { name: c.title, url: `${DOMAIN}${path}` },
+    ]),
+  ]}
+  ogType="article"
+  publishedTime={published}
+  modifiedTime={published}
+  keywords={[...c.keywords, ...t.keywords.support]}
+>
+  <PageHeader eyebrow={c.eyebrow} title={c.title} description={c.description} />
+
+  <Section>
+    <Container>
+      <Reveal class="mx-auto max-w-3xl">
+        <div class="rounded-2xl border border-[var(--border)] bg-[var(--brand-soft)]/40 p-6 md:p-8">
+          <p class="text-sm font-semibold tracking-wide text-[var(--brand-strong)] uppercase">{c.storyLabel}</p>
+          <p class="mt-3 text-lg leading-relaxed text-[var(--fg)]">{c.tldr}</p>
+          <div class="mt-6 flex">
+            <AppStoreButton label={t.cta.appStore} ct="blog-usd-story-tldr" />
+          </div>
+        </div>
+      </Reveal>
+
+      <div class="mx-auto mt-10 max-w-3xl prose-zb">
+        {
+          c.sections.map((s, i) => (
+            <Reveal delay={i * 40}>
+              <h2>{s.h}</h2>
+              {s.p.split('\n\n').map((para) => (
+                <p>{para}</p>
+              ))}
+              {i === midIndex && (
+                <div class="not-prose my-6 flex">
+                  <AppStoreButton label={t.cta.appStore} ct="blog-usd-story-mid" />
+                </div>
+              )}
+            </Reveal>
+          ))
+        }
+
+        <Reveal>
+          <h2>{c.faqHeading}</h2>
+        </Reveal>
+        <Reveal>
+          <FAQ items={c.faqItems} />
+        </Reveal>
+
+        <Reveal>
+          <h2>{c.relatedHeading}</h2>
+          <ul>
+            {c.related.map((r) => (
+              <li>
+                <a href={`/${lang}${r.href}`}>{r.label}</a>
+              </li>
+            ))}
+          </ul>
+        </Reveal>
+      </div>
+    </Container>
+  </Section>
+
+  <FinalCta {lang} />
+</PageLayout>

@@ -270,6 +270,10 @@ const fr: Dict = {
       help: 'Aide',
       legal: 'Mentions légales',
     },
+    contact: {
+      title: 'Une question ou une histoire à partager ?',
+      body: "Bloqué avec un solde, ou vous l'avez vidé avec Zero Balance ? Nous serions ravis de lire votre question ou votre histoire. Écrivez-nous à tout moment.",
+    },
     rights: 'Tous droits réservés.',
   },
   langSwitcher: {

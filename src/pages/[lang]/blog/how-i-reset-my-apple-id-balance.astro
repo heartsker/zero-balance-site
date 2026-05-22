@@ -1,0 +1,298 @@
+---
+import PageLayout from '../../../layouts/PageLayout.astro';
+import PageHeader from '../../../components/PageHeader.astro';
+import Container from '../../../components/Container.astro';
+import Section from '../../../components/Section.astro';
+import FAQ from '../../../components/FAQ.astro';
+import Reveal from '../../../components/Reveal.astro';
+import FinalCta from '../../../components/FinalCta.astro';
+import AppStoreButton from '../../../components/AppStoreButton.astro';
+import { getDict, type Locale } from '../../../i18n';
+import { articleSchema, faqSchema, breadcrumbSchema, howToSchema } from '../../../lib/schema';
+import { DOMAIN } from '../../../lib/siteConfig';
+
+const PAGE_LOCALES = ['en', 'ru'] as const;
+type PageLocale = (typeof PAGE_LOCALES)[number];
+
+export function getStaticPaths() {
+  return (['en', 'ru'] as const).map((lang) => ({ params: { lang } }));
+}
+
+const lang = Astro.params.lang as PageLocale;
+const t = getDict(lang as Locale);
+const slug = 'how-i-reset-my-apple-id-balance';
+const path = `/${lang}/blog/${slug}/`;
+const published = '2026-05-21T00:00:00Z';
+
+interface Copy {
+  title: string;
+  description: string;
+  eyebrow: string;
+  storyLabel: string;
+  tldr: string;
+  bcHome: string;
+  bcBlog: string;
+  sections: { h: string; p: string }[];
+  howToName: string;
+  steps: { title: string; body: string }[];
+  faqHeading: string;
+  faqItems: { q: string; a: string }[];
+  relatedHeading: string;
+  related: { label: string; href: string }[];
+  keywords: string[];
+}
+
+const COPY: Record<PageLocale, Copy> = {
+  en: {
+    title: 'How I got my Apple Account balance to exactly $0.00 before moving abroad',
+    description:
+      'I had $0.78 stuck on my Apple Account and a country change blocked because of it. Here is everything I tried, what failed, and the app that finally cleared it to zero.',
+    eyebrow: 'User story',
+    storyLabel: 'The short version',
+    tldr:
+      'I was relocating and needed to switch my App Store country, but Apple refused until my balance read exactly $0.00. I had $0.78 left over, and no single App Store item is priced to match it. Apple Support could not help me that day, a manual overshoot needed a card I no longer had, and Zero Balance combined a $0.49 and a $0.29 in-app purchase to land me on exactly zero in about a minute.',
+    bcHome: 'Home',
+    bcBlog: 'Blog',
+    sections: [
+      {
+        h: 'The $0.78 that would not go away',
+        p: 'I only noticed the leftover when I tried to change my App Store country. We were moving, my new cards were in a different region, and I wanted my account to match.\n\nApple stopped me cold: the country switcher refuses to continue until your balance is exactly $0.00. Not "close to zero". Exactly zero. Mine read $0.78, the residue of a gift card I had mostly spent months earlier.\n\nIf you want to see your own number, open the App Store, tap your profile picture in the top right, and look directly under your name. Write down the exact figure including the cents - you will need it.',
+      },
+      {
+        h: 'What happened when I asked Apple Support',
+        p: 'My first instinct was to let Apple deal with it. I went to getsupport.apple.com, searched "clear Apple ID balance", picked that topic, and started a chat.\n\nThe trick people online kept repeating is to lead with your reason. So I said I was changing my Apple Account country and had a small leftover I could not spend. That framing matters - "I am changing country" gets honored far more often than "I just want it gone".\n\nIt is genuinely hit or miss. The first agent I reached said they could not action it and suggested I spend it down instead. Plenty of people get a clean yes on amounts under a dollar, especially with a region-change reason, so it is worth trying first. It just did not land for me that day.',
+      },
+      {
+        h: 'Why buying an app did not work for me',
+        p: 'The obvious move is to buy something and let the balance get spent. The problem is the price floor: the cheapest standard app on the US store is $0.99, and my leftover was $0.78. There is no single item priced at exactly $0.78 - App Store prices land on fixed tiers like $0.29, $0.49 and $0.99, never an arbitrary number.\n\nYou can overshoot - buy a $0.99 app, let Apple take your $0.78 from the balance and charge the remaining $0.21 to a card. But that only works if you still have a valid card from the same country on the account. I had already removed mine for the move, which is exactly why the balance was now a dead end.',
+      },
+      {
+        h: 'How Zero Balance got me to exactly zero',
+        p: 'A comment thread pointed me at Zero Balance, a small free iOS app built for this one annoying problem.\n\nI typed in my leftover - $0.78 - and it showed me a plan: a $0.49 plus a $0.29 in-app purchase, which add up to exactly $0.78. Small consumable in-app prices like those are the only ones below the $0.99 app floor, so they are the only way to land on an exact sub-dollar total. I confirmed each one through Apple\'s normal purchase sheet with Face ID. No password to hand over, nothing that touches my Apple ID credentials.\n\nStart to finish it took about a minute. My balance line disappeared, which is how Apple shows $0.00, and the country switch finally went through. The small things I "bought" sit in a private inventory on the device that syncs over iCloud - it never asks for an account or tracks anything.',
+      },
+      {
+        h: 'What I would tell anyone in the same spot',
+        p: 'Do the cheap, fast checks first. Confirm the exact amount, then try Apple Support with a region-change reason - if your leftover is under a dollar there is a real chance they just clear it.\n\nIf that stalls, decide whether you have a same-region card to overshoot with. If you do not, matching the amount with small purchases is the route that actually reaches exact zero.\n\nAnd ignore the dead ends. You cannot transfer balance to another Apple Account - anyone selling a "transfer service" is running a scam. The "balance to cash" sites are phishing for your password. And Family Sharing does not share balance, no matter how many forum posts claim otherwise.',
+      },
+    ],
+    howToName: 'How I reset my Apple Account balance to zero',
+    steps: [
+      {
+        title: 'Check the exact leftover',
+        body: 'Open the App Store, tap your profile picture, and read the balance under your name. Note the amount including cents.',
+      },
+      {
+        title: 'Try Apple Support first if it is tiny',
+        body: 'At getsupport.apple.com, search "clear Apple ID balance" and start a chat. Lead with your reason, such as changing your Apple Account country.',
+      },
+      {
+        title: 'If that fails, match the amount',
+        body: 'Use Zero Balance to combine small in-app purchases that add up to your exact leftover, confirming each through Apple\'s purchase sheet.',
+      },
+      {
+        title: 'Confirm zero and continue',
+        body: 'Reopen your App Store profile. When the balance line disappears entirely, you are at $0.00 and any blocked action will unblock.',
+      },
+    ],
+    faqHeading: 'Questions I had along the way',
+    faqItems: [
+      {
+        q: 'How small a balance will Apple Support actually clear?',
+        a: 'There is no published threshold. Anecdotally anything under about $1 USD is cleared most of the time, especially paired with a region-change reason. Larger amounts are less likely, and outcomes vary by agent - trying again the next day sometimes works.',
+      },
+      {
+        q: 'Did resetting the balance refund anything to my card?',
+        a: 'No. If Apple Support clears it, Apple keeps the money. If you spend it down, you spent it. None of these routes put cash back on a card - balance is store credit, not refundable money.',
+      },
+      {
+        q: 'My balance shows blank or a dash. Is that zero?',
+        a: 'Yes. When the balance is $0.00, the App Store profile hides the line completely. If no "Apple Account balance" appears under your name, you are already at zero.',
+      },
+      {
+        q: 'I cleared the balance but my country change is still blocked. Why?',
+        a: 'Other things block it too: an active subscription, a pending refund, a pre-order, or being a Family Sharing organizer. Those are separate from the balance and have to be cleared as well.',
+      },
+    ],
+    relatedHeading: 'Guides that helped me',
+    related: [
+      { label: 'Changing your Apple ID country with a balance', href: '/change-apple-id-country-with-balance/' },
+      { label: 'Removing a leftover Apple ID balance', href: '/remove-leftover-apple-id-balance/' },
+      { label: 'Every way to clear a balance, compared', href: '/alternatives/' },
+      { label: 'The Family Sharing balance myth', href: '/family-sharing-apple-balance-myth/' },
+      { label: 'Frequently asked questions', href: '/faq/' },
+    ],
+    keywords: [
+      'reset apple id balance',
+      'apple account balance to zero',
+      'clear apple id balance',
+      'apple balance stuck region change',
+      'change apple id country balance zero',
+    ],
+  },
+  ru: {
+    title: 'Как я обнулил баланс Apple Account до 0,00 перед переездом',
+    description:
+      'На балансе застряли 0,78 доллара, и из-за них Apple не давала сменить страну. Рассказываю, что я перепробовал, что не сработало и какое приложение в итоге обнулило баланс.',
+    eyebrow: 'История пользователя',
+    storyLabel: 'Если коротко',
+    tldr:
+      'Я переезжал и хотел сменить страну в App Store, но Apple не давала этого сделать, пока баланс не станет ровно 0,00. У меня оставалось 0,78 доллара, и под эту сумму нет ни одного товара в App Store. Поддержка Apple в тот день не помогла, для ручного перерасхода нужна была карта, которой у меня уже не было, а Zero Balance собрал встроенные покупки на 0,49 и 0,29 доллара и вывел баланс точно в ноль примерно за минуту.',
+    bcHome: 'Главная',
+    bcBlog: 'Блог',
+    sections: [
+      {
+        h: 'Те самые 0,78 доллара, которые не уходили',
+        p: 'Я заметил остаток только когда попытался сменить страну в App Store. Мы переезжали, новые карты были в другом регионе, и я хотел, чтобы аккаунт им соответствовал.\n\nApple остановила меня сразу: переключатель страны не продолжает работу, пока баланс не станет ровно 0,00. Не "почти ноль". Именно ноль. У меня было 0,78 доллара - остаток от подарочной карты, которую я почти полностью потратил несколькими месяцами раньше.\n\nЕсли хотите увидеть свою сумму, откройте App Store, нажмите на фото профиля справа вверху и посмотрите прямо под именем. Запишите точную цифру вместе с центами - она пригодится.',
+      },
+      {
+        h: 'Что вышло, когда я написал в поддержку Apple',
+        p: 'Первым делом я решил переложить задачу на Apple. Зашёл на getsupport.apple.com, нашёл тему "очистить баланс Apple ID", выбрал её и открыл чат.\n\nГлавный совет, который все повторяют, - начинать с причины. Поэтому я сказал, что меняю страну Apple Account и у меня остался небольшой баланс, который я не могу потратить. Формулировка важна: "я меняю страну" срабатывает гораздо чаще, чем "просто уберите это".\n\nРезультат непредсказуемый. Первый агент сказал, что не может это сделать, и предложил потратить баланс самому. Многим без проблем обнуляют суммы меньше доллара, особенно с причиной про смену региона, так что попробовать стоит в первую очередь. Просто в тот день у меня не получилось.',
+      },
+      {
+        h: 'Почему покупка приложения мне не помогла',
+        p: 'Очевидный ход - что-то купить и дать балансу потратиться. Проблема в минимальной цене: самое дешёвое обычное приложение в магазине США стоит 0,99 доллара, а у меня оставалось 0,78. Товара ровно на 0,78 не существует - цены в App Store идут фиксированными уровнями вроде 0,29, 0,49 и 0,99, а не произвольной суммой.\n\nМожно купить с перерасходом - взять приложение за 0,99, чтобы Apple списала 0,78 с баланса, а оставшиеся 0,21 - с карты. Но это работает, только если на аккаунте есть действующая карта той же страны. Свою я уже удалил перед переездом - именно поэтому баланс и превратился в тупик.',
+      },
+      {
+        h: 'Как Zero Balance вывел меня точно в ноль',
+        p: 'В одном из обсуждений мне посоветовали Zero Balance - небольшое бесплатное приложение для iOS, сделанное ровно под эту надоедливую задачу.\n\nЯ ввёл остаток - 0,78 доллара - и приложение показало план: встроенные покупки на 0,49 и 0,29 доллара, которые в сумме дают ровно 0,78. Такие маленькие цены на расходуемые покупки - единственные ниже порога приложений в 0,99, поэтому только ими и можно набрать точную сумму меньше доллара. Каждую я подтверждал через обычное окно покупки Apple по Face ID. Никаких паролей передавать не нужно, ничего, что касалось бы данных моего Apple ID.\n\nВсё заняло около минуты. Строка баланса исчезла - так Apple показывает 0,00, - и смена страны наконец прошла. То, что я "купил", лежит в приватном списке на устройстве и синхронизируется через iCloud: приложение не просит аккаунт и ничего не отслеживает.',
+      },
+      {
+        h: 'Что я посоветовал бы тому, кто в той же ситуации',
+        p: 'Сначала сделайте быстрые бесплатные шаги. Уточните точную сумму, потом напишите в поддержку Apple с причиной про смену региона - если остаток меньше доллара, есть реальный шанс, что его просто обнулят.\n\nЕсли это не сработало, решите, есть ли у вас карта того же региона для покупки с перерасходом. Если нет, набор суммы из маленьких покупок - это путь, который действительно выводит точно в ноль.\n\nИ не ведитесь на тупиковые варианты. Баланс нельзя перевести на другой Apple Account - любой, кто продаёт "услугу перевода", мошенник. Сайты "баланс в наличные" выманивают пароль. А семейный доступ не делится балансом, сколько бы постов на форумах ни утверждали обратное.',
+      },
+    ],
+    howToName: 'Как я обнулил баланс Apple Account',
+    steps: [
+      {
+        title: 'Узнайте точный остаток',
+        body: 'Откройте App Store, нажмите на фото профиля и посмотрите баланс под именем. Запишите сумму вместе с центами.',
+      },
+      {
+        title: 'Если сумма крошечная, сначала попробуйте поддержку',
+        body: 'На getsupport.apple.com найдите "очистить баланс Apple ID" и откройте чат. Начните с причины, например смены страны Apple Account.',
+      },
+      {
+        title: 'Если не вышло, наберите сумму',
+        body: 'С помощью Zero Balance соберите маленькие встроенные покупки, которые в сумме дают ваш точный остаток, подтверждая каждую через окно покупки Apple.',
+      },
+      {
+        title: 'Убедитесь в нуле и продолжайте',
+        body: 'Снова откройте профиль в App Store. Когда строка баланса полностью исчезнет, у вас 0,00, и заблокированное действие разблокируется.',
+      },
+    ],
+    faqHeading: 'Вопросы, которые у меня возникали',
+    faqItems: [
+      {
+        q: 'Какой минимальный баланс поддержка Apple реально обнуляет?',
+        a: 'Официального порога нет. По опыту суммы меньше примерно 1 доллара обнуляют в большинстве случаев, особенно с причиной про смену региона. Большие суммы - реже, и результат зависит от агента: иногда помогает повторное обращение на следующий день.',
+      },
+      {
+        q: 'Вернулись ли деньги на карту после обнуления баланса?',
+        a: 'Нет. Если баланс обнуляет поддержка Apple, деньги остаются у Apple. Если вы тратите его сами, вы их потратили. Ни один из путей не возвращает наличные на карту: баланс - это кредит магазина, а не возвращаемые деньги.',
+      },
+      {
+        q: 'Баланс показывает пусто или прочерк. Это ноль?',
+        a: 'Да. Когда баланс равен 0,00, профиль App Store полностью прячет строку. Если под именем нет строки "Баланс Apple Account", у вас уже ноль.',
+      },
+      {
+        q: 'Я обнулил баланс, но смена страны всё ещё заблокирована. Почему?',
+        a: 'Её блокирует и другое: активная подписка, незавершённый возврат, предзаказ или статус организатора семейного доступа. Это отдельно от баланса, и это тоже нужно убрать.',
+      },
+    ],
+    relatedHeading: 'Гайды, которые мне помогли',
+    related: [
+      { label: 'Смена страны Apple ID с балансом', href: '/change-apple-id-country-with-balance/' },
+      { label: 'Как убрать остаток баланса Apple ID', href: '/remove-leftover-apple-id-balance/' },
+      { label: 'Все способы обнулить баланс, сравнение', href: '/alternatives/' },
+      { label: 'Миф о балансе и семейном доступе', href: '/family-sharing-apple-balance-myth/' },
+      { label: 'Частые вопросы', href: '/faq/' },
+    ],
+    keywords: [
+      'обнулить баланс apple id',
+      'баланс apple account в ноль',
+      'очистить баланс apple id',
+      'баланс apple застрял смена страны',
+      'сменить страну apple id баланс ноль',
+    ],
+  },
+};
+
+const c = COPY[lang];
+const midIndex = Math.floor(c.sections.length / 2);
+---
+
+<PageLayout
+  title={`${c.title} - Zero Balance`}
+  description={c.description}
+  {lang}
+  {path}
+  locales={[...PAGE_LOCALES]}
+  schema={[
+    articleSchema({ title: c.title, description: c.description, slug, lang, datePublished: published }),
+    howToSchema({ name: c.howToName, description: c.description, steps: c.steps }),
+    faqSchema(c.faqItems),
+    breadcrumbSchema([
+      { name: c.bcHome, url: `${DOMAIN}/${lang}/` },
+      { name: c.bcBlog, url: `${DOMAIN}/${lang}/blog/` },
+      { name: c.title, url: `${DOMAIN}${path}` },
+    ]),
+  ]}
+  ogType="article"
+  publishedTime={published}
+  modifiedTime={published}
+  keywords={[...c.keywords, ...t.keywords.support]}
+>
+  <PageHeader eyebrow={c.eyebrow} title={c.title} description={c.description} />
+
+  <Section>
+    <Container>
+      <Reveal class="mx-auto max-w-3xl">
+        <div class="rounded-2xl border border-[var(--border)] bg-[var(--brand-soft)]/40 p-6 md:p-8">
+          <p class="text-sm font-semibold tracking-wide text-[var(--brand-strong)] uppercase">{c.storyLabel}</p>
+          <p class="mt-3 text-lg leading-relaxed text-[var(--fg)]">{c.tldr}</p>
+          <div class="mt-6 flex">
+            <AppStoreButton label={t.cta.appStore} ct="blog-reset-story-tldr" />
+          </div>
+        </div>
+      </Reveal>
+
+      <div class="mx-auto mt-10 max-w-3xl prose-zb">
+        {
+          c.sections.map((s, i) => (
+            <Reveal delay={i * 40}>
+              <h2>{s.h}</h2>
+              {s.p.split('\n\n').map((para) => (
+                <p>{para}</p>
+              ))}
+              {i === midIndex && (
+                <div class="not-prose my-6 flex">
+                  <AppStoreButton label={t.cta.appStore} ct="blog-reset-story-mid" />
+                </div>
+              )}
+            </Reveal>
+          ))
+        }
+
+        <Reveal>
+          <h2>{c.faqHeading}</h2>
+        </Reveal>
+        <Reveal>
+          <FAQ items={c.faqItems} />
+        </Reveal>
+
+        <Reveal>
+          <h2>{c.relatedHeading}</h2>
+          <ul>
+            {c.related.map((r) => (
+              <li>
+                <a href={`/${lang}${r.href}`}>{r.label}</a>
+              </li>
+            ))}
+          </ul>
+        </Reveal>
+      </div>
+    </Container>
+  </Section>
+
+  <FinalCta {lang} />
+</PageLayout>

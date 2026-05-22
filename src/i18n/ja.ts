@@ -270,6 +270,10 @@ const ja: Dict = {
       help: 'ヘルプ',
       legal: '法的事項',
     },
+    contact: {
+      title: 'ご質問や体験談はありますか？',
+      body: '残高で困っていませんか、または Zero Balance で残高をゼロにできましたか？ ぜひご質問や体験談をお聞かせください。いつでもメールでご連絡ください。',
+    },
     rights: 'All rights reserved.',
   },
   langSwitcher: {

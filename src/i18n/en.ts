@@ -269,6 +269,10 @@ const en = {
       help: 'Help',
       legal: 'Legal',
     },
+    contact: {
+      title: 'Have a question or a story to share?',
+      body: 'Stuck on a balance, or cleared yours with Zero Balance? We would love to hear your question or story. Email us anytime.',
+    },
     rights: 'All rights reserved.',
   },
   langSwitcher: {

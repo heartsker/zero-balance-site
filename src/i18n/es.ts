@@ -270,6 +270,10 @@ const es: Dict = {
       help: 'Ayuda',
       legal: 'Legal',
     },
+    contact: {
+      title: '¿Tienes una pregunta o una historia que contar?',
+      body: '¿Te quedaste atascado con un saldo o lo vaciaste con Zero Balance? Nos encantaría conocer tu pregunta o tu historia. Escríbenos cuando quieras.',
+    },
     rights: 'Todos los derechos reservados.',
   },
   langSwitcher: {

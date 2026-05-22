@@ -270,6 +270,10 @@ const ko: Dict = {
       help: '도움말',
       legal: '법적 고지',
     },
+    contact: {
+      title: '질문이나 이야기가 있으신가요?',
+      body: '잔액 때문에 막히셨거나 Zero Balance로 잔액을 정리하셨나요? 여러분의 질문이나 이야기를 듣고 싶습니다. 언제든지 이메일로 보내주세요.',
+    },
     rights: '모든 권리 보유.',
   },
   langSwitcher: {

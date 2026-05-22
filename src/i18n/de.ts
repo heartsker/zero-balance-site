@@ -270,6 +270,10 @@ const de: Dict = {
       help: 'Hilfe',
       legal: 'Rechtliches',
     },
+    contact: {
+      title: 'Eine Frage oder eine Geschichte für uns?',
+      body: 'Bei einem Guthaben festgesteckt oder es mit Zero Balance geleert? Wir freuen uns über deine Frage oder Geschichte. Schreib uns jederzeit.',
+    },
     rights: 'Alle Rechte vorbehalten.',
   },
   langSwitcher: {
