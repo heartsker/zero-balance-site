@@ -1,0 +1,130 @@
+---
+// Consent-gated Yandex Metrika, loaded for Russia/CIS visitors only.
+//
+// Per the cross-jurisdiction legal review, Yandex Metrika (a Russian service that
+// stores data on Russian servers) is loaded ONLY for visitors in RU/BY/KZ/KG,
+// where it is the appropriate, data-localization-compliant tool. It is never
+// loaded anywhere else (no EU/UK/US data transfer to Russia). Webvisor session
+// replay is disabled everywhere.
+//
+// Even in RU/CIS, Russian law (152-FZ, 2025) requires standalone opt-in consent,
+// so the banner is shown and Metrika loads only after the visitor accepts. The
+// decision is remembered in localStorage.
+//
+// Region is detected client-side via Cloudflare's /cdn-cgi/trace (loc=XX). The
+// whole feature is gated to production builds so dev/preview traffic never
+// reaches the real counter. The counter id is the only server value injected
+// into the verbatim inline script.
+import { getDict, localizedPath, type Locale } from '../i18n';
+import { YANDEX_METRIKA_ID } from '../lib/siteConfig';
+
+interface Props {
+  lang: Locale;
+}
+
+const { lang } = Astro.props;
+const enabled = import.meta.env.PROD && YANDEX_METRIKA_ID != null;
+const dict = getDict(lang);
+const t = dict.consent;
+const privacyHref = localizedPath(lang, 'privacy');
+---
+
+{
+  enabled && (
+    <>
+      <div
+        data-consent
+        hidden
+        role="dialog"
+        aria-live="polite"
+        aria-label={t.message}
+        class="fixed inset-x-0 bottom-0 z-50 p-3 sm:p-4"
+      >
+        <div class="mx-auto flex max-w-3xl flex-col gap-3 rounded-2xl border border-[var(--border)] bg-[var(--surface)] p-4 shadow-lg sm:flex-row sm:items-center sm:justify-between">
+          <p class="text-sm text-[var(--fg)]">
+            {t.message}{' '}
+            <a class="underline text-[var(--brand)]" href={privacyHref}>
+              {dict.nav.privacy}
+            </a>
+          </p>
+          <div class="flex shrink-0 gap-2">
+            <button
+              type="button"
+              data-consent-decline
+              class="rounded-full border border-[var(--border)] px-4 py-2 text-sm text-[var(--fg)]"
+            >
+              {t.decline}
+            </button>
+            <button
+              type="button"
+              data-consent-accept
+              class="rounded-full bg-[var(--brand)] px-4 py-2 text-sm font-semibold text-white"
+            >
+              {t.accept}
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <script is:inline define:vars={{ id: YANDEX_METRIKA_ID }}>
+        (function () {
+          if (window.__zbConsentInit) return;
+          window.__zbConsentInit = true;
+
+          var KEY = 'zb_analytics_consent';
+          // Metrika is loaded ONLY for these countries (Russia + CIS). Everywhere
+          // else it never loads and no banner is shown.
+          var METRIKA_COUNTRIES = { RU: 1, BY: 1, KZ: 1, KG: 1 };
+
+          function loadMetrika() {
+            if (window.__ymLoaded) return;
+            window.__ymLoaded = true;
+            (function (m, e, t, r, i, k, a) {
+              m[i] = m[i] || function () { (m[i].a = m[i].a || []).push(arguments); };
+              m[i].l = 1 * new Date();
+              for (var j = 0; j < document.scripts.length; j++) { if (document.scripts[j].src === r) { return; } }
+              k = e.createElement(t), a = e.getElementsByTagName(t)[0], k.async = 1, k.src = r, a.parentNode.insertBefore(k, a);
+            })(window, document, 'script', 'https://mc.yandex.ru/metrika/tag.js?id=' + id, 'ym');
+
+            // webvisor (session replay) is intentionally OFF everywhere.
+            window.ym(id, 'init', { ssr: true, webvisor: false, clickmap: true, ecommerce: 'dataLayer', accurateTrackBounce: true, trackLinks: true });
+
+            // ClientRouter swaps the DOM without reloading <head>; send a hit per
+            // in-app navigation (after-swap never fires on the initial load).
+            document.addEventListener('astro:after-swap', function () {
+              if (window.ym) window.ym(id, 'hit', location.href);
+            });
+          }
+
+          function decision() { try { return localStorage.getItem(KEY); } catch (e) { return null; } }
+          function setBanner(show) { var b = document.querySelector('[data-consent]'); if (b) b.toggleAttribute('hidden', !show); }
+          function grant() { try { localStorage.setItem(KEY, 'granted'); } catch (e) {} setBanner(false); loadMetrika(); }
+          function deny() { try { localStorage.setItem(KEY, 'denied'); } catch (e) {} setBanner(false); }
+
+          document.addEventListener('click', function (e) {
+            var el = e.target && e.target.closest ? e.target.closest('[data-consent-accept],[data-consent-decline]') : null;
+            if (!el) return;
+            if (el.hasAttribute('data-consent-accept')) grant(); else deny();
+          });
+
+          // Re-assert the banner after SPA navigations (the DOM is replaced).
+          document.addEventListener('astro:page-load', function () {
+            if (window.__zbNeedsConsent && !decision()) setBanner(true);
+          });
+
+          // Geo gate first: outside RU/CIS, never load Metrika and never nag.
+          fetch('/cdn-cgi/trace').then(function (r) { return r.text(); }).then(function (txt) {
+            var m = txt.match(/(?:^|\n)loc=([A-Z]{2})/);
+            var cc = m ? m[1] : '';
+            if (!METRIKA_COUNTRIES[cc]) return;
+            var d = decision();
+            if (d === 'granted') { loadMetrika(); return; }
+            if (d === 'denied') return;
+            window.__zbNeedsConsent = true;
+            setBanner(true);
+          }).catch(function () { /* region unknown: do not load, do not show banner */ });
+        })();
+      </script>
+    </>
+  )
+}

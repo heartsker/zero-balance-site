@@ -379,6 +379,11 @@ const en = {
       },
     ],
   },
+  consent: {
+    message: 'We use Yandex Metrika analytics to understand how this site is used. It loads only if you accept.',
+    accept: 'Accept',
+    decline: 'Decline',
+  },
 };
 
 export default en;

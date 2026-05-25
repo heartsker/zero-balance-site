@@ -5,6 +5,9 @@ export const DOMAIN = 'https://zerobalance.pro';
 export const SUPPORT_EMAIL = 'developer.ios.dp@proton.me';
 export const ACCENT = '#7A4DE6';
 
+// Yandex Metrika counter ID. Set to null to disable the counter entirely.
+export const YANDEX_METRIKA_ID: number | null = 109411598;
+
 export const LOCALES = [
   'en',
   'ru',

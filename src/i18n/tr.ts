@@ -380,6 +380,11 @@ const tr: Dict = {
       },
     ],
   },
+  consent: {
+    message: 'Bu sitenin nasıl kullanıldığını anlamak için Yandex Metrika kullanıyoruz. Yalnızca kabul ederseniz yüklenir.',
+    accept: 'Kabul et',
+    decline: 'Reddet',
+  },
 };
 
 export default tr;

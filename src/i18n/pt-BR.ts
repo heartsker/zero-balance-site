@@ -380,6 +380,11 @@ const ptBR: Dict = {
       },
     ],
   },
+  consent: {
+    message: 'Usamos o Yandex Metrika para entender como este site é usado. Ele só carrega se você aceitar.',
+    accept: 'Aceitar',
+    decline: 'Recusar',
+  },
 };
 
 export default ptBR;

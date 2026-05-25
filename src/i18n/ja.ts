@@ -380,6 +380,11 @@ const ja: Dict = {
       },
     ],
   },
+  consent: {
+    message: '当サイトの利用状況を把握するため、Yandex Metrika を使用します。同意した場合にのみ読み込まれます。',
+    accept: '同意する',
+    decline: '拒否する',
+  },
 };
 
 export default ja;

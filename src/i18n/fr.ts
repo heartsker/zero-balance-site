@@ -380,6 +380,11 @@ const fr: Dict = {
       },
     ],
   },
+  consent: {
+    message: 'Nous utilisons Yandex Metrika pour comprendre comment ce site est utilisé. Il ne se charge qu\'avec votre consentement.',
+    accept: 'Accepter',
+    decline: 'Refuser',
+  },
 };
 
 export default fr;

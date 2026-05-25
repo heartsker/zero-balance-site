@@ -380,6 +380,11 @@ const ko: Dict = {
       },
     ],
   },
+  consent: {
+    message: '이 사이트의 사용 방식을 파악하기 위해 Yandex Metrika를 사용합니다. 동의하신 경우에만 로드됩니다.',
+    accept: '동의',
+    decline: '거부',
+  },
 };
 
 export default ko;

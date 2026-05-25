@@ -3,6 +3,7 @@ import '../styles/globals.css';
 import { ClientRouter } from 'astro:transitions';
 import SEO from '../components/SEO.astro';
 import JsonLd from '../components/JsonLd.astro';
+import ConsentAnalytics from '../components/ConsentAnalytics.astro';
 import type { Locale } from '../i18n';
 import { organizationSchema, websiteSchema } from '../lib/schema';
 import { APP_ID, ACCENT, DOMAIN, RTL_LOCALES } from '../lib/siteConfig';
@@ -64,6 +65,7 @@ const {
   </head>
   <body>
     <slot />
+    <ConsentAnalytics {lang} />
     <script>
       import '../scripts/reveal.ts';
     </script>
