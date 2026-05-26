@@ -2,7 +2,7 @@ export const APP_STORE_URL =
   'https://apps.apple.com/app/apple-store/id6761912988?pt=128302223&ct=zerobalance-pro-site&mt=8';
 
 export const DOMAIN = 'https://zerobalance.pro';
-export const SUPPORT_EMAIL = 'developer.ios.dp@proton.me';
+export const SUPPORT_EMAIL = 'developer.ios.dp@gmail.com';
 export const ACCENT = '#7A4DE6';
 
 // Yandex Metrika counter ID. Set to null to disable the counter entirely.
