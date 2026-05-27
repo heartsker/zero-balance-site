@@ -408,12 +408,12 @@ A daily-ish Q&A blog targeting Apple ecosystem pain points (App Store, Apple ID,
 ## Backlog (no full outline yet)
 
 - App Store icon disappeared from iPhone home screen - how to get it back
-- Family Sharing payment: who pays for what, and how to hand off the payer role
+- Family Sharing payment: who pays for what, and how to hand off the payer role - ☑ shipped (2026-05-27) - https://zerobalance.pro/en/blog/family-sharing-payment-who-pays/ (en + ru)
 - Lost trusted phone for Apple 2FA - full account recovery walkthrough
 - Apple Developer membership "payment authorization failed" - specifics for the Developer Portal
 - Billing address rejected by Apple even though the country is correct - format quirks
 - "This app is no longer available" - what it means and how to redownload your purchase
 - Apple One sharing: which services your family actually shares vs not
-- Pre-orders blocking Apple ID changes - how to find and cancel them
+- Pre-orders blocking Apple ID changes - how to find and cancel them - ☑ shipped (2026-05-27) - https://zerobalance.pro/en/blog/pre-orders-blocking-apple-id-country-change/ (en + ru)
 - Two Apple IDs - how (and whether) to merge them
-- Apple Cash vs Apple Account balance - difference, transfer rules, refund destination
+- Apple Cash vs Apple Account balance - difference, transfer rules, refund destination - ☑ shipped (2026-05-27) - https://zerobalance.pro/en/blog/apple-cash-vs-apple-account-balance/ (en + ru)

@@ -1,0 +1,263 @@
+---
+import PageLayout from '../../../layouts/PageLayout.astro';
+import PageHeader from '../../../components/PageHeader.astro';
+import Container from '../../../components/Container.astro';
+import Section from '../../../components/Section.astro';
+import FAQ from '../../../components/FAQ.astro';
+import Reveal from '../../../components/Reveal.astro';
+import FinalCta from '../../../components/FinalCta.astro';
+import AppStoreButton from '../../../components/AppStoreButton.astro';
+import { getDict, type Locale } from '../../../i18n';
+import { articleSchema, faqSchema, breadcrumbSchema } from '../../../lib/schema';
+import { DOMAIN } from '../../../lib/siteConfig';
+
+const PAGE_LOCALES = ['en', 'ru'] as const;
+type PageLocale = (typeof PAGE_LOCALES)[number];
+
+export function getStaticPaths() {
+  return (['en', 'ru'] as const).map((lang) => ({ params: { lang } }));
+}
+
+const lang = Astro.params.lang as PageLocale;
+const t = getDict(lang as Locale);
+const slug = 'apple-cash-vs-apple-account-balance';
+const path = `/${lang}/blog/${slug}/`;
+const published = '2026-05-27T00:00:00Z';
+
+interface Copy {
+  title: string;
+  description: string;
+  eyebrow: string;
+  storyLabel: string;
+  tldr: string;
+  bcHome: string;
+  bcBlog: string;
+  sections: { h: string; p: string }[];
+  faqHeading: string;
+  faqItems: { q: string; a: string }[];
+  relatedHeading: string;
+  related: { label: string; href: string }[];
+  keywords: string[];
+}
+
+const COPY: Record<PageLocale, Copy> = {
+  en: {
+    title: 'Apple Cash vs Apple Account balance - what the difference actually is',
+    description:
+      'Apple Cash and Apple Account balance look similar but are completely separate. Here is what each one can pay for, how refunds choose between them, and why you cannot move money between the two.',
+    eyebrow: 'Money on your Apple ID',
+    storyLabel: 'The short version',
+    tldr:
+      'Apple Cash is debit-card-equivalent money that lives in Wallet, can be sent to a bank, and only exists in the US. Apple Account balance is store credit that buys digital goods on the App Store, iTunes, and Apple subscriptions, exists everywhere Apple sells media, and cannot be cashed out. Refunds always return to whichever you used to pay - never the other.',
+    bcHome: 'Home',
+    bcBlog: 'Blog',
+    sections: [
+      {
+        h: 'Two products, very similar names, completely different rules',
+        p: 'If you see "Apple Cash" and "Apple Account balance" on the same screen and assume they are the same pool, you are not alone. Apple makes them look related because both surface on account.apple.com and both can pay for some things in the Apple ecosystem.\n\nThey are not the same. They are two separate financial products with different issuers, different geographies, different refund destinations, and different rules about what they can buy. Confusing the two is the single most common reason people end up with a stranded balance, a refund that "did not arrive", or a country change that will not go through.\n\nThe short way to keep them straight: Apple Cash is money, Apple Account balance is store credit. Money can become store credit if you choose to top up; store credit can never become money.',
+      },
+      {
+        h: 'What Apple Cash actually is',
+        p: 'Apple Cash is a prepaid Visa-style account issued by Green Dot Bank, surfaced through the Wallet app. It exists only in the United States, requires a US billing address, and is tied to an SSN-verified Apple ID.\n\nYou can receive Apple Cash from another person via iMessage, send it the same way, spend it anywhere Apple Pay is accepted, and transfer it to a US bank account (instant transfer for a 1.5% fee or 1-3 business days for free). It works as a real debit card for online checkout and is, for most purposes, indistinguishable from a checking account.\n\nThe critical thing for our topic: Apple Cash is fungible money. The bank does not care what you spend it on. It is yours, and you can move it out to a bank whenever you want.',
+      },
+      {
+        h: 'What Apple Account balance actually is',
+        p: 'Apple Account balance is store credit, not money. It funds purchases inside Apple\'s digital storefronts: apps, in-app purchases, subscriptions billed through Apple, iTunes movies and music, iCloud+ storage, Apple Books, Apple TV rentals, Apple Arcade. It exists in every country where Apple sells media, not just the US.\n\nIt is generated when you redeem an Apple Gift Card, when someone sends you an iTunes/App Store gift via email, when Apple refunds a purchase to "Apple Account balance" instead of your card, or when Apple credits you for a service issue. It is denominated in the currency of your Apple Account country and does not cross storefronts when you change region (which is why the country change forces it to zero first).\n\nWhat it cannot do: pay for physical Apple hardware at Apple Stores, pay for AppleCare on a new device, move to Apple Cash, transfer between accounts, or convert to cash through any official path. Sites and services that claim to "convert Apple balance to cash" are phishing operations.',
+      },
+      {
+        h: 'How refunds choose between the two',
+        p: 'When Apple refunds a purchase, the destination is determined by the original funding source, not by you. The rule:\n\nIf you paid with a credit or debit card, the refund goes back to that card.\n\nIf you paid with Apple Cash, the refund goes back to your Apple Cash balance.\n\nIf you paid with Apple Account balance, the refund goes back to your Apple Account balance.\n\nIf the purchase used a split between balance and a card (combined payment), the refund splits proportionally back to each source.\n\nThe one exception that catches people out: an "appeasement credit" that Apple\'s support agents sometimes issue (for things like a buggy app or a service outage) always lands as Apple Account balance, regardless of what you paid with. That is why you can pay for a refund in Apple Cash and end up with the refund as un-cashable store credit.',
+      },
+      {
+        h: 'The mistakes I see people make',
+        p: 'A few patterns to watch out for, especially before a country change or any large financial move on your Apple ID.\n\nAssuming Apple Cash counts as Apple Account balance for the country-change blocker. It does not. Apple only blocks region change when Apple Account balance is non-zero; Apple Cash is irrelevant to the country switch because it is a separate Green Dot account that stays in the US.\n\nTrying to "transfer" balance to Apple Cash. There is no path. The closest you can do is spend the balance down on a digital purchase, or contact Apple to clear small remainders (often under a dollar) at their discretion.\n\nExpecting Family Sharing to share either pool. Neither one is shared. Family Sharing shares purchases (apps, subscriptions billed through Apple, iCloud+ storage). Each member keeps their own Apple Cash and their own Apple Account balance, and the family payer\'s card is what gets charged for shared purchases - not their balance or their Cash.\n\nIgnoring the balance on a refund that "did not arrive". If you paid with Apple Cash and the refund went to Apple Account balance because of an appeasement credit, your bank statement will never show a return. Check account.apple.com under Payment & Shipping for the balance line before assuming the refund failed.',
+      },
+    ],
+    faqHeading: 'Questions I see a lot',
+    faqItems: [
+      {
+        q: 'Can I move Apple Cash to my Apple Account balance?',
+        a: 'Yes, indirectly: any purchase you make with Apple Cash on the App Store funds your balance side of things in the sense that you have used Apple Cash to buy a digital item. But there is no "transfer Apple Cash to balance" button, and you cannot top up your Apple Account balance with Apple Cash directly. The reverse - balance to Apple Cash - is impossible.',
+      },
+      {
+        q: 'Can I move my Apple Account balance to Apple Cash?',
+        a: 'No. There is no official way. Apple Account balance is store credit denominated in your storefront\'s currency; Apple Cash is a Green Dot Bank account in USD. They do not connect in that direction at any level - support cannot do it, the API does not allow it, and any third-party service claiming to do this is a scam designed to steal your Apple ID password.',
+      },
+      {
+        q: 'My refund says it went to "Apple Account" but I paid with Apple Cash - where is the money?',
+        a: 'Apple\'s appeasement credits (issued by support agents for service issues) always land as Apple Account balance regardless of original funding source. You will see it on account.apple.com under Payment & Shipping. If this was supposed to be a regular refund (not an appeasement), call Apple iTunes Store support and ask them to reroute it - they can sometimes redo the refund to the original Apple Cash card.',
+      },
+      {
+        q: 'Is Apple Cash available outside the US?',
+        a: 'No. Apple Cash is US-only, requires a US Apple ID, US billing address, and SSN verification. Equivalents exist in other regions (Wero in EU, various local schemes), but they are not branded as Apple Cash and are not interchangeable. Apple Account balance, by contrast, exists in every country Apple sells media in.',
+      },
+      {
+        q: 'Does Family Sharing share Apple Cash or Apple Account balance?',
+        a: 'Neither. Each family member keeps their own Apple Cash and their own Apple Account balance. Family Sharing shares purchases - the family payer\'s card is charged for everyone\'s shared App Store buys and subscriptions - but it does not share the credit pools themselves.',
+      },
+    ],
+    relatedHeading: 'Related guides',
+    related: [
+      { label: 'Removing a leftover Apple ID balance', href: '/remove-leftover-apple-id-balance/' },
+      { label: 'The Family Sharing balance myth', href: '/family-sharing-apple-balance-myth/' },
+      { label: 'Combined payment: balance plus card', href: '/blog/apple-account-balance-plus-card-combined-payment/' },
+      { label: 'Apple Account balance glossary', href: '/blog/apple-account-balance-glossary/' },
+    ],
+    keywords: [
+      'apple cash vs apple account balance',
+      'difference apple cash apple id balance',
+      'transfer apple cash to apple account',
+      'apple refund destination',
+      'apple appeasement credit',
+    ],
+  },
+  ru: {
+    title: 'Apple Cash и баланс Apple Account - в чём реальная разница',
+    description:
+      'Apple Cash и баланс Apple Account выглядят похоже, но это совершенно разные вещи. Рассказываем, что каждый из них умеет, куда уходят возвраты и почему переводы между ними невозможны.',
+    eyebrow: 'Деньги на Apple ID',
+    storyLabel: 'Если коротко',
+    tldr:
+      'Apple Cash - это аналог дебетовой карты в Wallet, который можно вывести на банковский счёт; работает только в США. Баланс Apple Account - это кредит магазина для покупки цифровых товаров в App Store, iTunes и подписках Apple; есть везде, где Apple продаёт медиа, и обналичить его нельзя. Возвраты всегда уходят туда, откуда вы платили, - и никогда не переходят между этими двумя пулами.',
+    bcHome: 'Главная',
+    bcBlog: 'Блог',
+    sections: [
+      {
+        h: 'Два продукта, очень похожие названия и совершенно разные правила',
+        p: 'Если вы видите "Apple Cash" и "баланс Apple Account" на одном экране и думаете, что это один и тот же кошелёк, - вы не одиноки. Apple специально показывает их рядом: оба отображаются на account.apple.com и оба могут оплачивать кое-что внутри экосистемы.\n\nНо это не одно и то же. Это два разных финансовых продукта с разными эмитентами, разной географией, разными правилами возвратов и разным набором того, что ими можно оплачивать. Путаница между ними - главная причина застрявших остатков, "не пришедших" возвратов и заблокированных смен страны.\n\nКороткий способ запомнить: Apple Cash - это деньги, баланс Apple Account - кредит магазина. Деньги при желании можно превратить в кредит магазина (купив гифт-карту), кредит магазина в деньги - никогда.',
+      },
+      {
+        h: 'Что такое Apple Cash',
+        p: 'Apple Cash - предоплаченный счёт типа Visa, выпускаемый Green Dot Bank и показываемый в приложении Wallet. Он существует только в США, требует американского платёжного адреса и Apple ID, привязанного к проверенному SSN.\n\nApple Cash можно получить от другого человека в iMessage, отправить тем же способом, расплатиться им там, где принимают Apple Pay, и вывести на американский банковский счёт (мгновенно за 1,5% или бесплатно за 1-3 рабочих дня). Для большинства задач он неотличим от обычной дебетовой карты или текущего счёта.\n\nГлавное по теме: Apple Cash - это полноценные деньги. Банку всё равно, на что вы их тратите. Они ваши, и вы можете вывести их на банк когда захотите.',
+      },
+      {
+        h: 'Что такое баланс Apple Account',
+        p: 'Баланс Apple Account - это кредит магазина, а не деньги. Он оплачивает покупки внутри цифровых витрин Apple: приложения, встроенные покупки, подписки через Apple, фильмы и музыку iTunes, хранилище iCloud+, Apple Books, аренду в Apple TV, Apple Arcade. Существует в каждой стране, где Apple продаёт медиа, не только в США.\n\nОн появляется, когда вы погашаете подарочную карту Apple, получаете подарок в iTunes/App Store по почте, когда Apple возвращает покупку именно на "баланс Apple Account", а не на карту, или когда поддержка начисляет компенсацию за сбой сервиса. Он в валюте страны вашего Apple Account и не переходит между сторами при смене региона - именно поэтому смена страны требует обнулить его заранее.\n\nЧего им сделать нельзя: оплатить технику в Apple Store, оплатить AppleCare на новом устройстве, перевести в Apple Cash, передать на другой аккаунт или вывести наличные через любой официальный путь. Сайты и сервисы, обещающие "обменять баланс Apple на наличные", - это фишинг.',
+      },
+      {
+        h: 'Как возвраты выбирают, куда отправить деньги',
+        p: 'Когда Apple возвращает покупку, направление определяет исходный источник оплаты, а не вы. Правило простое:\n\nЕсли вы платили кредитной или дебетовой картой - возврат уходит на ту же карту.\n\nЕсли платили Apple Cash - возврат идёт на Apple Cash.\n\nЕсли платили балансом Apple Account - возврат возвращается на баланс.\n\nЕсли использовали комбинированную оплату (часть с баланса, часть с карты) - возврат делится пропорционально по обоим источникам.\n\nЕсть одно исключение, которое часто застаёт врасплох: "компенсационный кредит", который иногда выдают агенты поддержки (например, за глючное приложение или сбой сервиса), всегда падает на баланс Apple Account независимо от того, чем вы платили. Поэтому покупка, оплаченная через Apple Cash, может вернуться в виде неналичного кредита магазина.',
+      },
+      {
+        h: 'Ошибки, которые я постоянно вижу',
+        p: 'Несколько паттернов, которые особенно важны перед сменой страны или любой крупной операцией на Apple ID.\n\nСчитать Apple Cash частью баланса Apple Account при смене страны. Это не так. Apple блокирует смену региона только когда ненулевой баланс Apple Account; Apple Cash для смены страны не имеет значения - это отдельный счёт в Green Dot, который остаётся в США.\n\nПытаться "перевести" баланс в Apple Cash. Такого пути нет. Максимум, что вы можете, - потратить баланс на цифровую покупку или попросить поддержку обнулить небольшой остаток (часто меньше доллара) на их усмотрение.\n\nЖдать, что семейный доступ поделит один из этих пулов. Не делит ни тот, ни другой. Семейный доступ делит покупки (приложения, подписки через Apple, хранилище iCloud+). У каждого участника свой Apple Cash и свой баланс Apple Account, а карту "плательщика семьи" списывают за общие покупки - не его баланс и не его Cash.\n\nИгнорировать баланс при "не пришедшем" возврате. Если вы платили Apple Cash, а возврат прилетел на баланс из-за компенсационной природы кредита, на выписке банка вы его не увидите никогда. Прежде чем считать возврат потерянным, проверьте account.apple.com в разделе "Способ оплаты и доставка".',
+      },
+    ],
+    faqHeading: 'Частые вопросы',
+    faqItems: [
+      {
+        q: 'Можно ли перевести Apple Cash в баланс Apple Account?',
+        a: 'Только косвенно: если оплатить покупку в App Store через Apple Cash, вы фактически использовали Apple Cash на цифровой товар. Но отдельной кнопки "перевести Apple Cash в баланс" нет, и пополнить баланс Apple Account напрямую через Apple Cash тоже нельзя. В обратную сторону - баланс в Apple Cash - перевод невозможен в принципе.',
+      },
+      {
+        q: 'Можно ли перевести баланс Apple Account в Apple Cash?',
+        a: 'Нет. Официального способа нет. Баланс Apple Account - это кредит магазина в валюте вашей страны; Apple Cash - счёт в Green Dot Bank в долларах. Они не связаны в этом направлении ни на одном уровне: поддержка не может, API не позволяет, а любые сторонние сервисы с подобным предложением - мошенники, охотящиеся за паролем Apple ID.',
+      },
+      {
+        q: 'Возврат пришёл "на Apple Account", хотя я платил через Apple Cash. Где деньги?',
+        a: 'Компенсационные кредиты Apple (выдаются агентами поддержки за сбои сервиса) всегда уходят на баланс Apple Account независимо от исходной оплаты. Их видно на account.apple.com в разделе "Способ оплаты и доставка". Если это должен был быть обычный возврат, позвоните в iTunes Store Support и попросите переоформить - иногда они могут вернуть деньги на исходный Apple Cash.',
+      },
+      {
+        q: 'Apple Cash работает за пределами США?',
+        a: 'Нет. Apple Cash доступен только в США, требует американского Apple ID, американского адреса и проверки SSN. В других регионах есть аналоги (Wero в ЕС, локальные схемы), но они не называются Apple Cash и не взаимозаменяемы. Баланс Apple Account, наоборот, есть в каждой стране, где Apple продаёт медиа.',
+      },
+      {
+        q: 'Делит ли семейный доступ Apple Cash или баланс Apple Account?',
+        a: 'Не делит ни тот, ни другой. У каждого участника семьи свой Apple Cash и свой баланс Apple Account. Семейный доступ делит покупки - карту плательщика семьи списывают за общие покупки в App Store и подписки, - но сами пулы кредита не делятся.',
+      },
+    ],
+    relatedHeading: 'Связанные гайды',
+    related: [
+      { label: 'Как убрать остаток баланса Apple ID', href: '/remove-leftover-apple-id-balance/' },
+      { label: 'Миф о балансе и семейном доступе', href: '/family-sharing-apple-balance-myth/' },
+      { label: 'Комбинированная оплата: баланс плюс карта', href: '/blog/apple-account-balance-plus-card-combined-payment/' },
+      { label: 'Глоссарий баланса Apple Account', href: '/blog/apple-account-balance-glossary/' },
+    ],
+    keywords: [
+      'apple cash и баланс apple account разница',
+      'перевести apple cash в баланс',
+      'apple cash отличие от баланса',
+      'куда приходит возврат apple',
+      'компенсация apple на баланс',
+    ],
+  },
+};
+
+const c = COPY[lang];
+const midIndex = Math.floor(c.sections.length / 2);
+---
+
+<PageLayout
+  title={`${c.title} - Zero Balance`}
+  description={c.description}
+  {lang}
+  {path}
+  locales={[...PAGE_LOCALES]}
+  schema={[
+    articleSchema({ title: c.title, description: c.description, slug, lang, datePublished: published }),
+    faqSchema(c.faqItems),
+    breadcrumbSchema([
+      { name: c.bcHome, url: `${DOMAIN}/${lang}/` },
+      { name: c.bcBlog, url: `${DOMAIN}/${lang}/blog/` },
+      { name: c.title, url: `${DOMAIN}${path}` },
+    ]),
+  ]}
+  ogType="article"
+  publishedTime={published}
+  modifiedTime={published}
+  keywords={[...c.keywords, ...t.keywords.support]}
+>
+  <PageHeader eyebrow={c.eyebrow} title={c.title} description={c.description} />
+
+  <Section>
+    <Container>
+      <Reveal class="mx-auto max-w-3xl">
+        <div class="rounded-2xl border border-[var(--border)] bg-[var(--brand-soft)]/40 p-6 md:p-8">
+          <p class="text-sm font-semibold tracking-wide text-[var(--brand-strong)] uppercase">{c.storyLabel}</p>
+          <p class="mt-3 text-lg leading-relaxed text-[var(--fg)]">{c.tldr}</p>
+          <div class="mt-6 flex">
+            <AppStoreButton label={t.cta.appStore} ct="blog-cash-vs-balance-tldr" />
+          </div>
+        </div>
+      </Reveal>
+
+      <div class="mx-auto mt-10 max-w-3xl prose-zb">
+        {
+          c.sections.map((s, i) => (
+            <Reveal delay={i * 40}>
+              <h2>{s.h}</h2>
+              {s.p.split('\n\n').map((para) => (
+                <p>{para}</p>
+              ))}
+              {i === midIndex && (
+                <div class="not-prose my-6 flex">
+                  <AppStoreButton label={t.cta.appStore} ct="blog-cash-vs-balance-mid" />
+                </div>
+              )}
+            </Reveal>
+          ))
+        }
+
+        <Reveal>
+          <h2>{c.faqHeading}</h2>
+        </Reveal>
+        <Reveal>
+          <FAQ items={c.faqItems} />
+        </Reveal>
+
+        <Reveal>
+          <h2>{c.relatedHeading}</h2>
+          <ul>
+            {c.related.map((r) => (
+              <li>
+                <a href={`/${lang}${r.href}`}>{r.label}</a>
+              </li>
+            ))}
+          </ul>
+        </Reveal>
+      </div>
+    </Container>
+  </Section>
+
+  <FinalCta {lang} />
+</PageLayout>

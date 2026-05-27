@@ -1,0 +1,312 @@
+---
+import PageLayout from '../../../layouts/PageLayout.astro';
+import PageHeader from '../../../components/PageHeader.astro';
+import Container from '../../../components/Container.astro';
+import Section from '../../../components/Section.astro';
+import FAQ from '../../../components/FAQ.astro';
+import Reveal from '../../../components/Reveal.astro';
+import FinalCta from '../../../components/FinalCta.astro';
+import AppStoreButton from '../../../components/AppStoreButton.astro';
+import { getDict, type Locale } from '../../../i18n';
+import { articleSchema, faqSchema, breadcrumbSchema, howToSchema } from '../../../lib/schema';
+import { DOMAIN } from '../../../lib/siteConfig';
+
+const PAGE_LOCALES = ['en', 'ru'] as const;
+type PageLocale = (typeof PAGE_LOCALES)[number];
+
+export function getStaticPaths() {
+  return (['en', 'ru'] as const).map((lang) => ({ params: { lang } }));
+}
+
+const lang = Astro.params.lang as PageLocale;
+const t = getDict(lang as Locale);
+const slug = 'pre-orders-blocking-apple-id-country-change';
+const path = `/${lang}/blog/${slug}/`;
+const published = '2026-05-27T00:00:00Z';
+
+interface Copy {
+  title: string;
+  description: string;
+  eyebrow: string;
+  storyLabel: string;
+  tldr: string;
+  bcHome: string;
+  bcBlog: string;
+  sections: { h: string; p: string }[];
+  howToName: string;
+  steps: { title: string; body: string }[];
+  faqHeading: string;
+  faqItems: { q: string; a: string }[];
+  relatedHeading: string;
+  related: { label: string; href: string }[];
+  keywords: string[];
+}
+
+const COPY: Record<PageLocale, Copy> = {
+  en: {
+    title: 'Pre-orders are blocking my Apple ID country change - how to find and cancel them',
+    description:
+      'Apple will not switch your App Store country while you have an active pre-order. Here is exactly where pre-orders hide, how to cancel them, and the propagation delay you need to wait out before retrying.',
+    eyebrow: 'Country change',
+    storyLabel: 'The short version',
+    tldr:
+      'Apple will not switch your App Store country while you have any active pre-order, because the future charge cannot cross regions. Find them at Settings > [your name] > Media & Purchases > View Account > Subscriptions, or on the web at reportaproblem.apple.com under "Pre-Orders". Cancel each one, wait roughly 24 hours for Apple\'s region-change checker to refresh, then retry the country change.',
+    bcHome: 'Home',
+    bcBlog: 'Blog',
+    sections: [
+      {
+        h: 'Why a pre-order is a country-change blocker',
+        p: 'A pre-order is a commitment to a future charge in your current storefront\'s currency. When Apple changes your App Store country, the storefront flips and the currency changes - which means the pre-order has no valid home anymore. Rather than convert it, refund it, or cancel it automatically, Apple\'s region-change flow refuses to start until every pre-order is cleared.\n\nThis catches people out because pre-orders are easy to forget. An album from a year ago that never released. A pre-ordered game from launch hype that you have not thought about in months. An iCloud+ plan upgrade scheduled to start next renewal. All of them count, and all of them block.\n\nThe error message Apple shows is usually something vague like "Cannot change country at this time" or "Please resolve all outstanding items first". It rarely names the pre-order specifically, which is why so many people end up cancelling subscriptions and clearing balance, only to still be stuck.',
+      },
+      {
+        h: 'Where pre-orders actually live in the UI',
+        p: 'Apple buries pre-orders in two places, and you usually have to check both.\n\nOn iPhone: Settings > [your name] > Media & Purchases > View Account (authenticate). Scroll past Subscriptions and you will see "Pre-Orders" if any are active. If the section does not appear at all, you have no active pre-orders on this account.\n\nOn the web: account.apple.com > Sign In > scroll to Subscriptions, but the more reliable view is reportaproblem.apple.com. Sign in there, change the filter at the top to "Apps" or "All", and you will see a list with status tags. Anything tagged "Pre-Order" with a future expected delivery date is what is blocking you.\n\nIn iTunes on Windows or in macOS Music/TV: Account > View My Account > scroll to "Settings" > "Manage Pre-Orders". This view is older but sometimes shows pre-orders the iPhone screen missed.\n\nIf you are sure you have no pre-orders but the country change still fails on "outstanding items", check Family Sharing - a pre-order on a member\'s account that uses your card as the family payer can count against you.',
+      },
+      {
+        h: 'How to actually cancel one',
+        p: 'On iPhone the flow is: Settings > [your name] > Media & Purchases > View Account > Pre-Orders > tap the item > Cancel Pre-Order. Apple shows a confirmation; tap again to confirm. The item disappears from the list immediately. No money was charged (pre-orders only charge at release), so there is nothing to refund.\n\nOn the web: reportaproblem.apple.com > Pre-Orders section > Report a problem on the pre-ordered item > pick "Cancel pre-order" as the reason. This is slower (sometimes 30 minutes to clear) but works for items that the iPhone UI refuses to cancel.\n\nFor pre-orders that look stuck - cancel button does not respond, or the item reappears after cancellation - call Apple iTunes Store support directly. They can force-clear pre-orders that the user-facing UI cannot.',
+      },
+      {
+        h: 'The hidden case: pre-order on a family member',
+        p: 'If you are the Family Sharing organizer (the family payer), any pre-order placed by a family member is billed to your card and counts as your outstanding commitment. Apple\'s country-change check looks at the organizer\'s aggregate financial state, not just your own purchases.\n\nThis is the case most people miss. They cancel everything on their own account, run the change, and get the same generic blocker. Then their teenager remembers a game pre-order from three months ago.\n\nTo audit: have each family member open Settings > Media & Purchases > View Account > Pre-Orders on their own device, then report any active ones. Alternatively, the organizer can go to Settings > Family > [member name] to see purchase history, but pre-orders specifically only show on the member\'s own device. There is no single screen that lists every family pre-order in one place.\n\nIf a family member is uncontactable (an estranged teen, an old shared-iCloud kid account), you may have to call Apple support to confirm and clear from their end.',
+      },
+      {
+        h: 'After cancellation - the propagation delay nobody warns you about',
+        p: 'Even after you have cancelled every pre-order, the region-change check does not refresh instantly. Apple\'s backend takes roughly 12 to 24 hours to reconcile the cancellation across the systems that gate the country switch.\n\nYou will see this as "I cancelled everything, retried immediately, and got the same error". The pre-order list shows empty, your subscriptions are clean, your balance is zero, but the change still fails. The cause is just propagation lag.\n\nThe workaround is to wait. Cancel late in the day, retry the next morning. If 24 hours later it still fails, that is your signal that there is another blocker - a family member\'s pre-order, a pending refund, an active subscription you did not catch, or a non-zero balance. Run through the country-change checklist again, because at that point pre-orders are no longer the cause.',
+      },
+    ],
+    howToName: 'How to cancel pre-orders blocking an Apple ID country change',
+    steps: [
+      {
+        title: 'Open your Apple ID account',
+        body: 'On iPhone: Settings > [your name] > Media & Purchases > View Account. On the web: reportaproblem.apple.com.',
+      },
+      {
+        title: 'Find the Pre-Orders section',
+        body: 'Scroll past Subscriptions. If "Pre-Orders" is not listed, you have none on this account.',
+      },
+      {
+        title: 'Cancel each pre-order',
+        body: 'Tap the item, then Cancel Pre-Order, then confirm. Repeat for every entry.',
+      },
+      {
+        title: 'Audit family members if you are the organizer',
+        body: 'Ask each family member to check their own Pre-Orders screen and cancel anything active.',
+      },
+      {
+        title: 'Wait 12-24 hours, then retry the country change',
+        body: 'Apple\'s region-change backend takes up to a day to reflect the cancellations.',
+      },
+    ],
+    faqHeading: 'Questions I see a lot',
+    faqItems: [
+      {
+        q: 'I cancelled my pre-order but it still appears in the list - what now?',
+        a: 'Force-quit Settings (or sign out and back in on the web), then check again. If it still shows after 30 minutes, the cancellation hit a snag on Apple\'s side. Contact iTunes Store support and ask them to force-clear it - they have a tool the user UI does not expose.',
+      },
+      {
+        q: 'Does cancelling a pre-order refund me?',
+        a: 'There is nothing to refund. Pre-orders only charge at release, not at the time of pre-ordering. The exception is an album that has already been partially delivered (some tracks released early); in that case the partial cost is refunded automatically.',
+      },
+      {
+        q: 'Will the pre-order be available again in the new country?',
+        a: 'Sometimes. App and game pre-orders are usually region-bound and may not appear at all in another storefront. Album pre-orders generally do reappear in most regions. You will have to re-pre-order in the new country if you still want it.',
+      },
+      {
+        q: 'I cancelled everything but the country change still fails. What did I miss?',
+        a: 'The four other common blockers: non-zero Apple Account balance, active subscription, pending refund, and being a Family Sharing organizer with active member purchases. Work through the country-change checklist; one of these is almost always the actual cause.',
+      },
+      {
+        q: 'Can I keep a pre-order across a country change?',
+        a: 'No. Apple does not transfer pre-orders between storefronts. You must cancel before the change and re-pre-order in the new country if available.',
+      },
+    ],
+    relatedHeading: 'Related guides',
+    related: [
+      { label: 'Apple ID country change checklist', href: '/blog/apple-id-country-change-checklist/' },
+      { label: 'Subscriptions after a country change', href: '/blog/subscriptions-after-apple-id-country-change/' },
+      { label: 'Forfeiting balance to change country', href: '/blog/forfeit-balance-to-change-apple-id-country/' },
+      { label: 'Changing your Apple ID country with a balance', href: '/change-apple-id-country-with-balance/' },
+    ],
+    keywords: [
+      'pre-order blocking apple id country change',
+      'cancel apple pre-order',
+      'apple id region change pre-order',
+      'pre-orders apple account',
+      'cannot change country apple id pre-order',
+    ],
+  },
+  ru: {
+    title: 'Предзаказы блокируют смену страны Apple ID - где их найти и как отменить',
+    description:
+      'Apple не даёт сменить страну App Store, пока есть активный предзаказ. Рассказываем, где предзаказы прячутся, как их отменить и почему после отмены придётся подождать сутки.',
+    eyebrow: 'Смена страны',
+    storyLabel: 'Если коротко',
+    tldr:
+      'Apple не позволяет сменить страну App Store, пока у вас есть активный предзаказ - будущее списание не может переехать между регионами. Ищите предзаказы в Настройки > [ваше имя] > Медиаматериалы и покупки > Просмотр > Подписки, либо на reportaproblem.apple.com в разделе "Предзаказы". Отмените все, подождите примерно сутки, пока бэкенд Apple обновит проверку, и повторите смену страны.',
+    bcHome: 'Главная',
+    bcBlog: 'Блог',
+    sections: [
+      {
+        h: 'Почему предзаказ блокирует смену страны',
+        p: 'Предзаказ - это обязательство по будущему списанию в валюте вашей текущей витрины. Когда Apple меняет страну App Store, витрина и валюта меняются, а у предзаказа больше нет валидного "дома". Apple не конвертирует его, не возвращает деньги и не отменяет автоматически - вместо этого процесс смены региона просто отказывается стартовать, пока все предзаказы не убраны.\n\nЛюди на этом застревают, потому что предзаказы легко забыть. Альбом годовой давности, который так и не вышел. Игра по предзаказу, о которой вы не вспоминали месяцами. Запланированное повышение тарифа iCloud+ на следующий цикл. Каждый из них считается и каждый блокирует.\n\nСообщение об ошибке у Apple обычно расплывчатое - "Сейчас нельзя сменить страну" или "Сначала завершите все операции". Конкретный предзаказ оно почти никогда не называет, поэтому многие отменяют подписки, обнуляют баланс и всё равно остаются заблокированными.',
+      },
+      {
+        h: 'Где предзаказы реально живут в интерфейсе',
+        p: 'Apple прячет предзаказы в двух местах, и проверить обычно надо оба.\n\nНа iPhone: Настройки > [ваше имя] > Медиаматериалы и покупки > Просмотр (подтвердите вход). Прокрутите ниже Подписок, и вы увидите "Предзаказы", если что-то активно. Если такого раздела нет, активных предзаказов на этом аккаунте нет.\n\nВ вебе: account.apple.com > войдите > пролистайте до Подписок, но удобнее смотреть на reportaproblem.apple.com. После входа выберите вверху фильтр "Приложения" или "Все" - увидите список со статусами. Всё, что отмечено как "Предзаказ" с будущей датой выхода, и есть то, что вас блокирует.\n\nВ iTunes на Windows или в Music/TV на macOS: Учётная запись > Просмотреть учётную запись > раздел "Настройки" > "Управление предзаказами". Этот экран старее, но иногда показывает предзаказы, которых нет на iPhone.\n\nЕсли вы уверены, что предзаказов нет, а смена страны всё равно падает на "незавершённых операциях", проверьте семейный доступ - предзаказ участника, оплата которого идёт с вашей карты как карты семьи, тоже учитывается.',
+      },
+      {
+        h: 'Как именно отменить предзаказ',
+        p: 'На iPhone путь такой: Настройки > [ваше имя] > Медиаматериалы и покупки > Просмотр > Предзаказы > выбрать пункт > Отменить предзаказ. Apple покажет подтверждение; нажмите ещё раз. Пункт сразу пропадает из списка. Деньги не списываются (предзаказы списываются только в момент релиза), поэтому возвращать нечего.\n\nВ вебе: reportaproblem.apple.com > раздел "Предзаказы" > Сообщить о проблеме по нужному пункту > выберите "Отменить предзаказ". Это медленнее (иногда до 30 минут), но работает для случаев, когда iPhone отказывается отменять.\n\nЕсли предзаказ "застрял" - кнопка отмены не реагирует или пункт возвращается после отмены - звоните напрямую в iTunes Store Support. У них есть инструмент принудительной отмены, которого нет в пользовательском интерфейсе.',
+      },
+      {
+        h: 'Скрытый случай: предзаказ у члена семьи',
+        p: 'Если вы - организатор семейного доступа (плательщик семьи), любой предзаказ, оформленный участником, списывается с вашей карты и засчитывается как ваше незавершённое обязательство. Проверка смены страны смотрит на совокупное финансовое состояние организатора, а не только на ваши собственные покупки.\n\nИменно этот случай чаще всего пропускают. Отменили всё своё, пытаются сменить страну, получают то же расплывчатое сообщение. А потом подросток вспоминает, что три месяца назад заказал игру.\n\nЧтобы проверить: пусть каждый член семьи у себя откроет Настройки > Медиаматериалы и покупки > Просмотр > Предзаказы и расскажет, что там активно. Организатор может зайти в Настройки > Семья > [имя участника] и посмотреть историю покупок, но конкретно предзаказы видны только на устройстве самого участника. Единого экрана со всеми предзаказами семьи у Apple нет.\n\nЕсли с участником нет связи (давно отбившийся подросток, старый детский iCloud-аккаунт), может понадобиться звонок в поддержку Apple, чтобы они проверили и отменили со своей стороны.',
+      },
+      {
+        h: 'Задержка после отмены, о которой никто не предупреждает',
+        p: 'Даже после отмены всех предзаказов проверка смены региона обновляется не мгновенно. Бэкенд Apple примерно 12-24 часа сверяет отмену со всеми системами, которые контролируют переключение страны.\n\nЭто выглядит как "я всё отменил, тут же попробовал ещё раз - та же ошибка". Список предзаказов пуст, подписки чистые, баланс в нуле, а смена страны всё ещё падает. Причина - просто задержка распространения.\n\nСпасает только ожидание. Отмените вечером, попробуйте утром. Если через сутки всё ещё не выходит - значит, есть другая причина: предзаказ члена семьи, незавершённый возврат, активная подписка, которую вы упустили, или ненулевой баланс. Пройдитесь по чек-листу смены страны заново - на этом этапе предзаказы уже не виноваты.',
+      },
+    ],
+    howToName: 'Как отменить предзаказы, блокирующие смену страны Apple ID',
+    steps: [
+      {
+        title: 'Откройте аккаунт Apple ID',
+        body: 'На iPhone: Настройки > [ваше имя] > Медиаматериалы и покупки > Просмотр. В вебе: reportaproblem.apple.com.',
+      },
+      {
+        title: 'Найдите раздел "Предзаказы"',
+        body: 'Прокрутите ниже Подписок. Если раздел "Предзаказы" не показан, на этом аккаунте их нет.',
+      },
+      {
+        title: 'Отмените каждый предзаказ',
+        body: 'Нажмите пункт, затем "Отменить предзаказ" и подтвердите. Повторите для каждого.',
+      },
+      {
+        title: 'Проверьте членов семьи, если вы организатор',
+        body: 'Попросите каждого участника открыть у себя экран "Предзаказы" и отменить всё активное.',
+      },
+      {
+        title: 'Подождите 12-24 часа и повторите смену страны',
+        body: 'Бэкенду Apple нужно до суток, чтобы учесть отмены в проверке региона.',
+      },
+    ],
+    faqHeading: 'Частые вопросы',
+    faqItems: [
+      {
+        q: 'Отменил предзаказ, но он всё ещё в списке - что делать?',
+        a: 'Завершите Настройки принудительно (или выйдите и снова войдите на сайте) и проверьте ещё раз. Если через 30 минут предзаказ остаётся, значит отмена застряла на стороне Apple. Свяжитесь с iTunes Store Support и попросите принудительно убрать - у них есть инструмент, который пользователю недоступен.',
+      },
+      {
+        q: 'Возвращаются ли деньги при отмене предзаказа?',
+        a: 'Возвращать нечего: предзаказы списываются только в момент выхода, а не в момент заказа. Исключение - альбом, у которого часть треков уже вышла; в этом случае частичная стоимость возвращается автоматически.',
+      },
+      {
+        q: 'Появится ли предзаказ в новой стране?',
+        a: 'Иногда. Предзаказы приложений и игр чаще привязаны к региону и могут не показаться вообще на другой витрине. Альбомные предзаказы обычно появляются в большинстве регионов. Если он вам всё ещё нужен, придётся переоформить заново в новой стране.',
+      },
+      {
+        q: 'Я всё отменил, но смена страны всё равно не идёт. Что я упустил?',
+        a: 'Четыре других типичных блокера: ненулевой баланс Apple Account, активная подписка, незавершённый возврат и роль организатора семейного доступа с активными покупками участников. Пройдитесь по чек-листу смены страны - реальная причина почти всегда одна из этих.',
+      },
+      {
+        q: 'Можно ли сохранить предзаказ при смене страны?',
+        a: 'Нет. Apple не переносит предзаказы между витринами. Нужно отменить перед сменой и при необходимости переоформить в новой стране.',
+      },
+    ],
+    relatedHeading: 'Связанные гайды',
+    related: [
+      { label: 'Чек-лист смены страны Apple ID', href: '/blog/apple-id-country-change-checklist/' },
+      { label: 'Подписки при смене страны', href: '/blog/subscriptions-after-apple-id-country-change/' },
+      { label: 'Когда Apple предлагает "потерять" баланс', href: '/blog/forfeit-balance-to-change-apple-id-country/' },
+      { label: 'Смена страны Apple ID с балансом', href: '/change-apple-id-country-with-balance/' },
+    ],
+    keywords: [
+      'предзаказ блокирует смену страны apple id',
+      'отменить предзаказ apple',
+      'apple id смена региона предзаказ',
+      'предзаказы apple account',
+      'нельзя сменить страну предзаказ',
+    ],
+  },
+};
+
+const c = COPY[lang];
+const midIndex = Math.floor(c.sections.length / 2);
+---
+
+<PageLayout
+  title={`${c.title} - Zero Balance`}
+  description={c.description}
+  {lang}
+  {path}
+  locales={[...PAGE_LOCALES]}
+  schema={[
+    articleSchema({ title: c.title, description: c.description, slug, lang, datePublished: published }),
+    howToSchema({ name: c.howToName, description: c.description, steps: c.steps }),
+    faqSchema(c.faqItems),
+    breadcrumbSchema([
+      { name: c.bcHome, url: `${DOMAIN}/${lang}/` },
+      { name: c.bcBlog, url: `${DOMAIN}/${lang}/blog/` },
+      { name: c.title, url: `${DOMAIN}${path}` },
+    ]),
+  ]}
+  ogType="article"
+  publishedTime={published}
+  modifiedTime={published}
+  keywords={[...c.keywords, ...t.keywords.support]}
+>
+  <PageHeader eyebrow={c.eyebrow} title={c.title} description={c.description} />
+
+  <Section>
+    <Container>
+      <Reveal class="mx-auto max-w-3xl">
+        <div class="rounded-2xl border border-[var(--border)] bg-[var(--brand-soft)]/40 p-6 md:p-8">
+          <p class="text-sm font-semibold tracking-wide text-[var(--brand-strong)] uppercase">{c.storyLabel}</p>
+          <p class="mt-3 text-lg leading-relaxed text-[var(--fg)]">{c.tldr}</p>
+          <div class="mt-6 flex">
+            <AppStoreButton label={t.cta.appStore} ct="blog-preorders-blocker-tldr" />
+          </div>
+        </div>
+      </Reveal>
+
+      <div class="mx-auto mt-10 max-w-3xl prose-zb">
+        {
+          c.sections.map((s, i) => (
+            <Reveal delay={i * 40}>
+              <h2>{s.h}</h2>
+              {s.p.split('\n\n').map((para) => (
+                <p>{para}</p>
+              ))}
+              {i === midIndex && (
+                <div class="not-prose my-6 flex">
+                  <AppStoreButton label={t.cta.appStore} ct="blog-preorders-blocker-mid" />
+                </div>
+              )}
+            </Reveal>
+          ))
+        }
+
+        <Reveal>
+          <h2>{c.faqHeading}</h2>
+        </Reveal>
+        <Reveal>
+          <FAQ items={c.faqItems} />
+        </Reveal>
+
+        <Reveal>
+          <h2>{c.relatedHeading}</h2>
+          <ul>
+            {c.related.map((r) => (
+              <li>
+                <a href={`/${lang}${r.href}`}>{r.label}</a>
+              </li>
+            ))}
+          </ul>
+        </Reveal>
+      </div>
+    </Container>
+  </Section>
+
+  <FinalCta {lang} />
+</PageLayout>

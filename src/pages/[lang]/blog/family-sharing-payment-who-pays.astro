@@ -1,0 +1,263 @@
+---
+import PageLayout from '../../../layouts/PageLayout.astro';
+import PageHeader from '../../../components/PageHeader.astro';
+import Container from '../../../components/Container.astro';
+import Section from '../../../components/Section.astro';
+import FAQ from '../../../components/FAQ.astro';
+import Reveal from '../../../components/Reveal.astro';
+import FinalCta from '../../../components/FinalCta.astro';
+import AppStoreButton from '../../../components/AppStoreButton.astro';
+import { getDict, type Locale } from '../../../i18n';
+import { articleSchema, faqSchema, breadcrumbSchema } from '../../../lib/schema';
+import { DOMAIN } from '../../../lib/siteConfig';
+
+const PAGE_LOCALES = ['en', 'ru'] as const;
+type PageLocale = (typeof PAGE_LOCALES)[number];
+
+export function getStaticPaths() {
+  return (['en', 'ru'] as const).map((lang) => ({ params: { lang } }));
+}
+
+const lang = Astro.params.lang as PageLocale;
+const t = getDict(lang as Locale);
+const slug = 'family-sharing-payment-who-pays';
+const path = `/${lang}/blog/${slug}/`;
+const published = '2026-05-27T00:00:00Z';
+
+interface Copy {
+  title: string;
+  description: string;
+  eyebrow: string;
+  storyLabel: string;
+  tldr: string;
+  bcHome: string;
+  bcBlog: string;
+  sections: { h: string; p: string }[];
+  faqHeading: string;
+  faqItems: { q: string; a: string }[];
+  relatedHeading: string;
+  related: { label: string; href: string }[];
+  keywords: string[];
+}
+
+const COPY: Record<PageLocale, Copy> = {
+  en: {
+    title: 'Family Sharing payment - who pays for what and how to hand off the payer role',
+    description:
+      'The Family Sharing organizer\'s card is charged for every shared purchase the family makes. Here is what is actually shared, what is not, and the only way to stop being the family payer.',
+    eyebrow: 'Family Sharing',
+    storyLabel: 'The short version',
+    tldr:
+      'The Family Sharing organizer\'s card is charged for every shared purchase any family member makes - apps, in-app purchases, subscriptions billed through Apple, iCloud+ upgrades. Individual subscriptions you bought outside Family are not shared and not billed to the organizer. To stop paying for your family, you cannot just remove your card; you have to transfer the organizer role to another adult or disband the family.',
+    bcHome: 'Home',
+    bcBlog: 'Blog',
+    sections: [
+      {
+        h: 'The default rule: the organizer pays for everything purchase-related',
+        p: 'When you set up Family Sharing, the person who created the family is the "organizer" - and the organizer\'s payment method becomes the family\'s payment method by default. Every shared purchase any family member makes is billed to the organizer\'s card, not the member\'s.\n\nThis is the part that surprises people. The family member taps Buy in the App Store, Apple shows the price, the member confirms with Face ID, and the charge appears on the organizer\'s statement. The member does not see this happen on their end; from their perspective the purchase "just worked".\n\nThe organizer also has no veto on the moment of purchase (unless Ask to Buy is on for that member, which only applies to under-18s by default). The card is charged silently. The organizer sees the charge later on account.apple.com under Purchase History, with the family member\'s name attached.',
+      },
+      {
+        h: 'What is shared and what is not',
+        p: 'Family Sharing shares purchases - meaning the app, song, movie, or in-app unlock is accessible to every family member - and routes payment for those purchases to the organizer.\n\nWhat is shared and billed to the organizer:\n\n- App Store app purchases (one-time and subscription)\n- In-app purchases made inside shared apps\n- iTunes movies and music\n- Apple Books\n- Apple subscriptions when shared (Apple One, Apple Music Family, Apple Arcade, Apple TV+, iCloud+ shared storage)\n- App and game pre-orders\n\nWhat is not shared (each member pays their own card):\n\n- Individual-tier Apple subscriptions a member signed up for separately (Apple Music Individual, iCloud+ on a personal plan, an individual Apple One)\n- Third-party subscriptions billed through Stripe or PayPal directly, not through Apple\n- Hardware purchases at Apple Store\n- Apple Cash transfers between family members\n\nWhat is sometimes confusing: a subscription started before joining the family stays on the member\'s own card. Joining a family does not retroactively reroute existing subscriptions to the organizer.',
+      },
+      {
+        h: 'How to hand off the organizer role',
+        p: 'The only way to stop being the family payer is to transfer the organizer role to another adult in the family. There is no "let me keep being organizer but charge someone else\'s card" option. Apple ties the role and the payment method together.\n\nSteps for the current organizer:\n\n1. Open Settings > [your name] > Family.\n2. Make sure the future organizer is already an adult member of the family (not a child account).\n3. Tap your own name at the top.\n4. Tap "Transfer organizer role".\n5. Pick the receiving adult and confirm.\n\nApple sends the receiving adult a notification asking them to accept. Once accepted, the role transfers and their payment method becomes the new family payer card. You can then leave the family if you want to be fully out, or stay as a regular member.\n\nThe pre-conditions: the receiving adult must have a valid payment method on file in the same country as the family, must be 18 or older, and must have been in the family long enough to satisfy Apple\'s minimum (no published threshold, but anecdotally hours rather than days).\n\nIf you remove your card without transferring the role first, Apple disables purchasing for the entire family. Charges in flight may fail; subscriptions enter the retry window. The family does not redirect to a different member\'s card automatically - that is not a feature.',
+      },
+      {
+        h: 'Member-side: paying with your own card despite being in a family',
+        p: 'A family member can choose to pay for their own purchase rather than the organizer, but only by paying with their own Apple Account balance. The rule: if a member has any balance on their account, Apple uses that balance first for any purchase they make, before falling back to the organizer\'s card.\n\nSo if a family member redeems an Apple Gift Card to their own account, that balance funds their own purchases. Only when the balance runs out does Apple charge the organizer\'s card.\n\nWhat does not work: adding your own card under "My personal payment method" inside the family. That field exists in Settings but only applies when you are not making a Family Sharing purchase - which in practice means almost never, because virtually all App Store purchases default to family-shared.\n\nThe one exception is purchases the member explicitly marks as personal during the buy flow - which is a UI Apple does not actually expose on most product types. The cleaner workaround for a member who wants to pay their own way is gift card credit to their own account.',
+      },
+      {
+        h: 'Common confusions and where to actually look',
+        p: 'Three patterns I see repeatedly.\n\n"I removed my card and charges still fail" - removing the card disables purchasing across the family, it does not switch to a backup. Add a new card, or transfer the organizer role to someone else with a valid card.\n\n"I left the family but my old purchases stayed with the organizer" - that is by design. Purchases made while you were in the family belong to the organizer\'s purchase history, not yours. The apps continue to work for you, but the original purchase record stays with whoever paid. You cannot transfer it back to your account.\n\n"My family is paying for a subscription I cancelled" - cancellation only stops auto-renew, not the period already paid for. If the cancellation timing was before the renewal but the renewal happened anyway, that is usually a retry-window issue (see Apple\'s 16-day retry policy). Check account.apple.com > Subscriptions > the specific subscription and look at the renewal date vs the cancellation date.\n\nFor any uncertainty about a specific charge, the best diagnostic is account.apple.com > Purchase History (filtered to the right Apple ID). Each line shows which family member triggered the purchase, which payment method covered it, and any partial-balance split.',
+      },
+    ],
+    faqHeading: 'Questions I see a lot',
+    faqItems: [
+      {
+        q: 'Can two family members split the bill?',
+        a: 'Not directly. The organizer\'s card is what gets charged for shared purchases. Members can offset their own contribution by maintaining Apple Account balance on their own ID (Apple uses member balance first, organizer card as fallback), but there is no native "split this 50/50" feature.',
+      },
+      {
+        q: 'If I leave the family, do my purchases stay mine?',
+        a: 'You keep access to apps purchased on your own Apple ID before joining the family. Purchases made by you while in the family belong to the organizer\'s purchase history; you keep access through Family Sharing only as long as the organizer keeps the family active. If they remove you or disband, the family-shared apps you used will require re-purchase on your own account.',
+      },
+      {
+        q: 'How do I see who paid for a specific charge on my card?',
+        a: 'Go to account.apple.com > Sign In > Purchase History. Each line shows the buyer (the family member whose Apple ID triggered the purchase), the price, and the payment method used. For the family organizer, this is the audit trail of every member\'s charges.',
+      },
+      {
+        q: 'Does Ask to Buy reroute the charge to the kid\'s card?',
+        a: 'No. Ask to Buy gives the organizer veto power before a child\'s purchase completes, but if the organizer approves, the charge still goes to the organizer\'s card. Children typically do not have their own payment methods anyway - Ask to Buy is a permission gate, not a payment redirection.',
+      },
+      {
+        q: 'I removed my card from Apple ID - why are family charges still failing?',
+        a: 'Because you are still the organizer and the family has no valid payment method. Apple will not auto-route to a different member\'s card; the family stays purchase-disabled until you add a new card or transfer the organizer role to another adult who has a valid card.',
+      },
+    ],
+    relatedHeading: 'Related guides',
+    related: [
+      { label: 'The Family Sharing balance myth', href: '/family-sharing-apple-balance-myth/' },
+      { label: 'Transferring Apple Account balance in family', href: '/transfer-apple-account-balance-family-sharing/' },
+      { label: 'Apple Cash vs Apple Account balance', href: '/blog/apple-cash-vs-apple-account-balance/' },
+      { label: 'Apple ID country change checklist', href: '/blog/apple-id-country-change-checklist/' },
+    ],
+    keywords: [
+      'family sharing who pays apple',
+      'family sharing payment method',
+      'transfer family organizer role',
+      'family sharing change payer',
+      'apple family billing',
+    ],
+  },
+  ru: {
+    title: 'Семейный доступ и оплата - кто за что платит и как передать роль организатора',
+    description:
+      'Карта организатора семейного доступа списывается за все общие покупки семьи. Рассказываем, что реально делится, что нет, и единственный способ перестать быть плательщиком семьи.',
+    eyebrow: 'Семейный доступ',
+    storyLabel: 'Если коротко',
+    tldr:
+      'Карту организатора семейного доступа списывают за каждую общую покупку любого члена семьи - приложения, встроенные покупки, подписки через Apple, обновления iCloud+. Индивидуальные подписки, которые кто-то оформил отдельно, не делятся и оплачиваются с его карты. Чтобы перестать быть плательщиком семьи, недостаточно просто удалить карту - надо передать роль организатора другому взрослому или распустить семью.',
+    bcHome: 'Главная',
+    bcBlog: 'Блог',
+    sections: [
+      {
+        h: 'Правило по умолчанию: за всё, связанное с покупками, платит организатор',
+        p: 'Когда вы настраиваете семейный доступ, тот, кто создал семью, становится "организатором" - и платёжный метод организатора по умолчанию становится платёжным методом всей семьи. Каждая общая покупка любого члена семьи списывается с карты организатора, а не с карты этого участника.\n\nЭто часто удивляет. Член семьи нажимает "Купить" в App Store, Apple показывает цену, участник подтверждает по Face ID, а списание появляется на выписке организатора. На стороне участника это никак не отображается; с его точки зрения покупка "просто прошла".\n\nУ организатора в момент покупки тоже нет права вето (если только не включён "Запрос на покупку" для этого участника, а он по умолчанию работает только для детей до 18 лет). Карту списывают молча. Организатор увидит списание позже на account.apple.com в "Истории покупок", где будет указано имя члена семьи.',
+      },
+      {
+        h: 'Что делится, а что нет',
+        p: 'Семейный доступ делит покупки - то есть приложение, песня, фильм или встроенная разблокировка становятся доступны всем членам семьи - и направляет оплату за эти покупки организатору.\n\nЧто делится и списывается с организатора:\n\n- Покупки приложений в App Store (разовые и подписки)\n- Встроенные покупки в общих приложениях\n- Фильмы и музыка iTunes\n- Apple Books\n- Подписки Apple в общем варианте (Apple One, Apple Music для семьи, Apple Arcade, Apple TV+, общее хранилище iCloud+)\n- Предзаказы приложений и игр\n\nЧто не делится (каждый платит со своей карты):\n\n- Индивидуальные подписки Apple, которые участник оформил отдельно (Apple Music индивидуальный, iCloud+ на личном тарифе, индивидуальный Apple One)\n- Сторонние подписки, которые списываются через Stripe или PayPal напрямую, а не через Apple\n- Покупки техники в Apple Store\n- Переводы Apple Cash между членами семьи\n\nЧто иногда путает: подписка, оформленная до вступления в семью, остаётся на карте участника. Вступление в семью не переводит уже существующие подписки на организатора задним числом.',
+      },
+      {
+        h: 'Как передать роль организатора',
+        p: 'Единственный способ перестать быть плательщиком семьи - передать роль организатора другому взрослому в семье. Варианта "остаюсь организатором, но списывайте с чужой карты" нет. Apple жёстко связывает роль и платёжный метод.\n\nШаги для текущего организатора:\n\n1. Откройте Настройки > [ваше имя] > Семья.\n2. Убедитесь, что будущий организатор уже входит в семью как взрослый (не детский аккаунт).\n3. Нажмите на своё имя сверху.\n4. Выберите "Передать роль организатора".\n5. Выберите принимающего взрослого и подтвердите.\n\nApple отправит ему уведомление с просьбой принять роль. После принятия роль передаётся и его платёжный метод становится новой картой семьи. Дальше вы можете либо покинуть семью, либо остаться обычным участником.\n\nПредусловия: принимающий взрослый должен иметь действующий платёжный метод в той же стране, что и семья, быть старше 18 и состоять в семье достаточно времени по правилам Apple (официально срок не опубликован, по опыту - часы, не дни).\n\nЕсли удалить карту, не передав сначала роль, Apple отключит покупки для всей семьи. Текущие списания могут не пройти; подписки уйдут в окно повторных попыток. Apple не переключится автоматически на чью-то другую карту - такой функции нет.',
+      },
+      {
+        h: 'Со стороны участника: как платить своей картой, оставаясь в семье',
+        p: 'Член семьи может оплатить свою покупку сам, а не через организатора, но только своим балансом Apple Account. Правило такое: если у участника есть хоть какой-то баланс, Apple сначала использует его для любой покупки, а уже потом обращается к карте организатора.\n\nТо есть если член семьи погасит подарочную карту Apple на свой счёт, этот баланс будет оплачивать его собственные покупки. И только когда баланс закончится, спишут карту организатора.\n\nЧто не работает: добавить собственную карту в поле "Мой личный способ оплаты" внутри семьи. Такое поле есть в настройках, но применяется только когда вы делаете не семейную покупку - а на практике в App Store почти всё считается семейной покупкой по умолчанию.\n\nЕдинственное исключение - покупки, которые участник явно отмечает как личные в момент оформления; но такой UI Apple показывает не для всех типов товаров. Более чистый способ для члена семьи, который хочет платить сам, - пополнить свой баланс подарочной картой.',
+      },
+      {
+        h: 'Частые путаницы и куда смотреть',
+        p: 'Три паттерна, которые встречаются постоянно.\n\n"Удалил карту - списания всё равно падают". Удаление карты отключает покупки во всей семье, а не переключает на запасную. Добавьте новую карту или передайте роль организатора тому, у кого есть действующая карта.\n\n"Я ушёл из семьи, но мои старые покупки остались у организатора". Так и задумано. Покупки, сделанные пока вы были в семье, числятся в истории организатора, а не в вашей. Приложения у вас продолжают работать, но запись о покупке остаётся у того, кто платил. Перенести её на свой аккаунт нельзя.\n\n"Семья оплачивает подписку, которую я отменил". Отмена прекращает только автопродление, но не уже оплаченный период. Если отмена прошла до продления, а списание всё равно случилось, это, как правило, окно повторных попыток Apple (16 дней по большинству подписок). Проверьте account.apple.com > Подписки > конкретная подписка, сравните дату продления и дату отмены.\n\nЕсли по конкретному списанию неясно, смотрите account.apple.com > Историю покупок под нужным Apple ID. В каждой строке видно, кто из членов семьи инициировал покупку, какой платёжный метод её закрыл и есть ли частичный покрытием с баланса.',
+      },
+    ],
+    faqHeading: 'Частые вопросы',
+    faqItems: [
+      {
+        q: 'Можно ли разделить счёт между двумя членами семьи?',
+        a: 'Напрямую нет. За общие покупки списывают карту организатора. Член семьи может частично "оплачивать своё" через свой баланс Apple Account (Apple сначала использует баланс участника, и только потом карту организатора), но штатной функции "разделить пополам" нет.',
+      },
+      {
+        q: 'Если я уйду из семьи, останутся ли мои покупки моими?',
+        a: 'У вас остаётся доступ к приложениям, купленным на ваш Apple ID до вступления в семью. Покупки, сделанные пока вы были в семье, остаются в истории организатора; вы пользуетесь ими по семейному доступу только пока семья активна. Если организатор вас удалит или распустит семью, для общих приложений придётся покупать заново на свой аккаунт.',
+      },
+      {
+        q: 'Как посмотреть, кто инициировал конкретное списание?',
+        a: 'Зайдите на account.apple.com > войдите > "История покупок". В каждой строке указано, кто из членов семьи сделал покупку, цена и использованный платёжный метод. Для организатора это полная аудиторская выписка по всем участникам.',
+      },
+      {
+        q: 'Перенаправляет ли "Запрос на покупку" списание на карту ребёнка?',
+        a: 'Нет. "Запрос на покупку" даёт организатору право вето на покупку ребёнка, но если организатор подтверждает, списывают всё равно карту организатора. У детей обычно и нет собственного платёжного метода - это контроль доступа, а не перенаправление оплаты.',
+      },
+      {
+        q: 'Я удалил карту из Apple ID - почему семейные списания всё ещё падают?',
+        a: 'Потому что вы остаётесь организатором, а у семьи теперь нет действующего платёжного метода. Apple не переключится автоматически на чью-то другую карту; покупки будут отключены для всей семьи, пока вы не добавите новую карту или не передадите роль организатора другому взрослому с действующей картой.',
+      },
+    ],
+    relatedHeading: 'Связанные гайды',
+    related: [
+      { label: 'Миф о балансе и семейном доступе', href: '/family-sharing-apple-balance-myth/' },
+      { label: 'Перенос баланса Apple Account в семье', href: '/transfer-apple-account-balance-family-sharing/' },
+      { label: 'Apple Cash и баланс Apple Account', href: '/blog/apple-cash-vs-apple-account-balance/' },
+      { label: 'Чек-лист смены страны Apple ID', href: '/blog/apple-id-country-change-checklist/' },
+    ],
+    keywords: [
+      'семейный доступ кто платит',
+      'передать роль организатора apple',
+      'сменить плательщика семьи apple',
+      'семейный доступ оплата',
+      'family sharing организатор карта',
+    ],
+  },
+};
+
+const c = COPY[lang];
+const midIndex = Math.floor(c.sections.length / 2);
+---
+
+<PageLayout
+  title={`${c.title} - Zero Balance`}
+  description={c.description}
+  {lang}
+  {path}
+  locales={[...PAGE_LOCALES]}
+  schema={[
+    articleSchema({ title: c.title, description: c.description, slug, lang, datePublished: published }),
+    faqSchema(c.faqItems),
+    breadcrumbSchema([
+      { name: c.bcHome, url: `${DOMAIN}/${lang}/` },
+      { name: c.bcBlog, url: `${DOMAIN}/${lang}/blog/` },
+      { name: c.title, url: `${DOMAIN}${path}` },
+    ]),
+  ]}
+  ogType="article"
+  publishedTime={published}
+  modifiedTime={published}
+  keywords={[...c.keywords, ...t.keywords.support]}
+>
+  <PageHeader eyebrow={c.eyebrow} title={c.title} description={c.description} />
+
+  <Section>
+    <Container>
+      <Reveal class="mx-auto max-w-3xl">
+        <div class="rounded-2xl border border-[var(--border)] bg-[var(--brand-soft)]/40 p-6 md:p-8">
+          <p class="text-sm font-semibold tracking-wide text-[var(--brand-strong)] uppercase">{c.storyLabel}</p>
+          <p class="mt-3 text-lg leading-relaxed text-[var(--fg)]">{c.tldr}</p>
+          <div class="mt-6 flex">
+            <AppStoreButton label={t.cta.appStore} ct="blog-family-payment-tldr" />
+          </div>
+        </div>
+      </Reveal>
+
+      <div class="mx-auto mt-10 max-w-3xl prose-zb">
+        {
+          c.sections.map((s, i) => (
+            <Reveal delay={i * 40}>
+              <h2>{s.h}</h2>
+              {s.p.split('\n\n').map((para) => (
+                <p>{para}</p>
+              ))}
+              {i === midIndex && (
+                <div class="not-prose my-6 flex">
+                  <AppStoreButton label={t.cta.appStore} ct="blog-family-payment-mid" />
+                </div>
+              )}
+            </Reveal>
+          ))
+        }
+
+        <Reveal>
+          <h2>{c.faqHeading}</h2>
+        </Reveal>
+        <Reveal>
+          <FAQ items={c.faqItems} />
+        </Reveal>
+
+        <Reveal>
+          <h2>{c.relatedHeading}</h2>
+          <ul>
+            {c.related.map((r) => (
+              <li>
+                <a href={`/${lang}${r.href}`}>{r.label}</a>
+              </li>
+            ))}
+          </ul>
+        </Reveal>
+      </div>
+    </Container>
+  </Section>
+
+  <FinalCta {lang} />
+</PageLayout>
