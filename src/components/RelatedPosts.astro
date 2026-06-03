@@ -1,0 +1,58 @@
+---
+import Section from './Section.astro';
+import Container from './Container.astro';
+import Reveal from './Reveal.astro';
+import { relatedPosts, localizedTitle, CATEGORY_LABELS } from '../lib/blogPosts';
+import type { Locale } from '../i18n';
+
+// Category-aware cross-links shown at the foot of a blog post. Renders nothing
+// when there are no other posts in the current locale (e.g. English-fallback
+// renders under non en/ru locales), so it never emits dead links.
+interface Props {
+  slug: string;
+  lang: Locale;
+  limit?: number;
+}
+
+const { slug, lang, limit = 4 } = Astro.props;
+const items = relatedPosts(slug, lang, limit);
+
+const HEADING: Partial<Record<Locale, string>> = {
+  en: 'Related guides',
+  ru: 'Связанные гайды',
+};
+const heading = HEADING[lang] ?? HEADING.en ?? 'Related guides';
+const categoryLabel = (category: (typeof items)[number]['category']) =>
+  CATEGORY_LABELS[category][lang] ?? CATEGORY_LABELS[category].en ?? '';
+---
+
+{
+  items.length > 0 && (
+    <Section variant="surface" bleed>
+      <Container>
+        <Reveal class="mx-auto max-w-3xl">
+          <nav aria-label={heading}>
+            <h2 class="h3">{heading}</h2>
+            <ul class="mt-5 grid gap-3 sm:grid-cols-2">
+              {items.map((post) => (
+                <li>
+                  <a
+                    href={`/${lang}/blog/${post.slug}/`}
+                    class="flex h-full flex-col gap-1.5 rounded-2xl border border-[var(--border)] bg-[var(--bg)] p-4 transition-colors hover:border-[var(--brand)]"
+                  >
+                    <span class="text-xs font-medium tracking-wide text-[var(--muted)] uppercase">
+                      {categoryLabel(post.category)}
+                    </span>
+                    <span class="font-semibold text-pretty text-[var(--fg)]">
+                      {localizedTitle(post, lang)}
+                    </span>
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </nav>
+        </Reveal>
+      </Container>
+    </Section>
+  )
+}

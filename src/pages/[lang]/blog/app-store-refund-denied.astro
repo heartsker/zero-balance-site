@@ -6,13 +6,16 @@ import Section from '../../../components/Section.astro';
 import FAQ from '../../../components/FAQ.astro';
 import Reveal from '../../../components/Reveal.astro';
 import FinalCta from '../../../components/FinalCta.astro';
+import RelatedPosts from '../../../components/RelatedPosts.astro';
 import AppStoreButton from '../../../components/AppStoreButton.astro';
 import { getDict, LOCALES, type Locale } from '../../../i18n';
 import { articleSchema, faqSchema, breadcrumbSchema } from '../../../lib/schema';
 import { DOMAIN } from '../../../lib/siteConfig';
 
 export function getStaticPaths() {
-  return LOCALES.map((lang) => ({ params: { lang } }));
+  // English-only article: never emit the Russian route, so it is excluded from
+  // the RU mirror entirely and the hreflang below claims no Russian alternate.
+  return LOCALES.filter((lang) => lang !== 'ru').map((lang) => ({ params: { lang } }));
 }
 
 const lang = Astro.params.lang as Locale;
@@ -80,6 +83,7 @@ const copy = {
   description={copy.description}
   {lang}
   {path}
+  locales={LOCALES.filter((l) => l !== 'ru')}
   schema={[
     articleSchema({ title: copy.title, description: copy.description, slug, lang, datePublished: published }),
     faqSchema(copy.faqItems),
@@ -141,6 +145,8 @@ const copy = {
       </div>
     </Container>
   </Section>
+
+  <RelatedPosts slug={slug} {lang} />
 
   <FinalCta {lang} />
 </PageLayout>

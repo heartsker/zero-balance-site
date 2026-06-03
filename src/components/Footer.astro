@@ -19,6 +19,10 @@ const productLinks = [
   { label: t.nav.home, href: localizedPath(lang, '') },
   { label: t.nav.faq, href: localizedPath(lang, 'faq') },
   { label: t.nav.help, href: localizedPath(lang, 'help') },
+  // The blog ships only in en + ru, so link it only where the index exists.
+  ...(lang === 'en' || lang === 'ru'
+    ? [{ label: lang === 'ru' ? 'Блог' : 'Blog', href: localizedPath(lang, 'blog') }]
+    : []),
 ];
 
 const helpLinks = [
