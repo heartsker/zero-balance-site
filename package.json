@@ -16,7 +16,8 @@
     "astro": "astro",
     "indexnow": "node scripts/indexnow.mjs",
     "indexnow:all": "node scripts/indexnow.mjs --all",
-    "indexnow:dry": "node scripts/indexnow.mjs --dry-run"
+    "indexnow:dry": "node scripts/indexnow.mjs --dry-run",
+    "indexnow:ru": "node scripts/indexnow.mjs --host=zerobalanceapp.ru --dist=dist-ru"
   },
   "dependencies": {
     "@astrojs/check": "^0.9.4",

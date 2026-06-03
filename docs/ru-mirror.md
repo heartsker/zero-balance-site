@@ -71,7 +71,12 @@ Cross-build details handled in code:
    # optional, defaults to https://storage.yandexcloud.net
    # YANDEX_S3_ENDPOINT=https://storage.yandexcloud.net
    ```
-5. **Search.** Submit the `.ru` sitemap to Yandex Webmaster.
+5. **Search (Yandex Webmaster).** At [webmaster.yandex.ru](https://webmaster.yandex.ru):
+   add `zerobalanceapp.ru`, verify ownership (DNS TXT or the HTML-file method), then
+   **Indexing -> Sitemap files** -> add `https://zerobalanceapp.ru/sitemap-index.xml`.
+   Under **Indexing -> IndexNow**, Yandex auto-detects the key from the `*.txt` file at
+   the site root (shipped from `public/`), so the per-deploy pings (below) show up there.
+   The manual "recrawl" button is quota-limited; IndexNow is the uncapped path.
 
 ## Deploying
 
@@ -81,7 +86,13 @@ npm run deploy:yandex       # build ru-only, prune, sync to the Yandex bucket
 npm run deploy:all          # both, sequentially
 ```
 
-All three are thin wrappers over `scripts/deploy.mjs`.
+All three are thin wrappers over `scripts/deploy.mjs`. Each lane ends with a
+best-effort **IndexNow** ping (`scripts/indexnow.mjs`) that submits the URLs whose
+content hash changed in that build - `zerobalanceapp.ru` from `dist-ru/` for the
+Yandex lane, `zerobalance.pro` from `dist/` for the Cloudflare lane. IndexNow is a
+shared protocol, so one ping reaches Yandex (and Bing, Seznam, ...). If a ping is
+missed (e.g. transient network), re-run `npm run indexnow:ru` or `npm run indexnow`;
+the ping never fails the deploy since the build has already shipped by then.
 
 ## Verify
 

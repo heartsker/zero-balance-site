@@ -2,28 +2,44 @@
 // Submits new/changed URLs to IndexNow (Bing, Yandex, ...). See plan in CLAUDE memory.
 //
 // Usage:
-//   node scripts/indexnow.mjs            # submit URLs whose content hash changed
+//   node scripts/indexnow.mjs            # submit changed URLs for zerobalance.pro (dist/)
 //   node scripts/indexnow.mjs --all      # submit every URL in the sitemap
 //   node scripts/indexnow.mjs --dry-run  # print what would be submitted, no network
+//   node scripts/indexnow.mjs --host=zerobalanceapp.ru --dist=dist-ru  # the RU mirror
+//
+// IndexNow is a shared protocol: one POST to api.indexnow.org propagates to Yandex
+// (and Bing, Seznam, ...), so the --host/--dist pair is all that differs between the
+// global site and the Russian mirror. The IndexNow key file lives in public/ and ships
+// to both builds, so the same key validates on both hosts.
 
 import { createHash, randomBytes } from 'node:crypto';
 import { readFileSync, writeFileSync, renameSync, existsSync, readdirSync } from 'node:fs';
 import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
+// Flags come in two shapes: boolean (--all, --dry-run) and valued (--host=, --dist=).
+const rawArgs = process.argv.slice(2);
+const flags = new Set(rawArgs.filter((a) => !a.includes('=')));
+const valued = Object.fromEntries(
+  rawArgs
+    .filter((a) => a.startsWith('--') && a.includes('='))
+    .map((a) => {
+      const i = a.indexOf('=');
+      return [a.slice(2, i), a.slice(i + 1)];
+    }),
+);
+const ALL = flags.has('--all');
+const DRY = flags.has('--dry-run');
+
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
 const PUBLIC_DIR = join(ROOT, 'public');
-const DIST_DIR = join(ROOT, 'dist');
 const STATE_FILE = join(ROOT, '.indexnow-state.json');
-const SITEMAP_FILE = join(DIST_DIR, 'sitemap-0.xml');
-const HOST = 'zerobalance.pro';
+const HOST = valued.host || 'zerobalance.pro';
 const ORIGIN = `https://${HOST}`;
+const DIST_DIR = join(ROOT, valued.dist || 'dist');
+const SITEMAP_FILE = join(DIST_DIR, 'sitemap-0.xml');
 const ENDPOINT = 'https://api.indexnow.org/IndexNow';
 const BATCH_SIZE = 10000;
-
-const args = new Set(process.argv.slice(2));
-const ALL = args.has('--all');
-const DRY = args.has('--dry-run');
 
 function die(msg) {
   console.error(`indexnow: ${msg}`);
@@ -128,10 +144,12 @@ async function main() {
     if (ALL || state.hashes[url] !== hash) toSubmit.push(url);
   }
 
-  // Drop URLs that no longer appear in the sitemap from the next state.
+  // Drop URLs that no longer appear in the sitemap. Scope to THIS host's origin so
+  // submitting one build doesn't wipe the other build's hashes - both hosts share
+  // this single state file, keyed by full URL.
   const sitemapSet = new Set(urls);
   for (const url of Object.keys(nextHashes)) {
-    if (!sitemapSet.has(url)) delete nextHashes[url];
+    if (url.startsWith(`${ORIGIN}/`) && !sitemapSet.has(url)) delete nextHashes[url];
   }
 
   if (missing.length > 0) {

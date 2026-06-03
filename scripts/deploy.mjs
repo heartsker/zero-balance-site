@@ -35,6 +35,18 @@ function run(cmd, env = {}) {
   execSync(cmd, { stdio: 'inherit', env: { ...process.env, ...env } });
 }
 
+// Ping IndexNow (-> Yandex, Bing, ...) with the URLs that changed in this build.
+// Best-effort: the deploy has already shipped by the time we get here, so a transient
+// submission failure must not fail the lane. Re-run `npm run indexnow` / `indexnow:ru`
+// manually if a ping is ever missed.
+function pingIndexNow(flags = '') {
+  try {
+    run(`node scripts/indexnow.mjs${flags ? ` ${flags}` : ''}`);
+  } catch (err) {
+    console.warn(`\nindexnow ping failed (deploy already succeeded): ${err.message}`);
+  }
+}
+
 // Recursively rewrite the `/ru/` prefix out of every text artifact so the mirror
 // serves Russian at the site root (zerobalanceapp.ru/faq/, not /ru/faq/).
 function stripRuPrefixRefs(dir) {
@@ -61,6 +73,7 @@ function deployCloudflare() {
   // ./dist, which wrangler.toml serves.
   run('npm run build');
   run('npx wrangler deploy');
+  pingIndexNow();
 }
 
 function deployYandex() {
@@ -111,6 +124,7 @@ function deployYandex() {
   run(
     `aws s3 sync ${outDir} s3://${bucket} --delete --endpoint-url ${endpoint} --region ru-central1`,
   );
+  pingIndexNow(`--host=zerobalanceapp.ru --dist=${outDir}`);
 }
 
 loadEnv();
