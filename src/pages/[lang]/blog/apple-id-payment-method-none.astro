@@ -10,6 +10,7 @@ import AppStoreButton from '../../../components/AppStoreButton.astro';
 import { getDict, LOCALES, type Locale } from '../../../i18n';
 import { articleSchema, faqSchema, breadcrumbSchema } from '../../../lib/schema';
 import { DOMAIN } from '../../../lib/siteConfig';
+import { renderInlineLinks } from '../../../lib/prose';
 
 export function getStaticPaths() {
   return LOCALES.map((lang) => ({ params: { lang } }));
@@ -125,7 +126,7 @@ const copy = {
             <Reveal delay={i * 40}>
               <h2>{s.h}</h2>
               {s.p.split('\n\n').map((para) => (
-                <p>{para}</p>
+                <p set:html={renderInlineLinks(para)} />
               ))}
               {i === 1 && (
                 <div class="not-prose my-6 flex">

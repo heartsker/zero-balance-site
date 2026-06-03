@@ -1,4 +1,6 @@
 ---
+import { renderInlineLinks } from '../lib/prose';
+
 interface Item {
   q: string;
   a: string;
@@ -32,7 +34,7 @@ const { items, detailHrefBase, detailLabel = 'Read full answer' } = Astro.props;
           </svg>
         </summary>
         <div class="px-5 pb-6 text-[var(--muted)] md:px-6">
-          <p>{item.a}</p>
+          <p set:html={renderInlineLinks(item.a)} />
           {detailHrefBase && item.slug && (
             <a
               href={`${detailHrefBase}${item.slug}/`}

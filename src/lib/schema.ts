@@ -9,6 +9,7 @@ import {
   FAQ_PUBLISHED_DATE,
   type Locale,
 } from './siteConfig';
+import { stripInlineLinks } from './prose';
 
 const PUBLISHER = {
   '@type': 'Person',
@@ -84,7 +85,7 @@ export function faqSchema(items: { q: string; a: string }[]) {
       name: item.q,
       acceptedAnswer: {
         '@type': 'Answer',
-        text: item.a,
+        text: stripInlineLinks(item.a),
       },
     })),
   };
@@ -225,7 +226,7 @@ export function qaPageSchema(opts: {
       author: PUBLISHER,
       acceptedAnswer: {
         '@type': 'Answer',
-        text: opts.answer,
+        text: stripInlineLinks(opts.answer),
         url: opts.url,
         datePublished,
         upvoteCount: 0,
