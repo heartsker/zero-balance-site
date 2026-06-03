@@ -1,6 +1,6 @@
 # build output
 dist/
-dist-ru/
+dist-*/
 .astro/
 
 # dependencies
