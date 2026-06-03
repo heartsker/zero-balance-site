@@ -1,12 +1,15 @@
 ---
 import '../styles/globals.css';
+// Self-hosted Inter (bundled from the same origin). Google Fonts is throttled in
+// Russia, so the global site must not depend on it either - a perf/privacy win.
+import '@fontsource-variable/inter';
 import { ClientRouter } from 'astro:transitions';
 import SEO from '../components/SEO.astro';
 import JsonLd from '../components/JsonLd.astro';
 import ConsentAnalytics from '../components/ConsentAnalytics.astro';
 import type { Locale } from '../i18n';
 import { organizationSchema, websiteSchema } from '../lib/schema';
-import { APP_ID, ACCENT, DOMAIN, RTL_LOCALES } from '../lib/siteConfig';
+import { APP_ID, ACCENT, DOMAIN, RTL_LOCALES, IS_RU_SITE } from '../lib/siteConfig';
 
 interface Props {
   title: string;
@@ -51,12 +54,6 @@ const {
     <link rel="manifest" href="/site.webmanifest" />
     <meta name="theme-color" content={ACCENT} />
     <meta name="apple-itunes-app" content={`app-id=${APP_ID}, app-argument=${DOMAIN}${path}`} />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
-      rel="stylesheet"
-    />
     <SEO {title} {description} {lang} {path} {image} {noindex} {keywords} {ogType} {publishedTime} {modifiedTime} {locales} />
     <JsonLd data={organizationSchema()} />
     <JsonLd data={websiteSchema({ lang })} />
@@ -65,7 +62,8 @@ const {
   </head>
   <body>
     <slot />
-    <ConsentAnalytics {lang} />
+    {/* Yandex Metrika lives only on the Russian mirror; the global site ships no analytics. */}
+    {IS_RU_SITE && <ConsentAnalytics {lang} />}
     <script>
       import '../scripts/reveal.ts';
     </script>

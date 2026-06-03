@@ -1,9 +1,11 @@
 ---
 import '../styles/globals.css';
+import '@fontsource-variable/inter';
 import { APP_ID, APP_NAME, ACCENT, DOMAIN } from '../lib/siteConfig';
 
 const APP_STORE_URL = `https://apps.apple.com/app/apple-store/id${APP_ID}?pt=128302223&ct=in-app-event&mt=8`;
 const REDIRECT_DELAY_MS = 1400;
+const siteHost = DOMAIN.replace(/^https?:\/\//, '');
 ---
 
 <!doctype html>
@@ -20,12 +22,6 @@ const REDIRECT_DELAY_MS = 1400;
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
     <link rel="manifest" href="/site.webmanifest" />
     <meta name="apple-itunes-app" content={`app-id=${APP_ID}, app-argument=${DOMAIN}/open_app/`} />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
-      rel="stylesheet"
-    />
     <meta http-equiv="refresh" content={`${Math.round(REDIRECT_DELAY_MS / 1000)}; url=${APP_STORE_URL}`} />
     <script is:inline define:vars={{ APP_STORE_URL, REDIRECT_DELAY_MS }}>
       window.setTimeout(function () {
@@ -63,7 +59,7 @@ const REDIRECT_DELAY_MS = 1400;
             href="/"
             class="text-sm font-medium text-[var(--muted)] transition-colors hover:text-[var(--fg)]"
           >
-            Back to zerobalance.pro
+            Back to {siteHost}
           </a>
         </div>
       </div>

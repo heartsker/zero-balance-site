@@ -1,14 +1,31 @@
-export const APP_STORE_URL =
-  'https://apps.apple.com/app/apple-store/id6761912988?pt=128302223&ct=zerobalance-pro-site&mt=8';
+// Fixed cross-domain hosts. The global site serves the world from Cloudflare;
+// the Russian mirror (zerobalanceapp.ru) serves RU/CIS from Russian hosting,
+// which stays reachable inside Russia where Cloudflare is throttled.
+export const GLOBAL_SITE = 'https://zerobalance.pro';
+export const RU_SITE = 'https://zerobalanceapp.ru';
 
-export const DOMAIN = 'https://zerobalance.pro';
+// The domain THIS build is stamped for (canonical / OG / sitemap / self-hreflang).
+// Driven by env so one source tree builds both targets; defaults to the global site.
+export const DOMAIN: string = import.meta.env.PUBLIC_SITE_DOMAIN ?? GLOBAL_SITE;
+
+// True when this build is the Russian-only mirror.
+export const IS_RU_SITE = DOMAIN.includes('zerobalanceapp.ru');
+
+// App Store smart-link. A distinct campaign token per site keeps the two
+// acquisition funnels separable in App Store Connect -> App Analytics.
+export const APP_STORE_URL = `https://apps.apple.com/app/apple-store/id6761912988?pt=128302223&ct=${
+  IS_RU_SITE ? 'zerobalanceapp-ru-site' : 'zerobalance-pro-site'
+}&mt=8`;
+
 export const SUPPORT_EMAIL = 'developer.ios.dp@gmail.com';
 export const ACCENT = '#7A4DE6';
 
 // Yandex Metrika counter ID. Set to null to disable the counter entirely.
 export const YANDEX_METRIKA_ID: number | null = 109411598;
 
-export const LOCALES = [
+// Every locale the site CAN render. Drives the `Locale` type and the per-locale
+// label maps below, so it stays constant regardless of which subset a build emits.
+export const ALL_LOCALES = [
   'en',
   'ru',
   'ar',
@@ -22,8 +39,20 @@ export const LOCALES = [
   'pt-BR',
   'tr',
 ] as const;
-export type Locale = (typeof LOCALES)[number];
-export const DEFAULT_LOCALE: Locale = 'en';
+export type Locale = (typeof ALL_LOCALES)[number];
+
+// The locales THIS build emits. The Russian mirror sets PUBLIC_SITE_LOCALES=ru to
+// ship a Russian-only site; the global build emits all of them.
+const SITE_LOCALES_ENV = import.meta.env.PUBLIC_SITE_LOCALES as string | undefined;
+export const LOCALES: readonly Locale[] = SITE_LOCALES_ENV
+  ? (SITE_LOCALES_ENV.split(',')
+      .map((s) => s.trim())
+      .filter(Boolean) as Locale[])
+  : ALL_LOCALES;
+
+export const DEFAULT_LOCALE: Locale =
+  (import.meta.env.PUBLIC_SITE_DEFAULT_LOCALE as Locale | undefined) ??
+  (IS_RU_SITE ? 'ru' : 'en');
 
 export const RTL_LOCALES: readonly Locale[] = ['ar'];
 

@@ -21,8 +21,13 @@ interface Props {
 const { current, path, locales = [...LOCALES] } = Astro.props;
 const baseRoute = stripLocale(path);
 const t = getDict(current);
+
+// A Russian-only (single-locale) build has nothing to switch between.
+const show = LOCALES.length > 1 && locales.length > 1;
 ---
 
+{show && (
+<Fragment>
 <div class="relative" data-lang-switcher>
   <button
     type="button"
@@ -124,3 +129,5 @@ const t = getDict(current);
     });
   })();
 </script>
+</Fragment>
+)}

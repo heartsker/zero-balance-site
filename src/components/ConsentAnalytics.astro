@@ -1,18 +1,17 @@
 ---
-// Consent-gated Yandex Metrika, loaded for Russia/CIS visitors only.
+// Consent-gated Yandex Metrika for the Russian mirror (zerobalanceapp.ru).
 //
-// Per the cross-jurisdiction legal review, Yandex Metrika (a Russian service that
-// stores data on Russian servers) is loaded ONLY for visitors in RU/BY/KZ/KG,
-// where it is the appropriate, data-localization-compliant tool. It is never
-// loaded anywhere else (no EU/UK/US data transfer to Russia). Webvisor session
-// replay is disabled everywhere.
+// This component is rendered only on the Russian-only build (see BaseLayout's
+// IS_RU_SITE gate), so every visitor is the RU/CIS target audience and no
+// client-side geo detection is needed. Yandex Metrika stores data on Russian
+// servers, which is the appropriate, data-localization-compliant tool for this
+// audience. The global zerobalance.pro build ships no analytics at all.
 //
-// Even in RU/CIS, Russian law (152-FZ, 2025) requires standalone opt-in consent,
-// so the banner is shown and Metrika loads only after the visitor accepts. The
-// decision is remembered in localStorage.
+// Russian law (152-FZ, 2025) requires standalone opt-in consent, so the banner
+// is shown and Metrika loads only after the visitor accepts. Webvisor session
+// replay is disabled. The decision is remembered in localStorage.
 //
-// Region is detected client-side via Cloudflare's /cdn-cgi/trace (loc=XX). The
-// whole feature is gated to production builds so dev/preview traffic never
+// The whole feature is gated to production builds so dev/preview traffic never
 // reaches the real counter. The counter id is the only server value injected
 // into the verbatim inline script.
 import { getDict, localizedPath, type Locale } from '../i18n';
@@ -72,9 +71,6 @@ const privacyHref = localizedPath(lang, 'privacy');
           window.__zbConsentInit = true;
 
           var KEY = 'zb_analytics_consent';
-          // Metrika is loaded ONLY for these countries (Russia + CIS). Everywhere
-          // else it never loads and no banner is shown.
-          var METRIKA_COUNTRIES = { RU: 1, BY: 1, KZ: 1, KG: 1 };
 
           function loadMetrika() {
             if (window.__ymLoaded) return;
@@ -112,17 +108,15 @@ const privacyHref = localizedPath(lang, 'privacy');
             if (window.__zbNeedsConsent && !decision()) setBanner(true);
           });
 
-          // Geo gate first: outside RU/CIS, never load Metrika and never nag.
-          fetch('/cdn-cgi/trace').then(function (r) { return r.text(); }).then(function (txt) {
-            var m = txt.match(/(?:^|\n)loc=([A-Z]{2})/);
-            var cc = m ? m[1] : '';
-            if (!METRIKA_COUNTRIES[cc]) return;
-            var d = decision();
-            if (d === 'granted') { loadMetrika(); return; }
-            if (d === 'denied') return;
+          // This build is the Russian mirror, so every visitor is the target
+          // audience: gate on consent alone, no geo detection.
+          var d = decision();
+          if (d === 'granted') {
+            loadMetrika();
+          } else if (d !== 'denied') {
             window.__zbNeedsConsent = true;
             setBanner(true);
-          }).catch(function () { /* region unknown: do not load, do not show banner */ });
+          }
         })();
       </script>
     </>

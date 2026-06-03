@@ -11,7 +11,7 @@
   --color-border: #ECE6EE;
   --radius-card: 1rem;
   --radius-pill: 999px;
-  --font-display: "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-display: "Inter Variable", "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
 }
 
 :root {

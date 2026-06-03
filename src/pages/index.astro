@@ -1,0 +1,24 @@
+---
+// Root entry document.
+//
+// On the global site the Cloudflare Worker owns `/` and redirects by detected
+// locale (run_worker_first in wrangler.toml), so this static page is never served
+// there. On the Russian mirror (Yandex static hosting, no edge compute) it IS the
+// `/` document and forwards to the default locale (`ru`).
+import { DEFAULT_LOCALE } from '../lib/siteConfig';
+
+const target = `/${DEFAULT_LOCALE}/`;
+---
+
+<!doctype html>
+<html lang={DEFAULT_LOCALE}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="robots" content="noindex" />
+    <meta http-equiv="refresh" content={`0; url=${target}`} />
+    <script is:inline define:vars={{ target }}>
+      location.replace(target);
+    </script>
+  </head>
+  <body></body>
+</html>

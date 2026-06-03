@@ -5,7 +5,7 @@ import Container from '../../components/Container.astro';
 import Section from '../../components/Section.astro';
 import Reveal from '../../components/Reveal.astro';
 import { getDict, LOCALES, type Locale } from '../../i18n';
-import { SUPPORT_EMAIL } from '../../lib/siteConfig';
+import { SUPPORT_EMAIL, IS_RU_SITE, DOMAIN } from '../../lib/siteConfig';
 
 export function getStaticPaths() {
   return LOCALES.map((lang) => ({ params: { lang } }));
@@ -16,6 +16,11 @@ const t = getDict(lang);
 const path = `/${lang}/privacy/`;
 const updated = lang === 'ru' ? '2026-05-25' : '2026-05-14';
 
+// Yandex Metrika ships only on the Russian mirror, so its disclosures appear only
+// there. The site host is shown per build (zerobalanceapp.ru vs zerobalance.pro).
+const metrika = IS_RU_SITE;
+const siteHost = DOMAIN.replace(/^https?:\/\//, '');
+
 const copy = lang === 'ru'
   ? {
       title: 'Политика конфиденциальности',
@@ -25,11 +30,11 @@ const copy = lang === 'ru'
       sections: [
         {
           h: 'Коротко',
-          html: `<p>Приложение Zero Balance не собирает персональные данные: нет аккаунтов, нет рекламы, нет трекинга. Ваш инвентарь и история покупок хранятся в вашем собственном приватном контейнере iCloud, привязанном к вашему Apple ID. На сайте для посетителей из России и стран СНГ работает Яндекс Метрика, и только с вашего согласия (см. раздел «Аналитика сайта»).</p>`,
+          html: `<p>Приложение Zero Balance не собирает персональные данные: нет аккаунтов, нет рекламы, нет трекинга. Ваш инвентарь и история покупок хранятся в вашем собственном приватном контейнере iCloud, привязанном к вашему Apple ID.${metrika ? ' На сайте работает Яндекс Метрика, и только с вашего согласия (см. раздел «Аналитика сайта»).' : ''}</p>`,
         },
         {
           h: 'Что собирается',
-          html: `<ul><li>Apple собирает то, что обычно собирает при покупках в App Store: подтверждение покупки, статус подписок, диагностику. Это происходит на уровне Apple, не у нас.</li><li>Apple предоставляет нам обезличенную статистику (загрузки, версии iOS, регионы) через App Store Connect.</li><li>На сайте (не в приложении), если вы из России или стран СНГ и дали согласие, Яндекс Метрика собирает обезличенную статистику посещений. Подробнее в разделе «Аналитика сайта».</li></ul>`,
+          html: `<ul><li>Apple собирает то, что обычно собирает при покупках в App Store: подтверждение покупки, статус подписок, диагностику. Это происходит на уровне Apple, не у нас.</li><li>Apple предоставляет нам обезличенную статистику (загрузки, версии iOS, регионы) через App Store Connect.</li>${metrika ? '<li>На сайте (не в приложении), если вы дали согласие, Яндекс Метрика собирает обезличенную статистику посещений. Подробнее в разделе «Аналитика сайта».</li>' : ''}</ul>`,
         },
         {
           h: 'Что не собирается',
@@ -41,12 +46,16 @@ const copy = lang === 'ru'
         },
         {
           h: 'Сторонние сервисы',
-          html: `<p>Внутри приложения нет SDK третьих сторон, кроме фреймворков Apple (StoreKit, CloudKit, GameKit). Сайт zerobalance.pro раздаётся со статического хостинга и использует шрифты Google Fonts. Свой собственный cookie сайт ставит только один - <code>zb_locale</code>, для сохранения выбранного языка, без идентификации пользователя. Для посетителей из России и стран СНГ, давших согласие, дополнительно используется Яндекс Метрика, которая ставит свои cookies (см. раздел «Аналитика сайта»).</p>`,
+          html: `<p>Внутри приложения нет SDK третьих сторон, кроме фреймворков Apple (StoreKit, CloudKit, GameKit). Сайт ${siteHost} раздаётся со статического хостинга; шрифты подключаются с того же домена, сторонние шрифтовые CDN (например, Google Fonts) не используются. Свой собственный cookie сайт ставит только один - <code>zb_locale</code>, для сохранения выбранного языка, без идентификации пользователя.${metrika ? ' Дополнительно, с вашего согласия, используется Яндекс Метрика, которая ставит свои cookies (см. раздел «Аналитика сайта»).' : ''}</p>`,
         },
-        {
-          h: 'Аналитика сайта',
-          html: `<p>Для посетителей из России и стран СНГ (Россия, Беларусь, Казахстан, Киргизия) сайт использует Яндекс Метрику, чтобы понимать, как используется сайт. Она загружается только после вашего явного согласия в баннере и не работает для посетителей из других стран.</p><p>Метрика собирает обезличенные данные о посещении: обезличенный IP-адрес, тип устройства и браузера, источник перехода, просмотренные страницы и действия на них (через cookies и аналогичные технологии). Запись сессий (Вебвизор) отключена. Данные обрабатываются сервисом Яндекс Метрика и хранятся на серверах в Российской Федерации.</p><p>Отозвать согласие можно, нажав «Отклонить» в баннере или очистив данные сайта в браузере. Политика конфиденциальности Яндекса: <a href="https://yandex.ru/legal/confidential/" rel="nofollow">yandex.ru/legal/confidential</a>.</p>`,
-        },
+        ...(metrika
+          ? [
+              {
+                h: 'Аналитика сайта',
+                html: `<p>Сайт использует Яндекс Метрику, чтобы понимать, как используется сайт. Она загружается только после вашего явного согласия в баннере.</p><p>Метрика собирает обезличенные данные о посещении: обезличенный IP-адрес, тип устройства и браузера, источник перехода, просмотренные страницы и действия на них (через cookies и аналогичные технологии). Запись сессий (Вебвизор) отключена. Данные обрабатываются сервисом Яндекс Метрика и хранятся на серверах в Российской Федерации.</p><p>Отозвать согласие можно, нажав «Отклонить» в баннере или очистив данные сайта в браузере. Политика конфиденциальности Яндекса: <a href="https://yandex.ru/legal/confidential/" rel="nofollow">yandex.ru/legal/confidential</a>.</p>`,
+              },
+            ]
+          : []),
         {
           h: 'Контакт',
           html: `<p>Вопросы по конфиденциальности: <a href="mailto:${SUPPORT_EMAIL}">${SUPPORT_EMAIL}</a>.</p>`,
@@ -78,7 +87,7 @@ const copy = lang === 'ru'
         },
         {
           h: 'Third-party services',
-          html: `<p>The app contains no third-party SDKs beyond Apple\'s own frameworks (StoreKit, CloudKit, GameKit). The website zerobalance.pro is served from a static host and uses Google Fonts. The site sets only one cookie - <code>zb_locale</code> - to remember your language choice. No personal identification.</p>`,
+          html: `<p>The app contains no third-party SDKs beyond Apple\'s own frameworks (StoreKit, CloudKit, GameKit). The website ${siteHost} is served from a static host with self-hosted fonts (no third-party font CDN). The site sets only one cookie - <code>zb_locale</code> - to remember your language choice. No personal identification.</p>`,
         },
         {
           h: 'Contact',

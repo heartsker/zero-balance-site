@@ -1,6 +1,16 @@
 ---
-import { DOMAIN, LOCALES, LOCALE_OG_TAG } from '../lib/siteConfig';
+import { DOMAIN, ALL_LOCALES, GLOBAL_SITE, RU_SITE, LOCALE_OG_TAG } from '../lib/siteConfig';
 import { localizedPath, stripLocale, getDict, type Locale } from '../i18n';
+
+// Where each language version actually lives, regardless of which build renders
+// this tag. Russian is served at the ROOT of the single-language .ru mirror
+// (zerobalanceapp.ru/faq/, no /ru/ prefix); every other locale lives under its
+// prefix on the global site. Both builds emit the same cluster so the hreflang
+// map stays consistent and the two domains do not compete as duplicate content.
+const hrefFor = (loc: Locale, localePath: string) =>
+  loc === 'ru'
+    ? `${RU_SITE}${localePath}`
+    : `${GLOBAL_SITE}${localizedPath(loc, localePath)}`;
 
 interface Props {
   title: string;
@@ -28,7 +38,7 @@ const {
   ogType = 'website',
   publishedTime,
   modifiedTime,
-  locales = [...LOCALES],
+  locales = [...ALL_LOCALES],
 } = Astro.props;
 
 const normalizedPath = path.startsWith('/') ? path : `/${path}`;
@@ -61,10 +71,10 @@ const keywordsString = keywords?.length
 
 {
   locales.map((l) => (
-    <link rel="alternate" hreflang={l} href={`${DOMAIN}${localizedPath(l, localePath)}`} />
+    <link rel="alternate" hreflang={l} href={hrefFor(l, localePath)} />
   ))
 }
-<link rel="alternate" hreflang="x-default" href={`${DOMAIN}${localizedPath('en', localePath)}`} />
+<link rel="alternate" hreflang="x-default" href={`${GLOBAL_SITE}${localizedPath('en', localePath)}`} />
 
 <meta property="og:type" content={ogType} />
 <meta property="og:site_name" content="Zero Balance" />
