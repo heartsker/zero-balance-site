@@ -17,7 +17,9 @@
     "indexnow": "node scripts/indexnow.mjs",
     "indexnow:all": "node scripts/indexnow.mjs --all",
     "indexnow:dry": "node scripts/indexnow.mjs --dry-run",
-    "indexnow:ru": "node scripts/indexnow.mjs --host=zerobalanceapp.ru --dist=dist-ru"
+    "indexnow:ru": "node scripts/indexnow.mjs --host=zerobalanceapp.ru --dist=dist-ru",
+    "purge:yandex": "node scripts/purge-cdn.mjs",
+    "purge:yandex:dry": "node scripts/purge-cdn.mjs --dry-run"
   },
   "dependencies": {
     "@astrojs/check": "^0.9.4",

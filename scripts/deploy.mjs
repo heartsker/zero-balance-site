@@ -53,19 +53,16 @@ function pingIndexNow(flags = '') {
   }
 }
 
-// Purge the Yandex CDN edge cache for the mirror via the `yc` CLI. The CDN
-// fronting the bucket caches every path for ~24h at the edge AND ignores query
-// strings, so without a purge a fresh deploy stays invisible for up to a day -
-// most visibly on the heavily-hit root `/`, which is cached early and never
-// revalidated. Resource id defaults to the zerobalanceapp.ru CDN resource (not a
-// secret); override with YANDEX_CDN_RESOURCE_ID. Best-effort like the IndexNow
-// ping: the bytes are already on the bucket, so a purge failure (e.g. `yc` missing
-// or unauthenticated in CI) must not fail the lane - run the command manually then.
+// Purge the Yandex CDN edge cache for the mirror (delegates to scripts/purge-cdn.mjs,
+// reusable standalone as `npm run purge:yandex`). The CDN fronting the bucket caches
+// every path for ~24h at the edge AND ignores query strings, so without a purge a
+// fresh deploy stays invisible for up to a day - most visibly on the heavily-hit
+// root `/`. Best-effort like the IndexNow ping: the bytes are already on the bucket,
+// so a purge failure (e.g. `yc` missing or unauthenticated in CI) must not fail the
+// lane - run `npm run purge:yandex` by hand then.
 function purgeCdn() {
-  const resourceId = process.env.YANDEX_CDN_RESOURCE_ID || 'bc8raiqxbyivnvuxk2xh';
-  if (!resourceId) return;
   try {
-    run(`yc cdn cache purge --resource-id ${resourceId} --path '/*'`);
+    run('node scripts/purge-cdn.mjs');
   } catch (err) {
     console.warn(`\nCDN purge failed (deploy already shipped to the bucket): ${err.message}`);
   }
