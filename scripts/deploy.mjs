@@ -84,8 +84,8 @@ function stripRuPrefixRefs(dir) {
         // Absolute self-URLs: zerobalanceapp.ru/ru/... -> zerobalanceapp.ru/...
         .split('https://zerobalanceapp.ru/ru/').join('https://zerobalanceapp.ru/')
         // Relative links wherever they appear (attrs, JSON-LD, prose, markdown):
-        // strip a LEADING `/ru/` path segment. The negative lookbehind keeps
-        // asset paths like /screenshots/ru/1.png (where `/ru/` follows a word char).
+        // strip a LEADING `/ru/` path segment. The negative lookbehind keeps any
+        // nested `/ru/` that follows a word char (e.g. a hashed asset path) intact.
         .replace(/(?<!\w)\/ru\//g, '/');
       if (after !== before) writeFileSync(p, after);
     }
@@ -117,20 +117,15 @@ function deployYandex() {
   // Keep only the mirror's locales (ru + en); drop any other locale directory a
   // page hardcoded (e.g. an en-only blog post builds /ar/, /de/, ... too).
   // Standard pages already build ru+en via the LOCALES env.
+  // Screenshots are imported from src/assets and emitted as optimized WebP under
+  // /_astro/ only for the locales this build renders (ru + en), so there is no
+  // verbatim per-locale screenshot directory left to prune here.
   for (const loc of ALL_LOCALES) {
     if (MIRROR_LOCALES.includes(loc)) continue;
     const dir = join(ROOT, outDir, loc);
     if (existsSync(dir)) {
       rmSync(dir, { recursive: true, force: true });
       console.log(`pruned ${outDir}/${loc}/`);
-    }
-    // public/screenshots/<loc>/ is copied verbatim for every locale, but the
-    // mirror's HTML only references /screenshots/ru/ and /screenshots/en/. Drop
-    // the other 10 so the sync doesn't ship unused App Store shots to the bucket.
-    const shots = join(ROOT, outDir, 'screenshots', loc);
-    if (existsSync(shots)) {
-      rmSync(shots, { recursive: true, force: true });
-      console.log(`pruned ${outDir}/screenshots/${loc}/`);
     }
   }
 

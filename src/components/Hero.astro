@@ -1,4 +1,6 @@
 ---
+import { Image } from 'astro:assets';
+import type { ImageMetadata } from 'astro';
 import AppStoreButton from './AppStoreButton.astro';
 import Container from './Container.astro';
 import RatingBadge from './RatingBadge.astro';
@@ -11,9 +13,17 @@ interface Props {
 const { lang } = Astro.props;
 const t = getDict(lang);
 
+// App Store screenshots live in src/assets so Astro can resize them to the small
+// size the hero actually renders and re-encode them as WebP. They are referenced
+// by locale at runtime, so import every variant eagerly and look up by path.
+const screenshotImports = import.meta.glob<{ default: ImageMetadata }>(
+  '../assets/screenshots/*/*.png',
+  { eager: true },
+);
+
 const screenshots = [1, 2, 3, 4].map((n) => ({
   n,
-  src: `/screenshots/${lang}/${n}.png`,
+  img: screenshotImports[`../assets/screenshots/${lang}/${n}.png`].default,
   alt:
     n === 1
       ? t.hero.screenshotAlt
@@ -83,11 +93,12 @@ const screenshots = [1, 2, 3, 4].map((n) => ({
               screenshots.map((s) => (
                 <div class="hero-rail-item">
                   <div class="hero-screen-frame">
-                    <img
-                      src={s.src}
+                    <Image
+                      src={s.img}
                       alt={s.alt}
-                      width="430"
-                      height="932"
+                      width={430}
+                      densities={[2]}
+                      format="webp"
                       loading={s.eager ? 'eager' : 'lazy'}
                       fetchpriority={s.eager ? 'high' : 'low'}
                       decoding="async"

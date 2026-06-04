@@ -21,7 +21,8 @@ export function softwareApplicationSchema(opts: {
   description: string;
   lang: Locale;
   featureList?: string[];
-  screenshots?: string[];
+  /** Absolute URLs of the optimized hero screenshots (see src/pages/[lang]/index.astro). */
+  screenshots: string[];
 }) {
   return {
     '@context': 'https://schema.org',
@@ -55,11 +56,7 @@ export function softwareApplicationSchema(opts: {
       'Private iCloud-synced inventory',
       'No ads, no tracking, no subscriptions',
     ],
-    screenshot: (opts.screenshots ?? [
-      `${DOMAIN}/screenshots/${opts.lang}/1.png`,
-      `${DOMAIN}/screenshots/${opts.lang}/2.png`,
-      `${DOMAIN}/screenshots/${opts.lang}/3.png`,
-    ]),
+    screenshot: opts.screenshots,
   };
 }
 

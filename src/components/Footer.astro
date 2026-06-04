@@ -1,4 +1,6 @@
 ---
+import { Image } from 'astro:assets';
+import icon from '../assets/icon.png';
 import { getDict, localizedPath, type Locale } from '../i18n';
 import { SUPPORT_EMAIL } from '../lib/siteConfig';
 import LangSwitcher from './LangSwitcher.astro';
@@ -78,11 +80,12 @@ const legalLinks = [
           href={localizedPath(lang, '')}
           class="inline-flex items-center gap-2 font-semibold tracking-tight"
         >
-          <img
-            src="/icon.png"
+          <Image
+            src={icon}
             alt=""
-            width="32"
-            height="32"
+            width={32}
+            height={32}
+            densities={[2]}
             class="h-8 w-8 rounded-lg shadow-sm"
             loading="lazy"
             decoding="async"

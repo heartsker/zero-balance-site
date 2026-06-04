@@ -1,6 +1,8 @@
 ---
 import '../styles/globals.css';
 import '@fontsource-variable/inter';
+import { Image } from 'astro:assets';
+import icon from '../assets/icon.png';
 import { APP_ID, APP_NAME, ACCENT, DOMAIN } from '../lib/siteConfig';
 
 const APP_STORE_URL = `https://apps.apple.com/app/apple-store/id${APP_ID}?pt=128302223&ct=in-app-event&mt=8`;
@@ -32,11 +34,12 @@ const siteHost = DOMAIN.replace(/^https?:\/\//, '');
   <body class="bg-aurora">
     <main class="relative min-h-[100dvh] grid place-items-center px-6 py-12">
       <div class="text-center max-w-md">
-        <img
-          src="/icon.png"
+        <Image
+          src={icon}
           alt={`${APP_NAME} app icon`}
-          width="96"
-          height="96"
+          width={96}
+          height={96}
+          densities={[2]}
           class="hero-rise hero-rise-1 mx-auto h-24 w-24 rounded-[1.25rem] shadow-[0_20px_50px_-15px_rgba(122,77,230,0.55)] ring-1 ring-black/5"
         />
 
