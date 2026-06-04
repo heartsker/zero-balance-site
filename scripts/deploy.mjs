@@ -2,20 +2,26 @@
 // Deploy lanes for the two targets that share this one source tree:
 //
 //   node scripts/deploy.mjs cloudflare  -> global site (all locales) on Cloudflare Workers
-//   node scripts/deploy.mjs yandex      -> Russian-only mirror on Yandex Object Storage
+//   node scripts/deploy.mjs yandex      -> Russian-default + English mirror on Yandex Object Storage
 //   node scripts/deploy.mjs all         -> both, sequentially
 //
 // Cloudflare reads ./dist (see wrangler.toml), so its build uses the default
 // output dir. The Yandex build is stamped for zerobalanceapp.ru, emits Russian
-// only, lands in ./dist-ru, is pruned to ru, then synced to the bucket over the
-// S3 API. See docs/ru-mirror.md for one-time setup and required env vars.
+// (default, at the root) plus English (under /en/, for people who search Yandex
+// in English), lands in ./dist-ru, is pruned to those two locales, then synced
+// to the bucket over the S3 API. See docs/ru-mirror.md for one-time setup and
+// required env vars.
 import { execSync } from 'node:child_process';
 import { cpSync, existsSync, readFileSync, readdirSync, rmSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 
 // Mirror of ALL_LOCALES in src/lib/siteConfig.ts - used only to prune stray
-// non-ru locale directories that a page hardcoded (e.g. the en+ru blog).
+// locale directories that a page hardcoded (e.g. the en+ru blog) but that the
+// mirror does not serve.
 const ALL_LOCALES = ['en', 'ru', 'ar', 'de', 'es', 'fr', 'hi', 'it', 'ja', 'ko', 'pt-BR', 'tr'];
+// The locales the Yandex mirror ships: Russian (default, flattened to the root)
+// plus English (kept under /en/). Keep in sync with PUBLIC_SITE_LOCALES below.
+const MIRROR_LOCALES = ['ru', 'en'];
 const ROOT = process.cwd();
 
 // Optional .env (gitignored) for Yandex S3 credentials + bucket. Never commit it.
@@ -44,6 +50,24 @@ function pingIndexNow(flags = '') {
     run(`node scripts/indexnow.mjs${flags ? ` ${flags}` : ''}`);
   } catch (err) {
     console.warn(`\nindexnow ping failed (deploy already succeeded): ${err.message}`);
+  }
+}
+
+// Purge the Yandex CDN edge cache for the mirror via the `yc` CLI. The CDN
+// fronting the bucket caches every path for ~24h at the edge AND ignores query
+// strings, so without a purge a fresh deploy stays invisible for up to a day -
+// most visibly on the heavily-hit root `/`, which is cached early and never
+// revalidated. Resource id defaults to the zerobalanceapp.ru CDN resource (not a
+// secret); override with YANDEX_CDN_RESOURCE_ID. Best-effort like the IndexNow
+// ping: the bytes are already on the bucket, so a purge failure (e.g. `yc` missing
+// or unauthenticated in CI) must not fail the lane - run the command manually then.
+function purgeCdn() {
+  const resourceId = process.env.YANDEX_CDN_RESOURCE_ID || 'bc8raiqxbyivnvuxk2xh';
+  if (!resourceId) return;
+  try {
+    run(`yc cdn cache purge --resource-id ${resourceId} --path '/*'`);
+  } catch (err) {
+    console.warn(`\nCDN purge failed (deploy already shipped to the bucket): ${err.message}`);
   }
 }
 
@@ -86,22 +110,23 @@ function deployYandex() {
 
   run('npm run build -- --outDir ' + outDir, {
     PUBLIC_SITE_DOMAIN: 'https://zerobalanceapp.ru',
-    PUBLIC_SITE_LOCALES: 'ru',
+    PUBLIC_SITE_LOCALES: MIRROR_LOCALES.join(','),
     PUBLIC_SITE_DEFAULT_LOCALE: 'ru',
   });
 
-  // Russian-only: drop any non-ru locale directory a page hardcoded (the en+ru
-  // blog emits /en/). Standard pages already build ru-only via the LOCALES env.
+  // Keep only the mirror's locales (ru + en); drop any other locale directory a
+  // page hardcoded (e.g. an en-only blog post builds /ar/, /de/, ... too).
+  // Standard pages already build ru+en via the LOCALES env.
   for (const loc of ALL_LOCALES) {
-    if (loc === 'ru') continue;
+    if (MIRROR_LOCALES.includes(loc)) continue;
     const dir = join(ROOT, outDir, loc);
     if (existsSync(dir)) {
       rmSync(dir, { recursive: true, force: true });
       console.log(`pruned ${outDir}/${loc}/`);
     }
     // public/screenshots/<loc>/ is copied verbatim for every locale, but the
-    // mirror's HTML only references /screenshots/ru/. Drop the other 11 so the
-    // sync doesn't ship ~44 unused App Store shots to the bucket.
+    // mirror's HTML only references /screenshots/ru/ and /screenshots/en/. Drop
+    // the other 10 so the sync doesn't ship unused App Store shots to the bucket.
     const shots = join(ROOT, outDir, 'screenshots', loc);
     if (existsSync(shots)) {
       rmSync(shots, { recursive: true, force: true });
@@ -109,9 +134,10 @@ function deployYandex() {
     }
   }
 
-  // Flatten /ru to the site root: this mirror is single-language, so serve at
+  // Flatten /ru to the site root: Russian is the mirror's default, so serve it at
   // zerobalanceapp.ru/... instead of /ru/.... Move the ru tree up (overwriting
   // the root redirect stub with the real home), then rewrite /ru/ references.
+  // English is left under /en/ (reachable via the language toggle).
   const ruDir = join(ROOT, outDir, 'ru');
   if (existsSync(ruDir)) {
     cpSync(ruDir, join(ROOT, outDir), { recursive: true, force: true });
@@ -124,6 +150,17 @@ function deployYandex() {
   run(
     `aws s3 sync ${outDir} s3://${bucket} --delete --endpoint-url ${endpoint} --region ru-central1`,
   );
+
+  // Belt-and-suspenders: force-upload the root index.html (the one file Astro
+  // writes as a redirect stub and the flatten then overwrites with the real home)
+  // so the origin copy of the landing page is always current, independent of any
+  // `aws s3 sync` size/mtime heuristic.
+  run(
+    `aws s3 cp ${outDir}/index.html s3://${bucket}/index.html --endpoint-url ${endpoint} --region ru-central1 --content-type text/html`,
+  );
+
+  // Edge cache holds the old bytes for ~24h otherwise; purge so the deploy is live now.
+  purgeCdn();
   pingIndexNow(`--host=zerobalanceapp.ru --dist=${outDir}`);
 }
 

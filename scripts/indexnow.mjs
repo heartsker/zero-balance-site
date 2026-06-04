@@ -5,13 +5,20 @@
 //   node scripts/indexnow.mjs            # submit changed URLs for zerobalance.pro (dist/)
 //   node scripts/indexnow.mjs --all      # submit every URL in the sitemap
 //   node scripts/indexnow.mjs --dry-run  # print what would be submitted, no network
+//   node scripts/indexnow.mjs --no-commit # update the state file but don't git commit it
 //   node scripts/indexnow.mjs --host=zerobalanceapp.ru --dist=dist-ru  # the RU mirror
+//
+// After a successful submission the updated .indexnow-state.json is committed
+// automatically (it is tracked in git so the next run's diff is meaningful).
+// Only that one file is committed - any other working-tree changes are left
+// untouched. Pass --no-commit to skip this (e.g. for ad-hoc local runs).
 //
 // IndexNow is a shared protocol: one POST to api.indexnow.org propagates to Yandex
 // (and Bing, Seznam, ...), so the --host/--dist pair is all that differs between the
 // global site and the Russian mirror. The IndexNow key file lives in public/ and ships
 // to both builds, so the same key validates on both hosts.
 
+import { execSync } from 'node:child_process';
 import { createHash, randomBytes } from 'node:crypto';
 import { readFileSync, writeFileSync, renameSync, existsSync, readdirSync } from 'node:fs';
 import { join, dirname } from 'node:path';
@@ -30,6 +37,7 @@ const valued = Object.fromEntries(
 );
 const ALL = flags.has('--all');
 const DRY = flags.has('--dry-run');
+const NO_COMMIT = flags.has('--no-commit');
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
 const PUBLIC_DIR = join(ROOT, 'public');
@@ -106,6 +114,35 @@ function saveState(state) {
   const tmp = `${STATE_FILE}.tmp`;
   writeFileSync(tmp, `${JSON.stringify(state, null, 2)}\n`);
   renameSync(tmp, STATE_FILE);
+}
+
+// Commit the freshly written state file so the next run diffs against a clean
+// tree. Best-effort: the URLs are already submitted by the time we get here, so
+// a git hiccup (no repo, nothing staged, hook failure) must not fail the run -
+// re-run with the state committed by hand if needed. Only .indexnow-state.json
+// is committed; the pathspec form of `git commit` leaves any other staged or
+// modified files out of this commit.
+function commitState() {
+  if (NO_COMMIT) return;
+  const rel = '.indexnow-state.json';
+  try {
+    const status = execSync(`git status --porcelain -- ${rel}`, {
+      cwd: ROOT,
+      encoding: 'utf8',
+    }).trim();
+    if (status === '') {
+      console.log('indexnow: state file unchanged, nothing to commit.');
+      return;
+    }
+    execSync(`git add -- ${rel}`, { cwd: ROOT, stdio: 'ignore' });
+    execSync(`git commit -m "chore: update .indexnow-state" -- ${rel}`, {
+      cwd: ROOT,
+      stdio: 'inherit',
+    });
+    console.log('indexnow: committed .indexnow-state.json');
+  } catch (err) {
+    console.warn(`indexnow: could not commit state file (continuing): ${err.message}`);
+  }
 }
 
 async function submit(urlList, key) {
@@ -186,6 +223,7 @@ async function main() {
   state.lastSubmittedAt = new Date().toISOString();
   saveState(state);
   console.log(`indexnow: state written to ${STATE_FILE}`);
+  commitState();
 }
 
 main().catch((err) => {

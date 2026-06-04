@@ -53,10 +53,21 @@ export default defineConfig({
         defaultLocale: DEFAULT_LOCALE,
         locales: Object.fromEntries(LOCALES.map((l) => [l, l])),
       },
-      // On a single-locale (RU) build, keep only that locale's URLs so the sitemap
-      // never lists pages pruned after build (e.g. the en+ru blog's /en/ pages).
-      filter: (page) =>
-        LOCALES.length > 1 || LOCALES.some((l) => page.includes(`/${l}/`)),
+      // Keep the sitemap to canonical, indexable 200 URLs only.
+      // - `/`        : noindex redirect to /<defaultLocale>/ (the Worker owns it on the
+      //                global site; the deploy flatten produces the real RU home separately).
+      // - /open_app/ : noindex app-redirect helper.
+      // Keep this list in sync with any future noindex route (grep dist for `content="noindex`).
+      // On a single-locale (RU) build, keep only that locale's URLs so the sitemap never
+      // lists pages pruned after build (e.g. the en+ru blog's /en/ pages); that branch
+      // already drops the bare `/` redirect (it does not match `/ru/`).
+      filter: (page) => {
+        const path = new URL(page).pathname;
+        if (path === '/open_app/') return false;
+        return LOCALES.length > 1
+          ? path !== '/'
+          : LOCALES.some((l) => page.includes(`/${l}/`));
+      },
       // Give every URL a <lastmod>: a blog post's own published date when known,
       // otherwise the build time. Helps Yandex and Google prioritise recrawls.
       serialize(item) {

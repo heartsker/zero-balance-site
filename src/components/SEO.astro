@@ -1,16 +1,21 @@
 ---
-import { DOMAIN, ALL_LOCALES, GLOBAL_SITE, RU_SITE, LOCALE_OG_TAG } from '../lib/siteConfig';
+import { DOMAIN, ALL_LOCALES, LOCALES, IS_RU_SITE, GLOBAL_SITE, RU_SITE, LOCALE_OG_TAG } from '../lib/siteConfig';
 import { localizedPath, stripLocale, getDict, type Locale } from '../i18n';
 
 // Where each language version actually lives, regardless of which build renders
-// this tag. Russian is served at the ROOT of the single-language .ru mirror
-// (zerobalanceapp.ru/faq/, no /ru/ prefix); every other locale lives under its
-// prefix on the global site. Both builds emit the same cluster so the hreflang
-// map stays consistent and the two domains do not compete as duplicate content.
+// this tag. Russian is always served at the ROOT of the .ru mirror
+// (zerobalanceapp.ru/faq/, no /ru/ prefix). The mirror also serves English under
+// /en/, so on the mirror build any locale it actually emits points back at the
+// mirror (self-referential, matching the self-canonical) - this lets Yandex
+// index the .ru English pages. Every other locale lives under its prefix on the
+// global site. Keeping hreflang consistent with the canonical per build stops the
+// two domains from contradicting each other.
 const hrefFor = (loc: Locale, localePath: string) =>
   loc === 'ru'
     ? `${RU_SITE}${localePath}`
-    : `${GLOBAL_SITE}${localizedPath(loc, localePath)}`;
+    : IS_RU_SITE && LOCALES.includes(loc)
+      ? `${RU_SITE}${localizedPath(loc, localePath)}`
+      : `${GLOBAL_SITE}${localizedPath(loc, localePath)}`;
 
 interface Props {
   title: string;
