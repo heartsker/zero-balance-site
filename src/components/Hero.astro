@@ -1,7 +1,6 @@
 ---
-import { Image } from 'astro:assets';
-import type { ImageMetadata } from 'astro';
 import AppStoreButton from './AppStoreButton.astro';
+import BeforeAfter from './BeforeAfter.astro';
 import Container from './Container.astro';
 import RatingBadge from './RatingBadge.astro';
 import { getDict, type Locale } from '../i18n';
@@ -12,26 +11,6 @@ interface Props {
 
 const { lang } = Astro.props;
 const t = getDict(lang);
-
-// App Store screenshots live in src/assets so Astro can resize them to the small
-// size the hero actually renders and re-encode them as WebP. They are referenced
-// by locale at runtime, so import every variant eagerly and look up by path.
-const screenshotImports = import.meta.glob<{ default: ImageMetadata }>(
-  '../assets/screenshots/*/*.png',
-  { eager: true },
-);
-
-const screenshots = [1, 2, 3, 4].map((n) => ({
-  n,
-  img: screenshotImports[`../assets/screenshots/${lang}/${n}.png`].default,
-  alt:
-    n === 1
-      ? t.hero.screenshotAlt
-      : n === 2
-        ? t.hero.screenshotAlt2
-        : `${t.meta.siteName} - iPhone`,
-  eager: n === 1,
-}));
 ---
 
 <section class="relative overflow-hidden bg-aurora pt-12 pb-16 md:pt-24 md:pb-28">
@@ -66,6 +45,10 @@ const screenshots = [1, 2, 3, 4].map((n) => ({
           <RatingBadge {lang} />
         </div>
 
+        <p class="hero-rise hero-rise-4 mt-3 text-sm text-[var(--muted)]">
+          {t.hero.socialProof}
+        </p>
+
         <div class="hero-rise hero-rise-4 mt-6 flex flex-wrap items-center gap-3">
           <AppStoreButton label={t.cta.appStore} size="lg" />
           <a
@@ -83,54 +66,11 @@ const screenshots = [1, 2, 3, 4].map((n) => ({
             class="absolute -inset-8 -z-10 rounded-full bg-[radial-gradient(closest-side,rgba(122,77,230,0.22),transparent)] blur-2xl"
             aria-hidden="true"
           />
-          <div
-            class="hero-rail hero-rise hero-rise-3"
-            role="region"
-            aria-label={t.hero.screenshotAlt}
-            tabindex="0"
-          >
-            {
-              screenshots.map((s) => (
-                <div class="hero-rail-item">
-                  <div class="hero-screen-frame">
-                    <Image
-                      src={s.img}
-                      alt={s.alt}
-                      width={430}
-                      densities={[2]}
-                      format="webp"
-                      loading={s.eager ? 'eager' : 'lazy'}
-                      fetchpriority={s.eager ? 'high' : 'low'}
-                      decoding="async"
-                      class="hero-screen-img"
-                    />
-                  </div>
-                </div>
-              ))
-            }
+          <div class="hero-rise hero-rise-3">
+            <BeforeAfter {lang} />
           </div>
         </div>
       </div>
     </div>
   </Container>
 </section>
-
-<script>
-  function markLoaded(img: HTMLImageElement) {
-    img.classList.add('is-loaded');
-    img.parentElement?.classList.add('is-loaded');
-  }
-  function setupHeroPreviews() {
-    document.querySelectorAll<HTMLImageElement>('.hero-screen-img').forEach((img) => {
-      if (img.classList.contains('is-loaded')) return;
-      if (img.complete && img.naturalWidth > 0) {
-        markLoaded(img);
-      } else {
-        img.addEventListener('load', () => markLoaded(img), { once: true });
-        img.addEventListener('error', () => markLoaded(img), { once: true });
-      }
-    });
-  }
-  setupHeroPreviews();
-  document.addEventListener('astro:page-load', setupHeroPreviews);
-</script>

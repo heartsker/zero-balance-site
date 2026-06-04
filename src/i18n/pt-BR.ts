@@ -168,9 +168,10 @@ const ptBR: Dict = {
   },
   hero: {
     eyebrow: 'Utilitário iOS',
-    title: 'Gaste o saldo restante do seu Apple Account.',
+    title: 'Não consegue mudar a região da App Store por causa de um saldo restante no Apple ID?',
     subtitle:
-      'Sobrou um saldo pequeno no Apple Account, um crédito da loja ou os últimos centavos de um cartão-presente? Zero Balance escolhe o pacote mais próximo de pequenas compras da App Store e zera.',
+      'Zero Balance ajuda você a gastar o que sobrou - sem acesso ao Apple ID, sem assinatura, sem ligar para o suporte.',
+    socialProof: 'Mais de 2.000 pessoas já mudaram a região da App Store.',
     bullets: [
       'Feito em menos de um minuto',
       'Sem acesso ao seu Apple ID',
@@ -185,6 +186,25 @@ const ptBR: Dict = {
     label: 'avaliações',
     outOfFive: 'de 5',
     basedOn: 'com base em',
+    scope: 'em todas as regiões',
+  },
+  beforeAfter: {
+    beforeLabel: 'Antes',
+    afterLabel: 'Depois',
+    balanceLabel: 'Saldo do Apple ID',
+    beforeAmount: '0,78 €',
+    afterAmount: '0,00 €',
+    beforeStatus: 'Mudança de região indisponível',
+    afterStatus: 'Você pode mudar a região da App Store',
+  },
+  eligibility: {
+    title: 'Isto é para você se…',
+    items: [
+      'Sobrou um saldo qualquer travado na sua conta da App Store',
+      'E por causa dele você não consegue mudar o país ou a região da App Store',
+      'Nenhuma compra sozinha bate exatamente com o que sobrou',
+      'Ou um cartão-presente Apple deixou alguns centavos quebrados',
+    ],
   },
   reviews: {
     title: 'O que as pessoas dizem',
@@ -209,41 +229,18 @@ const ptBR: Dict = {
   },
   howItWorks: {
     title: 'Como funciona',
-    subtitle: 'Três passos. Sem truques. A Apple debita o saldo como em qualquer compra dentro do app.',
     steps: [
       {
         title: 'Digite seu saldo',
-        body: 'Coloque o valor que quer zerar. Zero Balance nunca lê seu Apple Account automaticamente.',
+        body: 'Coloque o valor que quer zerar.',
       },
       {
-        title: 'Revise o plano',
-        body: 'O app escolhe a combinação mais próxima entre oito faixas de preço. Você vê o total, o excesso e quantas confirmações são necessárias antes de tocar em qualquer coisa.',
+        title: 'Combinamos as compras para o seu saldo cair em zero',
+        body: 'O app monta a combinação certa para você, automaticamente.',
       },
       {
         title: 'Confirme e zere',
-        body: 'Aprove as compras. Seu inventário sincroniza de forma privada no seu iCloud. O saldo tende a zero.',
-      },
-    ],
-  },
-  features: {
-    title: 'Feito para uma tarefa só, bem feita',
-    subtitle: 'Sem assinaturas. Sem upsells. Sem venda de dados.',
-    items: [
-      {
-        title: 'Alvo manual',
-        body: 'Você digita o saldo restante. Zero Balance faz a combinação.',
-      },
-      {
-        title: 'Tela de revisão do plano',
-        body: 'Total, excesso e número de confirmações antes de qualquer compra na App Store.',
-      },
-      {
-        title: 'Oito faixas de preço',
-        body: 'Valores granulares para acertar diferentes restos com precisão.',
-      },
-      {
-        title: 'Inventário privado no iCloud',
-        body: 'Itens sincronizam entre seus aparelhos pelo seu próprio iCloud. Nós nunca vemos.',
+        body: 'Aprove as compras na App Store.',
       },
     ],
   },
@@ -257,7 +254,7 @@ const ptBR: Dict = {
   },
   faqTeaser: {
     title: 'Perguntas frequentes',
-    subtitle: 'Respostas para o que a maioria pergunta primeiro.',
+    subtitle: 'O essencial que as pessoas conferem antes de instalar.',
   },
   finalCta: {
     title: 'Zere seu saldo em menos de um minuto.',
@@ -289,6 +286,36 @@ const ptBR: Dict = {
     readFullAnswer: 'Ler resposta completa',
     relatedTitle: 'Perguntas relacionadas',
     items: [
+      {
+        slug: 'does-zero-balance-see-my-balance',
+        q: 'O Zero Balance enxerga meu saldo do Apple ID sozinho?',
+        a: 'Não. A Apple nunca entrega seu saldo a apps de terceiros. Você mesmo digita o valor - dá para ver no iPhone nos ajustes do Apple Account ou na App Store. O Zero Balance não pede login, senha nem código de verificação, e não tem nenhum acesso ao seu Apple ID.',
+        long: 'A Apple guarda o saldo do Apple ID nos próprios servidores e não dá a nenhum app de terceiros uma forma de lê-lo. O Zero Balance é um app comum da App Store, sem acesso especial, então o valor tem que vir de você: abra os Ajustes, toque no seu nome e confira o saldo em Apple Account (ou veja na App Store). Depois digite esse número no Zero Balance. É só essa a ligação. Você nunca faz login em nada, nunca entrega senha ou código de verificação, e o app nunca toca no seu Apple ID. A troca é um passo manual em vez de uma leitura automática - mas é também por isso que você não precisa confiar nenhuma credencial ao app.',
+      },
+      {
+        slug: 'what-zero-balance-spends',
+        q: 'O que exatamente o Zero Balance gasta?',
+        a: 'Ele gasta o que sobrou no seu Apple ID - o mesmo saldo que pode impedir você de mudar a região da App Store. Você digita o valor, o app combina algumas pequenas compras da App Store para bater com ele, e você vê o total antes de confirmar.',
+        long: 'O Zero Balance só mexe no crédito que já está no seu Apple ID - aquela sobra que muitas vezes é o motivo de a App Store não deixar você mudar de país ou região. Ele não tira nada do seu cartão a menos que o saldo acabe no meio do plano, porque a Apple sempre gasta primeiro o saldo do Apple ID. Você digita quanto sobrou, o app monta um pequeno conjunto de compras dentro do app que soma mais ou menos esse valor, e a tela do plano mostra o total e qualquer excesso. Nada é comprado até você aprovar cada item na própria janela da Apple, então você fica no controle o tempo todo.',
+      },
+      {
+        slug: 'balance-below-cheapest-purchase',
+        q: 'E se meu saldo for menor que a compra mais barata?',
+        a: 'Aí pode não dar para bater exato. O Zero Balance mostra a opção mais próxima e quanto ela ultrapassa - tudo antes de pagar - para você decidir se segue. Cada compra é confirmada separadamente na janela padrão da Apple.',
+        long: 'Isso aparece quando sobram só alguns centavos - menos que o menor item que o Zero Balance consegue comprar. Nesse caso o app não chega ao zero exato, então ele mostra o plano mais próximo e exatamente quanto ele ultrapassaria, na sua moeda, antes de qualquer cobrança. Se zerar o saldo vale alguns centavos a mais para você - digamos, para finalmente liberar a mudança de região da App Store - você segue. Se não, deixa como está; o saldo não expira. De todo jeito, a Apple ainda pede para você confirmar cada compra separadamente, então não há surpresas.',
+      },
+      {
+        slug: 'why-not-charge-exact-amount',
+        q: 'Por que ele não cobra exatamente o meu saldo?',
+        a: 'A App Store não deixa ninguém cobrar um valor qualquer - a Apple só permite preços fixos para compras dentro do app. Por isso o Zero Balance combina algumas pequenas compras para chegar o mais perto possível do que sobrou, com o menor excesso.',
+        long: 'Não existe forma de nenhum app cobrar uma quantia arbitrária pela App Store. A Apple só oferece um conjunto fixo de preços para compras dentro do app, então o desenvolvedor não consegue criar uma cobrança única para, digamos, os 46 exatos que sobraram na sua conta. O Zero Balance contorna isso da única maneira possível: trata esses preços fixos como moedas e monta uma combinação que soma o mais perto possível do que sobrou. Quanto mais preços houver para trabalhar, menor o excesso - e é por isso que o app se espalha por várias faixas pequenas em vez de depender de uma ou duas.',
+      },
+      {
+        slug: 'will-it-help-change-app-store-region',
+        q: 'Isso vai me ajudar a mudar a região da App Store?',
+        a: 'Sim, se o que está bloqueando a mudança for o saldo do Apple ID. A Apple obriga você a gastar o saldo até zero antes de mudar de país ou região. Se for outra coisa no caminho - uma assinatura ativa, uma pré-venda inacabada, um aluguel ou um reembolso pendente - você precisa resolver isso primeiro.',
+        long: 'A Apple não deixa você mudar o país ou a região da App Store enquanto sobrar qualquer saldo na conta - a opção fica desativada até o saldo chegar a exatamente zero, e o saldo não se transfere entre lojas nem volta para o seu cartão. É justamente esse bloqueio que o Zero Balance foi feito para resolver. Vale saber que o saldo não é a única coisa que a Apple verifica: uma assinatura ativa, uma pré-venda inacabada, um aluguel de filme ou série ativo, uma configuração de Compartilhamento Familiar ou um reembolso pendente também podem segurar a mudança. Resolva isso primeiro, zere o saldo, e a troca de região fica liberada.',
+      },
       {
         slug: 'does-zero-balance-read-my-balance',
         q: 'O Zero Balance lê meu saldo do Apple Account automaticamente?',

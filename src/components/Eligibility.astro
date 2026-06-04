@@ -1,0 +1,42 @@
+---
+import Container from './Container.astro';
+import Section from './Section.astro';
+import Reveal from './Reveal.astro';
+import { getDict, type Locale } from '../i18n';
+
+interface Props {
+  lang: Locale;
+}
+
+const { lang } = Astro.props;
+const t = getDict(lang);
+---
+
+<Section id="eligibility">
+  <Container>
+    <div class="mx-auto max-w-2xl text-center">
+      <Reveal>
+        <h2 class="h2 text-balance">{t.eligibility.title}</h2>
+      </Reveal>
+    </div>
+
+    <ul class="mx-auto mt-10 grid max-w-3xl gap-4 md:mt-14 md:grid-cols-2">
+      {
+        t.eligibility.items.map((item, i) => (
+          <Reveal
+            delay={i * 70}
+            as="li"
+            class="flex items-start gap-3 rounded-2xl border border-[var(--border)] bg-[var(--surface)] p-5 shadow-sm"
+          >
+            <span class="mt-0.5 inline-flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-[var(--brand-soft)] text-[var(--brand-strong)]">
+              <svg width="14" height="14" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+                <path d="M4 10l4 4 8-9" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" />
+              </svg>
+            </span>
+            <span class="text-[var(--fg)]">{item}</span>
+          </Reveal>
+        ))
+      }
+    </ul>
+  </Container>
+</Section>

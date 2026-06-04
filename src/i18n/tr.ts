@@ -168,9 +168,10 @@ const tr: Dict = {
   },
   hero: {
     eyebrow: 'iOS yardımcı uygulama',
-    title: 'Apple Account\'taki kalan bakiyenizi harcayın.',
+    title: 'Apple ID\'de kalan bakiye yüzünden App Store bölgenizi mi değiştiremiyorsunuz?',
     subtitle:
-      'Apple Account\'ta küçük bir bakiye, mağaza kredisi veya hediye kartının son kuruşları mı kaldı? Zero Balance App Store\'dan en yakın küçük öğeleri seçer ve sıfırlar.',
+      'Zero Balance kalanı harcamanıza yardımcı olur - Apple ID erişimi yok, abonelik yok, desteği aramak yok.',
+    socialProof: '2.000\'den fazla kişi App Store bölgesini şimdiden değiştirdi.',
     bullets: [
       'Bir dakikadan kısa sürede biter',
       'Apple ID\'nize erişim yok',
@@ -185,6 +186,25 @@ const tr: Dict = {
     label: 'değerlendirme',
     outOfFive: '5 üzerinden',
     basedOn: 'temel',
+    scope: 'tüm bölgelerde',
+  },
+  beforeAfter: {
+    beforeLabel: 'Önce',
+    afterLabel: 'Sonra',
+    balanceLabel: 'Apple ID bakiyesi',
+    beforeAmount: '0,78 €',
+    afterAmount: '0,00 €',
+    beforeStatus: 'Bölge değişikliği kullanılamıyor',
+    afterStatus: 'App Store bölgenizi değiştirebilirsiniz',
+  },
+  eligibility: {
+    title: 'Şu durumdaysanız bu sizin için…',
+    items: [
+      'App Store hesabınızda biraz bakiye takılı kaldı',
+      'Ve bu yüzden App Store ülkenizi veya bölgenizi değiştiremiyorsunuz',
+      'Tek bir satın alma kalan tutara tam olarak denk gelmiyor',
+      'Ya da bir Apple hediye kartından birkaç tuhaf kuruş kaldı',
+    ],
   },
   reviews: {
     title: 'İnsanlar ne diyor',
@@ -209,41 +229,18 @@ const tr: Dict = {
   },
   howItWorks: {
     title: 'Nasıl çalışır',
-    subtitle: 'Üç adım. Hile yok. Apple bakiyenizi diğer uygulama içi satın almalar gibi tahsil eder.',
     steps: [
       {
         title: 'Bakiyenizi girin',
-        body: 'Temizlemek istediğiniz tutarı yazın. Zero Balance Apple Account\'unuzu asla otomatik okumaz.',
+        body: 'Temizlemek istediğiniz tutarı yazın.',
       },
       {
-        title: 'Planı inceleyin',
-        body: 'Uygulama sekiz fiyat kademesinden en yakın kombinasyonu seçer. Bir şeye dokunmadan önce toplam, fazlalık ve gerekli onay sayısını görürsünüz.',
+        title: 'Bakiyeniz sıfıra insin diye satın almaları biz ayarlarız',
+        body: 'Uygulama doğru kombinasyonu sizin için otomatik olarak oluşturur.',
       },
       {
         title: 'Onaylayın ve temizleyin',
-        body: 'Satın almaları onaylayın. Envanteriniz size özel iCloud\'unuza özel olarak senkronize edilir. Bakiye sıfıra yönelir.',
-      },
-    ],
-  },
-  features: {
-    title: 'Tek bir iş için yapıldı ve iyi yapıldı',
-    subtitle: 'Abonelik yok. Ek satış yok. Veri satışı yok.',
-    items: [
-      {
-        title: 'Manuel hedef',
-        body: 'Kalan bakiyeyi kendiniz girersiniz. Zero Balance kombinasyonu yapar.',
-      },
-      {
-        title: 'Plan inceleme ekranı',
-        body: 'Herhangi bir App Store satın alımından önce toplam, fazlalık ve onay sayısı.',
-      },
-      {
-        title: 'Sekiz fiyat kademesi',
-        body: 'Farklı kalıntıları hassasiyetle eşleştirmek için ayrıntılı tutarlar.',
-      },
-      {
-        title: 'Özel iCloud envanteri',
-        body: 'Öğeler size özel iCloud\'unuz üzerinden cihazlarınız arasında senkronize edilir. Biz hiç görmeyiz.',
+        body: 'Satın almaları App Store\'da onaylayın.',
       },
     ],
   },
@@ -257,7 +254,7 @@ const tr: Dict = {
   },
   faqTeaser: {
     title: 'Sık sorulan sorular',
-    subtitle: 'Çoğu kişinin ilk sorduğu şeylerin yanıtları.',
+    subtitle: 'İnsanların kurmadan önce kontrol ettiği önemli şeyler.',
   },
   finalCta: {
     title: 'Bakiyenizi bir dakikadan kısa sürede sıfırlayın.',
@@ -289,6 +286,36 @@ const tr: Dict = {
     readFullAnswer: 'Tam yanıtı oku',
     relatedTitle: 'İlgili sorular',
     items: [
+      {
+        slug: 'does-zero-balance-see-my-balance',
+        q: 'Zero Balance Apple ID bakiyemi kendi başına görüyor mu?',
+        a: 'Hayır. Apple bakiyenizi asla üçüncü taraf uygulamalara vermez. Tutarı kendiniz yazarsınız - iPhone\'unuzda Apple Account ayarlarından veya App Store\'dan okuyabilirsiniz. Zero Balance giriş, parola ya da doğrulama kodu istemez ve Apple ID\'nize hiçbir erişim almaz.',
+        long: 'Apple, Apple ID bakiyenizi kendi sunucularında tutar ve hiçbir üçüncü taraf uygulamaya bunu okuma yolu vermez. Zero Balance özel erişimi olmayan sıradan bir App Store uygulamasıdır, bu yüzden tutarın sizden gelmesi gerekir: Ayarlar\'ı açın, adınıza dokunun ve bakiyeyi Apple Account altında kontrol edin (ya da App Store\'a bakın). Sonra o sayıyı Zero Balance\'a yazın. Bağlantının tamamı bu kadar. Hiçbir yere giriş yapmaz, parola veya doğrulama kodu vermez ve uygulama Apple ID\'nize asla dokunmaz. Bedeli, otomatik bir okuma yerine tek bir manuel adım atmanızdır - ama uygulamaya herhangi bir kimlik bilgisi emanet etmek zorunda olmamanızın da nedeni budur.',
+      },
+      {
+        slug: 'what-zero-balance-spends',
+        q: 'Zero Balance tam olarak neyi harcar?',
+        a: 'Apple ID\'nizde duran kalanı harcar - App Store bölgenizi değiştirmenize engel olabilen aynı bakiyeyi. Tutarı girersiniz, uygulama buna denk gelecek birkaç küçük App Store satın alması sıralar ve onaylamadan önce toplamı görürsünüz.',
+        long: 'Zero Balance yalnızca Apple ID\'nizde zaten duran mağaza kredisine dokunur - çoğu zaman App Store\'un ülke veya bölge değiştirmenize izin vermemesinin nedeni olan kalana. Bakiyeniz plan ortasında bitmediği sürece kartınızdan çekmez, çünkü Apple her zaman önce Apple ID bakiyesini harcar. Ne kadar kaldığını girersiniz, uygulama yaklaşık o tutara denk gelen küçük bir uygulama içi satın alma kümesi belirler ve plan ekranı size toplamı ve varsa aşımı gösterir. Her öğeyi Apple\'ın kendi penceresinden onaylayana kadar hiçbir şey satın alınmaz, böylece süreç boyunca kontrol sizde kalır.',
+      },
+      {
+        slug: 'balance-below-cheapest-purchase',
+        q: 'Bakiyem en ucuz satın almadan küçükse ne olur?',
+        a: 'O zaman tam bir eşleşme mümkün olmayabilir. Zero Balance en yakın seçeneği ve ne kadar aştığını gösterir - hepsi ödeme yapmadan önce - böylece devam edip etmeyeceğinize karar verebilirsiniz. Her satın alma Apple\'ın standart penceresinden ayrı ayrı onaylanır.',
+        long: 'Bu, geriye yalnızca birkaç kuruş kaldığında ortaya çıkar - Zero Balance\'ın satın alabileceği en küçük öğeden daha az. Bu durumda uygulama tam olarak sıfıra inemez, bu yüzden hiçbir şey çekilmeden önce en yakın planı ve ne kadar aşacağını kendi para biriminizde tam olarak gösterir. Bakiyeyi temizlemek size birkaç kuruşa değiyorsa - mesela sonunda App Store bölgenizi değiştirmeyi açmak için - devam edersiniz. Değmiyorsa öyle bırakırsınız; bakiye dolmaz. Her durumda Apple yine de her satın almayı tek tek onaylamanızı ister, böylece sürpriz olmaz.',
+      },
+      {
+        slug: 'why-not-charge-exact-amount',
+        q: 'Neden tam olarak bakiyemi tahsil edemiyor?',
+        a: 'App Store kimsenin rastgele bir tutar tahsil etmesine izin vermez - Apple uygulama içi satın almalar için yalnızca sabit fiyatlara izin verir. Bu yüzden Zero Balance kalanınıza olabildiğince yakın gelmek için birkaç küçük öğeyi en az aşımla birleştirir.',
+        long: 'Hiçbir uygulamanın App Store üzerinden rastgele bir tutarı faturalandırma yolu yoktur. Apple yalnızca sabit bir uygulama içi satın alma fiyat noktası kümesi sunar, bu yüzden bir geliştirici hesabınızda kalan, diyelim ki tam 46 için tek seferlik bir tahsilat oluşturamaz. Zero Balance bunu mümkün olan tek yolla aşar: o sabit fiyatlara madeni para gibi davranır ve kalanınıza olabildiğince yakın toplanan bir kombinasyon kurar. Çalışılacak fiyat noktası ne kadar çoksa aşım o kadar küçük olur - bu yüzden uygulama bir veya ikisine yaslanmak yerine birkaç küçük kademeye yayılır.',
+      },
+      {
+        slug: 'will-it-help-change-app-store-region',
+        q: 'Bu, App Store bölgemi değiştirmeme yardımcı olur mu?',
+        a: 'Evet, değişikliği engelleyen Apple ID bakiyesiyse. Apple, ülke veya bölge değiştirmeden önce bakiyeyi sıfıra kadar harcamanızı ister. Yolu tıkayan başka bir şeyse - etkin bir abonelik, tamamlanmamış bir ön sipariş, bir kiralama veya bekleyen bir iade - önce onu temizlemeniz gerekir.',
+        long: 'Apple, hesapta herhangi bir bakiye kaldığı sürece App Store ülkenizi veya bölgenizi değiştirmenize izin vermez - seçenek tam olarak sıfır okuyana kadar devre dışı kalır ve bakiye ne mağazalar arasında aktarılır ne de kartınıza iade edilir. Zero Balance tam olarak bu engeli temizlemek için yapıldı. Şunu bilmekte fayda var: bakiye Apple\'ın kontrol ettiği tek şey değildir - etkin bir abonelik, tamamlanmamış bir ön sipariş, etkin bir film veya dizi kiralaması, bir Aile Paylaşımı kurulumu ya da bekleyen bir iade de değişikliği geri tutabilir. Önce onları temizleyin, bakiyeyi sıfıra indirin, bölge değişikliği açılsın.',
+      },
       {
         slug: 'does-zero-balance-read-my-balance',
         q: 'Zero Balance Apple Account bakiyemi otomatik okuyor mu?',

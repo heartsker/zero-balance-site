@@ -126,8 +126,8 @@ export const APP_TAGLINE_RU = 'Потратить баланс';
 export const APP_ID = '6761912988';
 
 // Bump after notable rating swings. Source of truth: App Store Connect.
-export const APP_RATING = 4.9;
-export const APP_RATING_COUNT = 517;
+export const APP_RATING = 4.7;
+export const APP_RATING_COUNT = 127;
 
 export const SOCIAL = {
   github: 'https://github.com/heartsker/zero-balance-site',

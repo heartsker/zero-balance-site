@@ -25,11 +25,11 @@ const full = Math.floor(rounded);
 const hasHalf = rounded - full === 0.5;
 const totalStars = 5;
 
-const ariaLabel = `${ratingFormatted} ${t.rating.outOfFive}, ${t.rating.basedOn} ${countFormatted} ${t.rating.label}`;
+const ariaLabel = `${ratingFormatted} ${t.rating.outOfFive}, ${t.rating.basedOn} ${countFormatted} ${t.rating.label}, ${t.cta.appStoreShort}, ${t.rating.scope}`;
 ---
 
 <div
-  class:list={['inline-flex items-center gap-2 text-sm text-[var(--muted)]', className]}
+  class:list={['inline-flex flex-wrap items-center gap-x-2 gap-y-1 text-sm text-[var(--muted)]', className]}
   role="img"
   aria-label={ariaLabel}
   data-rating-badge
@@ -60,4 +60,6 @@ const ariaLabel = `${ratingFormatted} ${t.rating.outOfFive}, ${t.rating.basedOn}
   <span class="font-semibold text-[var(--fg)]">{ratingFormatted}</span>
   <span aria-hidden="true">·</span>
   <span>{countFormatted} {t.rating.label}</span>
+  <span aria-hidden="true">·</span>
+  <span>{t.cta.appStoreShort}, {t.rating.scope}</span>
 </div>

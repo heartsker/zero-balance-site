@@ -168,9 +168,10 @@ const ko: Dict = {
   },
   hero: {
     eyebrow: 'iOS 유틸리티',
-    title: 'Apple Account 의 남은 잔액을 다 쓰세요.',
+    title: 'Apple ID 에 남은 잔액 때문에 App Store 지역을 못 바꾸시나요?',
     subtitle:
-      'Apple Account 의 소액 잔액, 스토어 크레딧, 기프트카드 마지막 잔돈? Zero Balance 가 App Store 의 소액 아이템 중 가장 가까운 조합을 골라 0으로 만듭니다.',
+      'Zero Balance 가 남은 잔액을 다 쓰도록 도와드립니다 - Apple ID 접근도, 구독도, 고객지원 전화도 필요 없습니다.',
+    socialProof: '이미 2,000명이 넘는 분들이 App Store 지역을 바꿨습니다.',
     bullets: [
       '1분 안에 완료',
       'Apple ID 접근 없음',
@@ -185,6 +186,25 @@ const ko: Dict = {
     label: '개 평가',
     outOfFive: '5점 만점',
     basedOn: '기준',
+    scope: '전체 지역 기준',
+  },
+  beforeAfter: {
+    beforeLabel: '전',
+    afterLabel: '후',
+    balanceLabel: 'Apple ID 잔액',
+    beforeAmount: '₩1,200',
+    afterAmount: '₩0',
+    beforeStatus: '지역 변경 불가',
+    afterStatus: 'App Store 지역을 바꿀 수 있음',
+  },
+  eligibility: {
+    title: '이런 경우라면 딱 맞습니다…',
+    items: [
+      'App Store 계정에 잔액이 조금 묶여 있다',
+      '그 잔액 때문에 App Store 국가나 지역을 바꿀 수 없다',
+      '딱 그 잔액만큼 떨어지는 단일 구매가 없다',
+      '또는 Apple 기프트카드 때문에 어중간한 잔돈이 남았다',
+    ],
   },
   reviews: {
     title: '사용자 의견',
@@ -209,41 +229,18 @@ const ko: Dict = {
   },
   howItWorks: {
     title: '작동 방식',
-    subtitle: '세 단계. 트릭 없음. Apple 은 다른 인앱 결제처럼 잔액에서 차감합니다.',
     steps: [
       {
         title: '잔액 입력',
-        body: '없애고 싶은 금액을 입력하세요. Zero Balance 는 Apple Account 를 자동으로 읽지 않습니다.',
+        body: '없애고 싶은 금액을 입력하세요.',
       },
       {
-        title: '계획 검토',
-        body: '앱이 8단계 가격 등급에서 가장 가까운 조합을 고릅니다. 무언가를 탭하기 전에 총액, 초과분, 필요한 확인 횟수가 보입니다.',
+        title: '잔액이 0으로 딱 떨어지도록 구매를 맞춰 드립니다',
+        body: '앱이 알맞은 조합을 자동으로 구성해 줍니다.',
       },
       {
         title: '확인하고 비우기',
-        body: '구매를 승인하세요. 보유 아이템은 본인의 iCloud 에 비공개로 동기화됩니다. 잔액은 0으로 향합니다.',
-      },
-    ],
-  },
-  features: {
-    title: '한 가지 일을 제대로',
-    subtitle: '구독 없음. 업셀 없음. 데이터 판매 없음.',
-    items: [
-      {
-        title: '수동 목표값',
-        body: '남은 잔액은 본인이 입력합니다. Zero Balance 는 조합을 담당합니다.',
-      },
-      {
-        title: '계획 검토 화면',
-        body: 'App Store 구매 전에 총액, 초과분, 확인 횟수.',
-      },
-      {
-        title: '8단계 가격',
-        body: '세밀한 금액으로 다양한 잔돈을 정확히 맞춥니다.',
-      },
-      {
-        title: '비공개 iCloud 인벤토리',
-        body: '아이템은 본인 iCloud 를 통해 기기 간 동기화. 우리는 절대 보지 않습니다.',
+        body: 'App Store 에서 구매를 승인하세요.',
       },
     ],
   },
@@ -257,7 +254,7 @@ const ko: Dict = {
   },
   faqTeaser: {
     title: '자주 묻는 질문',
-    subtitle: '대부분이 가장 먼저 묻는 것에 대한 답.',
+    subtitle: '설치 전에 다들 확인하는 핵심만 모았습니다.',
   },
   finalCta: {
     title: '잔액을 1분 안에 0으로.',
@@ -289,6 +286,36 @@ const ko: Dict = {
     readFullAnswer: '전체 답변 보기',
     relatedTitle: '관련 질문',
     items: [
+      {
+        slug: 'does-zero-balance-see-my-balance',
+        q: 'Zero Balance 가 제 Apple ID 잔액을 스스로 알 수 있나요?',
+        a: '아니요. Apple 은 잔액을 서드파티 앱에 절대 넘기지 않습니다. 금액은 본인이 직접 입력합니다 - iPhone 의 Apple Account 설정이나 App Store 에서 확인할 수 있습니다. Zero Balance 는 로그인, 비밀번호, 인증 코드를 일절 요구하지 않으며 Apple ID 에 어떤 접근권도 갖지 않습니다.',
+        long: 'Apple 은 Apple ID 잔액을 자사 서버에 보관하며 서드파티 앱이 읽을 방법을 전혀 제공하지 않습니다. Zero Balance 는 특별한 접근권이 없는 평범한 App Store 앱이므로 금액은 본인에게서 와야 합니다. 설정을 열고 이름을 누른 뒤 Apple Account 아래에서 잔액을 확인하세요(또는 App Store 에서 확인하세요). 그 숫자를 Zero Balance 에 입력하면 됩니다. 연결은 그게 전부입니다. 어디에도 로그인하지 않고, 비밀번호나 인증 코드를 넘기지 않으며, 앱은 Apple ID 를 절대 건드리지 않습니다. 자동 조회 대신 수동으로 한 단계를 거친다는 점이 트레이드오프이지만, 바로 그 덕분에 어떤 자격 증명도 앱에 맡기지 않아도 됩니다.',
+      },
+      {
+        slug: 'what-zero-balance-spends',
+        q: 'Zero Balance 는 정확히 무엇을 쓰나요?',
+        a: 'Apple ID 에 남아 있는 잔액 - App Store 지역 변경을 막곤 하는 바로 그 잔액 - 을 씁니다. 금액을 입력하면 앱이 그에 맞춰 App Store 소액 구매 몇 개를 구성하고, 확인하기 전에 총액을 보여줍니다.',
+        long: 'Zero Balance 는 이미 Apple ID 에 들어 있는 스토어 크레딧 - App Store 가 국가나 지역 변경을 막는 이유가 되곤 하는 그 잔액 - 만 건드립니다. Apple 은 항상 Apple ID 잔액을 먼저 쓰므로, 계획 도중 잔액이 다 떨어지지 않는 한 카드에서는 끌어오지 않습니다. 남은 금액을 입력하면 앱이 대략 그 금액에 맞는 소액 인앱 구매 묶음을 계산하고, 계획 화면에 총액과 초과분이 표시됩니다. Apple 자체 안내창에서 각 항목을 승인하기 전까지는 아무것도 구매되지 않으므로, 처음부터 끝까지 통제권은 본인에게 있습니다.',
+      },
+      {
+        slug: 'balance-below-cheapest-purchase',
+        q: '잔액이 가장 싼 구매보다 적으면 어떻게 되나요?',
+        a: '그러면 정확히 맞추는 것이 불가능할 수 있습니다. Zero Balance 가 가장 가까운 옵션과 얼마나 초과되는지를 - 모두 결제 전에 - 보여주므로 계속할지 결정할 수 있습니다. 모든 구매는 Apple 의 표준 안내창에서 개별적으로 확인됩니다.',
+        long: '이는 잔돈이 몇 센트만 남았을 때 - Zero Balance 가 살 수 있는 가장 작은 아이템보다 적을 때 - 생깁니다. 이 경우 앱은 정확히 0으로 떨어뜨릴 수 없으므로, 무엇이든 청구되기 전에 가장 가까운 계획과 정확히 얼마나 초과되는지를 본인 통화로 보여줍니다. 잔액을 비우는 일이 몇 센트를 더 낼 가치가 있다면 - 예를 들어 마침내 App Store 지역 변경을 풀기 위해서라면 - 계속하세요. 아니라면 그대로 두면 됩니다. 잔액은 만료되지 않습니다. 어느 쪽이든 Apple 은 각 구매를 개별적으로 확인하도록 하므로 깜짝 놀랄 일은 없습니다.',
+      },
+      {
+        slug: 'why-not-charge-exact-amount',
+        q: '그냥 제 잔액만큼 정확히 청구하면 안 되나요?',
+        a: 'App Store 는 누구에게도 임의의 금액을 청구하도록 허용하지 않습니다 - Apple 은 인앱 구매에 고정 가격만 허용합니다. 그래서 Zero Balance 는 소액 아이템 몇 개를 조합해 초과분을 최소로 하면서 남은 잔액에 최대한 가깝게 맞춥니다.',
+        long: '어떤 앱도 App Store 를 통해 임의의 금액을 청구할 방법이 없습니다. Apple 은 고정된 인앱 구매 가격대만 제공하므로, 개발자가 예컨대 계정에 남은 정확히 46원짜리 일회성 청구를 만들 수 없습니다. Zero Balance 는 가능한 유일한 방식으로 이를 우회합니다. 그 고정 가격들을 동전처럼 다루어, 남은 잔액에 최대한 가깝게 합산되는 조합을 만듭니다. 다룰 수 있는 가격대가 많을수록 초과분은 작아집니다 - 그래서 앱은 한두 개에 의존하지 않고 여러 소액 등급에 걸쳐 분산합니다.',
+      },
+      {
+        slug: 'will-it-help-change-app-store-region',
+        q: '이게 App Store 지역을 바꾸는 데 도움이 되나요?',
+        a: '네, 변경을 막는 것이 Apple ID 잔액이라면요. Apple 은 국가나 지역을 바꾸기 전에 잔액을 0으로 다 쓰도록 요구합니다. 다른 것이 막고 있다면 - 활성 구독, 미완료 예약 주문, 대여, 처리 중인 환불 - 그것을 먼저 정리해야 합니다.',
+        long: 'Apple 은 계정에 잔액이 조금이라도 남아 있는 동안에는 App Store 국가나 지역을 바꾸지 못하게 합니다 - 정확히 0이 될 때까지 해당 옵션은 회색으로 비활성화되며, 잔액은 스토어프런트 간에 이전되지도, 카드로 환불되지도 않습니다. 바로 그 막힘이 Zero Balance 가 해결하려고 만들어진 부분입니다. 다만 Apple 이 확인하는 것이 잔액만은 아니라는 점을 알아두면 좋습니다. 활성 구독, 미완료 예약 주문, 진행 중인 영화나 TV 대여, 가족 공유 설정, 처리 중인 환불도 각각 변경을 막을 수 있습니다. 그것들을 먼저 정리하고 잔액을 0으로 만들면 지역 변경이 열립니다.',
+      },
       {
         slug: 'does-zero-balance-read-my-balance',
         q: 'Zero Balance 가 Apple Account 잔액을 자동으로 읽나요?',

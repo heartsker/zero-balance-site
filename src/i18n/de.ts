@@ -168,9 +168,10 @@ const de: Dict = {
   },
   hero: {
     eyebrow: 'iOS-Utility',
-    title: 'Gib dein Apple Account Restguthaben aus.',
+    title: 'Du kannst deine App-Store-Region wegen eines Restguthabens auf der Apple ID nicht wechseln?',
     subtitle:
-      'Kleines Restguthaben auf deinem Apple Account, Store-Credit oder die letzten Cent einer Geschenkkarte? Zero Balance findet die passende Kombination kleiner App-Store-Käufe und bringt es auf null.',
+      'Zero Balance hilft dir, das Restguthaben auszugeben - ohne Zugriff auf deine Apple ID, ohne Abo und ohne Anruf beim Support.',
+    socialProof: 'Mehr als 2.000 Leute haben damit schon ihre App-Store-Region gewechselt.',
     bullets: [
       'In unter einer Minute erledigt',
       'Kein Zugriff auf deine Apple ID',
@@ -185,6 +186,25 @@ const de: Dict = {
     label: 'Bewertungen',
     outOfFive: 'von 5',
     basedOn: 'basierend auf',
+    scope: 'über alle Regionen',
+  },
+  beforeAfter: {
+    beforeLabel: 'Vorher',
+    afterLabel: 'Nachher',
+    balanceLabel: 'Apple ID Guthaben',
+    beforeAmount: '0,78 €',
+    afterAmount: '0,00 €',
+    beforeStatus: 'Regionswechsel nicht möglich',
+    afterStatus: 'Du kannst deine App-Store-Region wechseln',
+  },
+  eligibility: {
+    title: 'Das ist was für dich, wenn …',
+    items: [
+      'Auf deinem App-Store-Account hängt noch ein bisschen Guthaben',
+      'Und deshalb lässt sich dein App-Store-Land oder deine Region nicht wechseln',
+      'Kein einzelner Kauf trifft genau das Restguthaben',
+      'Oder eine Apple-Geschenkkarte hat dir ein paar krumme Cent hinterlassen',
+    ],
   },
   reviews: {
     title: 'Was die Leute sagen',
@@ -209,41 +229,18 @@ const de: Dict = {
   },
   howItWorks: {
     title: 'So funktioniert es',
-    subtitle: 'Drei Schritte. Keine Tricks. Apple bucht dein Guthaben wie bei jedem anderen In-App-Kauf ab.',
     steps: [
       {
         title: 'Guthaben eingeben',
-        body: 'Gib den Betrag ein, den du loswerden willst. Zero Balance liest dein Apple Account nie automatisch.',
+        body: 'Gib den Betrag ein, den du loswerden willst.',
       },
       {
-        title: 'Plan prüfen',
-        body: 'Die App wählt die passende Kombination aus acht Preisstufen. Du siehst Gesamtbetrag, Überschuss und Anzahl der Bestätigungen, bevor du etwas tippst.',
+        title: 'Wir stellen Käufe so zusammen, dass dein Guthaben auf null landet',
+        body: 'Die App stellt die passende Kombination automatisch für dich zusammen.',
       },
       {
         title: 'Bestätigen und löschen',
-        body: 'Bestätige die Käufe. Dein Inventar synchronisiert sich privat in deinem iCloud. Das Guthaben geht gegen null.',
-      },
-    ],
-  },
-  features: {
-    title: 'Für eine Aufgabe gebaut - und gut gemacht',
-    subtitle: 'Keine Abos. Keine Aufdringlichkeiten. Keine Datenverkäufe.',
-    items: [
-      {
-        title: 'Manueller Zielbetrag',
-        body: 'Du gibst dein Restguthaben selbst ein. Zero Balance übernimmt das Matching.',
-      },
-      {
-        title: 'Plan-Prüfungsbildschirm',
-        body: 'Gesamtbetrag, Überschuss und Anzahl der Bestätigungen vor jedem App-Store-Kauf.',
-      },
-      {
-        title: 'Acht Preisstufen',
-        body: 'Feine Beträge, damit verschiedene Reste präzise getroffen werden können.',
-      },
-      {
-        title: 'Privates iCloud-Inventar',
-        body: 'Artikel synchronisieren sich über deinen eigenen iCloud auf deine Geräte. Wir sehen sie nie.',
+        body: 'Bestätige die Käufe im App Store.',
       },
     ],
   },
@@ -257,7 +254,7 @@ const de: Dict = {
   },
   faqTeaser: {
     title: 'Häufige Fragen',
-    subtitle: 'Antworten auf das, was die meisten zuerst fragen.',
+    subtitle: 'Das Wichtigste, was Leute vor der Installation klären.',
   },
   finalCta: {
     title: 'Leere dein Guthaben in unter einer Minute.',
@@ -289,6 +286,36 @@ const de: Dict = {
     readFullAnswer: 'Vollständige Antwort lesen',
     relatedTitle: 'Verwandte Fragen',
     items: [
+      {
+        slug: 'does-zero-balance-see-my-balance',
+        q: 'Sieht Zero Balance mein Apple ID Guthaben von selbst?',
+        a: 'Nein. Apple gibt dein Guthaben nie an Drittanbieter-Apps weiter. Du gibst den Betrag selbst ein - ablesen kannst du ihn auf deinem iPhone in den Apple-Account-Einstellungen oder im App Store. Zero Balance fragt nach keinem Login, keinem Passwort, keinem Bestätigungscode und bekommt keinen Zugriff auf deine Apple ID.',
+        long: 'Apple bewahrt dein Apple ID Guthaben auf den eigenen Servern auf und gibt keiner Drittanbieter-App eine Möglichkeit, es auszulesen. Zero Balance ist eine ganz normale App-Store-App ohne besonderen Zugriff, also muss der Betrag von dir kommen: Öffne die Einstellungen, tippe auf deinen Namen und schau dir das Guthaben unter Apple Account an (oder im App Store). Diese Zahl tippst du dann in Zero Balance ein. Mehr Verbindung gibt es nicht. Du meldest dich nirgends an, gibst kein Passwort und keinen Bestätigungscode heraus, und die App fasst deine Apple ID nie an. Der Preis dafür ist ein manueller Schritt statt einer automatischen Anzeige - aber genau deshalb musst du der App auch keine Zugangsdaten anvertrauen.',
+      },
+      {
+        slug: 'what-zero-balance-spends',
+        q: 'Was genau gibt Zero Balance aus?',
+        a: 'Es gibt das Restguthaben aus, das auf deiner Apple ID liegt - dasselbe Guthaben, das dich am Wechsel der App-Store-Region hindern kann. Du gibst den Betrag ein, die App stellt ein paar kleine App-Store-Käufe passend dazu zusammen, und du siehst die Summe, bevor du bestätigst.',
+        long: 'Zero Balance fasst immer nur den Store-Credit an, der bereits auf deiner Apple ID liegt - das Restguthaben, das oft der Grund ist, warum der App Store dich Land oder Region nicht wechseln lässt. Von deiner Karte zieht es nichts ab, solange das Guthaben mitten im Plan nicht aufgebraucht ist, denn Apple gibt immer zuerst das Apple ID Guthaben aus. Du gibst ein, wie viel übrig ist, die App ermittelt eine kleine Auswahl an In-App-Käufen, die ungefähr diesen Betrag ergibt, und der Plan-Bildschirm zeigt dir die Summe und einen eventuellen Überschuss. Es wird nichts gekauft, bis du jeden Posten über Apples eigenen Dialog freigibst - du behältst also die ganze Zeit die Kontrolle.',
+      },
+      {
+        slug: 'balance-below-cheapest-purchase',
+        q: 'Was, wenn mein Guthaben kleiner ist als der günstigste Kauf?',
+        a: 'Dann ist eine exakte Übereinstimmung vielleicht nicht möglich. Zero Balance zeigt dir die nächstbeste Option und wie viel sie darüber liegt - alles, bevor du zahlst - damit du entscheiden kannst, ob du weitermachst. Jeder Kauf wird einzeln über Apples Standarddialog bestätigt.',
+        long: 'Das kommt vor, wenn nur noch ein paar Cent übrig sind - weniger, als der kleinste Artikel kostet, den Zero Balance kaufen kann. In dem Fall kann die App nicht exakt auf null landen und zeigt dir deshalb den nächstgelegenen Plan und genau, wie viel er darüber liegen würde, in deiner eigenen Währung, bevor etwas belastet wird. Wenn dir das Leeren des Guthabens ein paar Cent extra wert ist - etwa, um endlich den Wechsel der App-Store-Region freizuschalten - machst du weiter. Wenn nicht, lässt du es; das Guthaben verfällt nicht. So oder so bittet dich Apple, jeden Kauf einzeln zu bestätigen, also gibt es keine Überraschungen.',
+      },
+      {
+        slug: 'why-not-charge-exact-amount',
+        q: 'Warum kann es nicht einfach genau mein Guthaben abbuchen?',
+        a: 'Der App Store lässt niemanden einen beliebigen Betrag abbuchen - Apple erlaubt nur feste Preise für In-App-Käufe. Also kombiniert Zero Balance ein paar kleine Artikel, um deinem Restguthaben so nah wie möglich zu kommen, mit dem geringsten Überschuss.',
+        long: 'Es gibt für keine App eine Möglichkeit, über den App Store einen beliebigen Betrag abzubuchen. Apple bietet nur einen festen Satz an Preispunkten für In-App-Käufe, also kann ein Entwickler keine einmalige Belastung über zum Beispiel die exakten 46 Cent erstellen, die auf deinem Account übrig sind. Zero Balance umgeht das auf die einzig mögliche Weise: Es behandelt diese festen Preise wie Münzen und stellt eine Kombination zusammen, die so nah wie möglich an dein Restguthaben herankommt. Je mehr Preispunkte zur Verfügung stehen, desto kleiner der Überschuss - deshalb verteilt die App sich auf mehrere kleine Stufen, statt sich auf eine oder zwei zu verlassen.',
+      },
+      {
+        slug: 'will-it-help-change-app-store-region',
+        q: 'Hilft mir das, meine App-Store-Region zu wechseln?',
+        a: 'Ja, wenn der Wechsel am Apple ID Guthaben hängt. Apple verlangt, dass du das Guthaben auf null bringst, bevor du Land oder Region wechselst. Steht etwas anderes im Weg - ein laufendes Abo, eine offene Vorbestellung, eine Leihe oder eine ausstehende Erstattung - musst du das zuerst klären.',
+        long: 'Apple lässt dich Land oder Region des App Store nicht wechseln, solange noch irgendein Guthaben auf dem Account liegt - die Option bleibt ausgegraut, bis sie exakt null anzeigt, und das Guthaben wandert weder zwischen Storefronts noch wird es auf deine Karte erstattet. Genau diese Sperre soll Zero Balance auflösen. Gut zu wissen: Das Guthaben ist nicht das Einzige, was Apple prüft. Ein laufendes Abo, eine offene Vorbestellung, eine aktive Film- oder Serienleihe, eine eingerichtete Familienfreigabe oder eine ausstehende Erstattung können den Wechsel ebenfalls blockieren. Kläre diese zuerst, bring das Guthaben auf null, und der Regionswechsel wird freigegeben.',
+      },
       {
         slug: 'does-zero-balance-read-my-balance',
         q: 'Liest Zero Balance mein Apple Account Guthaben automatisch?',

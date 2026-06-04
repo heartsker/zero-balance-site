@@ -166,9 +166,10 @@ const en = {
   },
   hero: {
     eyebrow: 'iOS utility',
-    title: 'Spend your leftover Apple Account balance.',
+    title: "Can't change your App Store region because of a leftover Apple ID balance?",
     subtitle:
-      'Got a small balance on your Apple Account, a leftover store credit, or the last few cents of a gift card? Zero Balance picks the closest pack of small App Store items to clear it down to zero.',
+      "Zero Balance helps you spend what's left - no Apple ID access, no subscription, no call to support.",
+    socialProof: 'More than 2,000 people have already changed their App Store region.',
     bullets: [
       'Done in under a minute',
       'No access to your Apple ID',
@@ -183,6 +184,25 @@ const en = {
     label: 'ratings',
     outOfFive: 'out of 5',
     basedOn: 'based on',
+    scope: 'across all regions',
+  },
+  beforeAfter: {
+    beforeLabel: 'Before',
+    afterLabel: 'After',
+    balanceLabel: 'Apple ID balance',
+    beforeAmount: '$0.78',
+    afterAmount: '$0.00',
+    beforeStatus: 'Region change unavailable',
+    afterStatus: 'You can change your App Store region',
+  },
+  eligibility: {
+    title: 'This is for you if…',
+    items: [
+      "You've got a bit of balance stuck on your App Store account",
+      "And it won't let you switch your App Store country or region",
+      'No single purchase lands exactly on the leftover',
+      'Or an Apple gift card left you with a few odd cents',
+    ],
   },
   reviews: {
     title: 'What people are saying',
@@ -208,41 +228,18 @@ const en = {
   },
   howItWorks: {
     title: 'How it works',
-    subtitle: 'Three steps. No tricks. Apple charges your balance like any other in-app purchase.',
     steps: [
       {
         title: 'Enter your balance',
-        body: 'Type in the amount you want to clear. Zero Balance never reads your Apple Account automatically.',
+        body: 'Type in the amount you want to clear.',
       },
       {
-        title: 'Review the plan',
-        body: 'The app picks the closest combination from eight price tiers. You see the total, the overage, and how many confirmations it takes before you tap anything.',
+        title: 'We line up purchases so your balance lands on zero',
+        body: 'The app puts the right combination together for you, automatically.',
       },
       {
         title: 'Confirm and clear',
-        body: 'Approve the purchases. Your inventory syncs privately to your own iCloud. The balance trends to zero.',
-      },
-    ],
-  },
-  features: {
-    title: 'Built for one job, done well',
-    subtitle: 'No subscriptions. No upsells. No data sold.',
-    items: [
-      {
-        title: 'Manual target helper',
-        body: 'You enter the remaining balance yourself. Zero Balance does the matching.',
-      },
-      {
-        title: 'Plan review screen',
-        body: 'Total, overage and confirmation count before any App Store purchase.',
-      },
-      {
-        title: 'Eight price tiers',
-        body: 'Granular amounts so different remainders can be matched precisely.',
-      },
-      {
-        title: 'Private iCloud inventory',
-        body: 'Items sync across your devices via your own iCloud. We never see them.',
+        body: 'Approve the purchases in the App Store.',
       },
     ],
   },
@@ -256,7 +253,7 @@ const en = {
   },
   faqTeaser: {
     title: 'Common questions',
-    subtitle: 'Answers to what most people ask first.',
+    subtitle: 'The key things people check before installing.',
   },
   finalCta: {
     title: 'Clear your balance in under a minute.',
@@ -288,6 +285,36 @@ const en = {
     readFullAnswer: 'Read full answer',
     relatedTitle: 'Related questions',
     items: [
+      {
+        slug: 'does-zero-balance-see-my-balance',
+        q: 'Does Zero Balance see my Apple ID balance on its own?',
+        a: 'No. Apple never hands your balance to third-party apps. You type the amount in yourself - you can read it on your iPhone under Apple Account settings or in the App Store. Zero Balance asks for no login, no password, no verification code, and gets no access to your Apple ID.',
+        long: "Apple keeps your Apple ID balance on its own servers and gives no third-party app a way to read it. Zero Balance is an ordinary App Store app with no special access, so the amount has to come from you: open Settings, tap your name, and check the balance under Apple Account (or look in the App Store). Then type that number into Zero Balance. That is the whole connection. You never sign in to anything, never hand over a password or a verification code, and the app never touches your Apple ID. The trade-off is one manual step instead of an automatic readout - but it is also why you do not have to trust the app with any credentials.",
+      },
+      {
+        slug: 'what-zero-balance-spends',
+        q: 'What exactly does Zero Balance spend?',
+        a: 'It spends the leftover sitting on your Apple ID - the same balance that can keep you from switching App Store region. You enter the amount, the app lines up a few small App Store purchases to match it, and you see the total before you confirm.',
+        long: "Zero Balance only ever touches the store credit already sitting on your Apple ID - the leftover that is often the reason the App Store will not let you change country or region. It does not pull from your card unless your balance runs out mid-plan, because Apple always spends the Apple ID balance first. You enter how much is left, the app works out a small set of in-app purchases that adds up to roughly that amount, and the plan screen shows you the total and any overage. Nothing is bought until you approve each item through Apple's own prompt, so you stay in control the whole way.",
+      },
+      {
+        slug: 'balance-below-cheapest-purchase',
+        q: 'What if my balance is smaller than the cheapest purchase?',
+        a: 'Then an exact match may not be possible. Zero Balance shows you the closest option and how much it goes over - all before you pay - so you can decide whether to continue. Every purchase is confirmed separately through Apple\'s standard prompt.',
+        long: "This comes up when you have just a few cents left - less than the smallest item Zero Balance can buy. In that case the app cannot land on zero exactly, so it shows you the nearest plan and exactly how much it would go over, in your own currency, before anything is charged. If clearing the balance is worth a few extra cents to you - say, to finally unlock changing your App Store region - you continue. If not, you leave it; the balance does not expire. Either way, Apple still asks you to confirm each purchase on its own, so there are no surprises.",
+      },
+      {
+        slug: 'why-not-charge-exact-amount',
+        q: "Why can't it just charge my exact balance?",
+        a: "The App Store doesn't let anyone charge an arbitrary amount - Apple only allows fixed prices for in-app purchases. So Zero Balance combines a few small items to get as close to your leftover as it can, with the least overshoot.",
+        long: "There is no way for any app to bill an arbitrary sum through the App Store. Apple only offers a fixed set of in-app purchase price points, so a developer cannot create a one-off charge for, say, the exact 46 left on your account. Zero Balance works around that the only way possible: it treats those fixed prices like coins and assembles a combination that adds up as close to your leftover as it can. The more price points there are to work with, the smaller the overshoot - which is why the app spreads across several small tiers instead of relying on one or two.",
+      },
+      {
+        slug: 'will-it-help-change-app-store-region',
+        q: 'Will this help me change my App Store region?',
+        a: "Yes, if it's the Apple ID balance that's blocking the change. Apple makes you spend the balance down to zero before switching country or region. If something else is in the way - an active subscription, an unfinished pre-order, a rental, or a pending refund - you'll need to clear that first.",
+        long: "Apple will not let you change your App Store country or region while there is any balance left on the account - the option stays greyed out until it reads exactly zero, and the balance neither transfers between storefronts nor refunds to your card. That specific block is exactly what Zero Balance is built to clear. It is worth knowing that the balance is not the only thing Apple checks: an active subscription, an unfinished pre-order, an active film or TV rental, a Family Sharing setup, or a pending refund can each hold the change back too. Clear those first, get the balance to zero, and the region switch opens up.",
+      },
       {
         slug: 'does-zero-balance-read-my-balance',
         q: 'Does Zero Balance read my Apple Account balance automatically?',
