@@ -16,7 +16,15 @@ const navLinks = [
   { label: t.nav.home, href: localizedPath(lang, '') },
   { label: t.nav.faq, href: localizedPath(lang, 'faq') },
   { label: t.nav.help, href: localizedPath(lang, 'help') },
+  // The blog ships only in en + ru, so link it only where the index exists.
+  // Label is inline (not a dict key) to avoid touching all 12 locale files.
+  ...(lang === 'en' || lang === 'ru'
+    ? [{ label: lang === 'ru' ? 'Блог' : 'Blog', href: localizedPath(lang, 'blog') }]
+    : []),
 ];
+
+// Hardcoded (not a dict key) for the same reason as the blog label above.
+const menuLabel = lang === 'ru' ? 'Меню' : 'Menu';
 ---
 
 <header
@@ -59,6 +67,93 @@ const navLinks = [
       <div class="hidden sm:block">
         <AppStoreButton label={t.cta.appStoreShort} />
       </div>
+      <button
+        type="button"
+        class="inline-flex items-center justify-center rounded-full border border-[var(--border)] bg-[var(--surface)] p-2 text-[var(--fg)] transition-colors hover:border-[var(--brand)] focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--brand)] md:hidden"
+        aria-label={menuLabel}
+        aria-haspopup="true"
+        aria-expanded="false"
+        aria-controls="mobile-nav"
+        data-mobile-nav-toggle
+      >
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true" data-mobile-nav-icon-open>
+          <path d="M4 7h16M4 12h16M4 17h16" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"/>
+        </svg>
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true" class="hidden" data-mobile-nav-icon-close>
+          <path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"/>
+        </svg>
+      </button>
     </div>
   </div>
+
+  <nav
+    id="mobile-nav"
+    aria-label={menuLabel}
+    class="hidden border-t border-[var(--border)] bg-[var(--surface)] md:hidden"
+    data-mobile-nav-menu
+  >
+    <div class="mx-auto flex w-full max-w-6xl flex-col gap-1 px-5 py-3">
+      {
+        navLinks.map((link) => (
+          <a
+            href={link.href}
+            class="rounded-lg px-3 py-2.5 text-base font-medium text-[var(--fg)] transition-colors hover:bg-[var(--bg-elevated)]"
+          >
+            {link.label}
+          </a>
+        ))
+      }
+    </div>
+  </nav>
 </header>
+
+<script is:inline>
+  (function () {
+    function init() {
+      document.querySelectorAll('[data-site-header]').forEach(function (header) {
+        if (header.dataset.mobileNavInit === '1') return;
+        header.dataset.mobileNavInit = '1';
+        var toggle = header.querySelector('[data-mobile-nav-toggle]');
+        var menu = header.querySelector('[data-mobile-nav-menu]');
+        if (!toggle || !menu) return;
+        var iconOpen = toggle.querySelector('[data-mobile-nav-icon-open]');
+        var iconClose = toggle.querySelector('[data-mobile-nav-icon-close]');
+        function open() {
+          menu.classList.remove('hidden');
+          if (iconOpen) iconOpen.classList.add('hidden');
+          if (iconClose) iconClose.classList.remove('hidden');
+          toggle.setAttribute('aria-expanded', 'true');
+        }
+        function close() {
+          menu.classList.add('hidden');
+          if (iconOpen) iconOpen.classList.remove('hidden');
+          if (iconClose) iconClose.classList.add('hidden');
+          toggle.setAttribute('aria-expanded', 'false');
+        }
+        toggle.addEventListener('click', function (e) {
+          e.stopPropagation();
+          var expanded = toggle.getAttribute('aria-expanded') === 'true';
+          if (expanded) close(); else open();
+        });
+        // Tapping a link navigates; close so the panel is not left open mid-transition.
+        menu.addEventListener('click', function (e) {
+          if (e.target instanceof Element && e.target.closest('a')) close();
+        });
+        document.addEventListener('click', function (e) {
+          if (!header.contains(e.target)) close();
+        });
+        document.addEventListener('keydown', function (e) {
+          if (e.key === 'Escape') close();
+        });
+      });
+    }
+    init();
+    document.addEventListener('astro:page-load', init);
+    // Reset to closed after a view transition swaps in fresh markup.
+    document.addEventListener('astro:after-swap', function () {
+      document.querySelectorAll('[data-mobile-nav-menu]').forEach(function (menu) {
+        menu.classList.add('hidden');
+      });
+    });
+  })();
+</script>
