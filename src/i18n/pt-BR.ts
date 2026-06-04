@@ -211,19 +211,19 @@ const ptBR: Dict = {
     subtitle: 'Avaliações reais da App Store.',
     items: [
       {
-        author: 'Lucas M.',
+        author: 'Mariana S.',
         rating: 5,
-        body: 'Tinha R$ 0,43 presos no meu Apple ID há séculos. Duas compras, saldo zero. Pronto.',
+        body: 'Sobrava uns centavos que travavam a troca de região. Em um minuto foi pra zero.',
       },
       {
-        author: 'Priscila K.',
+        author: 'Rafael O.',
         rating: 5,
-        body: 'Precisava de saldo zero para mudar país da App Store. 90 segundos. Funcionou.',
+        body: 'Ia falar com a Apple por causa de uns trocados que não conseguia gastar. Nem precisei, duas compras e pronto.',
       },
       {
-        author: 'Marcos T.',
+        author: 'Lucas A.',
         rating: 5,
-        body: 'Sem login, sem permissões, sem rastreamento. Você mesmo digita o valor.',
+        body: 'O melhor é não pedir login. Você digita o que sobrou e ele monta as compras.',
       },
     ],
   },

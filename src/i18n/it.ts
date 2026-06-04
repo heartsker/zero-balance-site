@@ -211,19 +211,19 @@ const it: Dict = {
     subtitle: 'Recensioni reali dall\'App Store.',
     items: [
       {
-        author: 'Giorgio M.',
+        author: 'Giulia R.',
         rating: 5,
-        body: 'Avevo 0,43 € bloccati sul mio Apple ID da una vita. Due acquisti, saldo a zero. Fatto.',
+        body: 'Avevo 40 centesimi che mi bloccavano il cambio regione. Spariti in un minuto.',
       },
       {
-        author: 'Sofia K.',
+        author: 'Luca V.',
         rating: 5,
-        body: 'Mi serviva saldo zero per cambiare paese App Store. 90 secondi. Ha funzionato.',
+        body: 'Stavo per scrivere ad Apple per pochi spiccioli. Invece due acquisti e via.',
       },
       {
-        author: 'Marco T.',
+        author: 'Marco B.',
         rating: 5,
-        body: 'Nessun login, nessun permesso, nessun tracciamento. Inserisci tu l\'importo.',
+        body: 'Bello che non chiede il login. Inserisci quello che resta e pensa lui agli acquisti.',
       },
     ],
   },

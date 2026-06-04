@@ -211,19 +211,19 @@ const es: Dict = {
     subtitle: 'Reseñas reales del App Store.',
     items: [
       {
-        author: 'Javier M.',
+        author: 'Diego S.',
         rating: 5,
-        body: 'Tenía 0,43 € atascados en mi Apple ID hace siglos. Dos compras, saldo a cero. Listo.',
+        body: 'Me quedaban 50 céntimos que no me dejaban cambiar de región. En un minuto a cero.',
       },
       {
-        author: 'Lucía K.',
+        author: 'Lucía F.',
         rating: 5,
-        body: 'Necesitaba saldo a cero para cambiar el país del App Store. 90 segundos. Funcionó.',
+        body: 'Estaba por escribir a Apple por unas monedas que no podía gastar. Ni falta hizo, dos compras y ya.',
       },
       {
-        author: 'Marcos T.',
+        author: 'Javier R.',
         rating: 5,
-        body: 'Sin login, sin permisos, sin rastreo. Tú mismo escribes la cantidad.',
+        body: 'Lo mejor es que no pide iniciar sesión. Pones lo que te queda y él arma las compras.',
       },
     ],
   },

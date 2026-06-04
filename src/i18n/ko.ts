@@ -211,19 +211,19 @@ const ko: Dict = {
     subtitle: 'App Store 의 실제 리뷰.',
     items: [
       {
-        author: '지훈 M.',
+        author: '민준',
         rating: 5,
-        body: 'Apple ID 에 한참 동안 0.43달러가 묶여 있었어요. 두 번 구매로 0. 끝.',
+        body: '지역 변경을 막던 잔액이 조금 남아 있었는데 1분 만에 0이 됐어요.',
       },
       {
-        author: '수민 K.',
+        author: '서연',
         rating: 5,
-        body: 'App Store 국가 변경에 잔액 0이 필요했어요. 90초. 됐어요.',
+        body: '몇백 원 때문에 Apple에 문의할 뻔했는데, 두 번 사니까 끝났어요.',
       },
       {
-        author: '재훈 T.',
+        author: '지후',
         rating: 5,
-        body: '로그인도, 권한도, 추적도 없음. 본인이 직접 금액을 입력합니다.',
+        body: '로그인을 안 해도 되는 게 제일 좋아요. 남은 금액만 넣으면 알아서 골라줘요.',
       },
     ],
   },

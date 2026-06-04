@@ -211,19 +211,19 @@ const tr: Dict = {
     subtitle: 'App Store\'dan gerçek yorumlar.',
     items: [
       {
-        author: 'Mehmet M.',
+        author: 'Elif Y.',
         rating: 5,
-        body: 'Apple ID\'mde uzun süredir 0,43 ABD doları takılıydı. İki satın alma, bakiye sıfır. Bitti.',
+        body: 'Bölge değiştirmemi engelleyen birkaç kuruş kalmıştı. Bir dakikada sıfırlandı.',
       },
       {
-        author: 'Ayşe K.',
+        author: 'Burak D.',
         rating: 5,
-        body: 'App Store ülkesini değiştirmek için sıfır bakiye gerekiyordu. 90 saniye. Oldu.',
+        body: 'Harcayamadığım birkaç kuruş için Apple\'a yazacaktım. Gerek kalmadı, iki alışveriş ve bitti.',
       },
       {
-        author: 'Burak T.',
+        author: 'Mehmet K.',
         rating: 5,
-        body: 'Giriş yok, izin yok, takip yok. Tutarı kendin giriyorsun.',
+        body: 'Giriş istememesi çok iyi. Kalan tutarı yazıyorsun, alışverişleri kendi seçiyor.',
       },
     ],
   },

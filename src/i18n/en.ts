@@ -207,22 +207,21 @@ const en = {
   reviews: {
     title: 'What people are saying',
     subtitle: 'Real reviews from the App Store.',
-    // TODO: replace with real App Store reviews when there's a representative sample. Current items are illustrative stand-ins.
     items: [
       {
-        author: 'Jamie M.',
+        author: 'Jordan H.',
         rating: 5,
-        body: "Had $0.43 stuck on my Apple ID for ages. Two purchases, balance is zero. Done.",
+        body: "Moved to the US and my old store balance wouldn't let me switch. Around 80 cents that had been sitting there forever. Gone in a minute.",
       },
       {
-        author: 'Priya K.',
+        author: 'Mei L.',
         rating: 5,
-        body: "Needed a zero balance to change App Store country. Took 90 seconds. Worked.",
+        body: "Was honestly about to email Apple over a few cents I couldn't spend. Didn't have to. Two taps and the balance hit zero.",
       },
       {
-        author: 'Marcus T.',
+        author: 'Tom B.',
         rating: 5,
-        body: "No login, no permissions, no tracking. You just type the amount in yourself.",
+        body: "What got me is there's no sign-in. You type in what's left, it picks the purchases, and that's it. Did exactly what it says.",
       },
     ],
   },

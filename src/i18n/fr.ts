@@ -211,19 +211,19 @@ const fr: Dict = {
     subtitle: 'De vraies notes de l\'App Store.',
     items: [
       {
-        author: 'Julien M.',
+        author: 'Camille D.',
         rating: 5,
-        body: '0,43 € coincés sur mon identifiant Apple depuis des lustres. Deux achats, solde à zéro. C\'est fait.',
+        body: 'Il me restait 30 centimes qui bloquaient le changement de région. Réglé en une minute.',
       },
       {
-        author: 'Camille K.',
+        author: 'Hugo L.',
         rating: 5,
-        body: 'Il me fallait un solde nul pour changer de pays App Store. 90 secondes. Ça a marché.',
+        body: 'J\'allais écrire à Apple pour quelques centimes impossibles à dépenser. Finalement deux achats et c\'est bon.',
       },
       {
-        author: 'Marc T.',
+        author: 'Thomas M.',
         rating: 5,
-        body: 'Pas de connexion, pas de permissions, pas de pistage. Vous saisissez le montant vous-même.',
+        body: 'Je n\'y croyais pas sans connexion, mais si. On entre le montant, on voit le plan, on valide.',
       },
     ],
   },

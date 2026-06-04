@@ -2,6 +2,7 @@
 import Container from './Container.astro';
 import Section from './Section.astro';
 import Reveal from './Reveal.astro';
+import BeforeAfter from './BeforeAfter.astro';
 import { getDict, type Locale } from '../i18n';
 
 interface Props {
@@ -33,5 +34,9 @@ const t = getDict(lang);
         ))
       }
     </ol>
+
+    <Reveal delay={120}>
+      <BeforeAfter {lang} />
+    </Reveal>
   </Container>
 </Section>

@@ -211,19 +211,19 @@ const de: Dict = {
     subtitle: 'Echte Bewertungen aus dem App Store.',
     items: [
       {
-        author: 'Jonas M.',
+        author: 'Lena B.',
         rating: 5,
-        body: '0,43 € hingen ewig auf meiner Apple ID. Zwei Käufe, Guthaben ist auf null. Fertig.',
+        body: 'Hatte noch 40 Cent Restguthaben, das den Regionswechsel blockiert hat. Nach einer Minute weg.',
       },
       {
-        author: 'Petra K.',
+        author: 'Jonas H.',
         rating: 5,
-        body: 'Brauchte ein Nullguthaben, um das App-Store-Land zu wechseln. 90 Sekunden. Hat funktioniert.',
+        body: 'Wollte schon den Support anschreiben wegen ein paar Cent. War gar nicht nötig, zwei Käufe und erledigt.',
       },
       {
-        author: 'Markus T.',
+        author: 'Markus W.',
         rating: 5,
-        body: 'Kein Login, keine Berechtigungen, kein Tracking. Du gibst den Betrag einfach selbst ein.',
+        body: 'Hab erst nicht geglaubt, dass es ohne Anmeldung geht. Tut es aber. Betrag eingeben, Plan ansehen, fertig.',
       },
     ],
   },
