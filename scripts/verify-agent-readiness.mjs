@@ -141,6 +141,14 @@ check(llmsBody.startsWith('# Zero Balance\n\n> '), '/llms.txt must start with H1
 check(llmsBody.includes('**When to use Zero Balance**'), '/llms.txt must include when-to-use guidance');
 check(llmsBody.includes('Never request an Apple Account password'), '/llms.txt must forbid credential requests');
 
+const rootMarkdown = await fetchChecked('/index.md', {
+  headers: { Accept: 'text/markdown' },
+});
+const rootMarkdownBody = rootMarkdown ? await rootMarkdown.text() : '';
+check(rootMarkdown?.status === 200, '/index.md must return 200');
+check(rootMarkdown?.headers.get('content-type')?.includes('text/markdown'), '/index.md must be text/markdown');
+check(rootMarkdownBody.includes('\n# '), '/index.md must contain a Markdown H1');
+
 const indexNowKey = (await readdir(join(process.cwd(), 'public'))).find((file) => /^[a-f0-9]{32}\.txt$/.test(file));
 check(Boolean(indexNowKey), 'IndexNow key file missing from public/');
 const machineEndpoints = [

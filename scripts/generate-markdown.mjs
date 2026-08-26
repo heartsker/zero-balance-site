@@ -1,11 +1,12 @@
 #!/usr/bin/env node
-import { readdir, readFile, writeFile } from 'node:fs/promises';
+import { copyFile, readdir, readFile, writeFile } from 'node:fs/promises';
 import { dirname, join, relative } from 'node:path';
 import { load } from 'cheerio';
 import TurndownService from 'turndown';
 
 const ROOT = process.cwd();
 const DIST = join(ROOT, process.env.MARKDOWN_DIST_DIR || 'dist');
+const DEFAULT_LOCALE = process.env.MARKDOWN_DEFAULT_LOCALE || 'en';
 
 async function walk(directory) {
   const entries = await readdir(directory, { withFileTypes: true });
@@ -110,5 +111,10 @@ for (const htmlPath of htmlFiles) {
   await writeFile(markdownOutputPath(htmlPath), markdown, 'utf8');
   generated += 1;
 }
+
+// The site root redirects to the default locale, but agents commonly probe
+// /index.md directly. Keep that stable alias byte-identical to the canonical
+// default-locale Markdown representation.
+await copyFile(join(DIST, DEFAULT_LOCALE, 'index.md'), join(DIST, 'index.md'));
 
 console.log(`markdown: generated ${generated} representation(s), skipped ${skipped} non-content HTML file(s)`);

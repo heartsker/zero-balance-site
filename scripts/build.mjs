@@ -19,6 +19,11 @@ execFileSync(astro, ['build', '--outDir', outDir], {
 });
 execFileSync(process.execPath, [join(ROOT, 'scripts', 'generate-markdown.mjs')], {
   cwd: ROOT,
-  env: { ...process.env, MARKDOWN_DIST_DIR: outDir },
+  env: {
+    ...process.env,
+    MARKDOWN_DIST_DIR: outDir,
+    MARKDOWN_DEFAULT_LOCALE: process.env.PUBLIC_SITE_DEFAULT_LOCALE
+      || (process.env.PUBLIC_SITE_DOMAIN?.includes('zerobalanceapp.ru') ? 'ru' : 'en'),
+  },
   stdio: 'inherit',
 });

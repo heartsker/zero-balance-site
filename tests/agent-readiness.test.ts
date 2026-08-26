@@ -148,6 +148,14 @@ describe('built agent surfaces', () => {
     expect(headers).toContain('X-Robots-Tag: noindex, nofollow');
   });
 
+  it('publishes a root Markdown alias for the default-locale homepage', async () => {
+    const rootMarkdown = await readFile(join(DIST, 'index.md'), 'utf8');
+    const defaultLocaleMarkdown = await readFile(join(DIST, 'en/index.md'), 'utf8');
+    expect(rootMarkdown).toBe(defaultLocaleMarkdown);
+    expect(rootMarkdown).toMatch(/^---\n/);
+    expect(rootMarkdown).toContain('\n# ');
+  });
+
   it.each([
     'en/index.html',
     'en/about/index.html',
