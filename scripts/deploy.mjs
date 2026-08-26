@@ -75,7 +75,7 @@ function stripRuPrefixRefs(dir) {
     const p = join(dir, entry.name);
     if (entry.isDirectory()) {
       stripRuPrefixRefs(p);
-    } else if (/\.(html|xml|txt)$/.test(entry.name)) {
+    } else if (/\.(html|xml|txt|md)$/.test(entry.name)) {
       const before = readFileSync(p, 'utf8');
       const after = before
         // Absolute self-URLs: zerobalanceapp.ru/ru/... -> zerobalanceapp.ru/...
@@ -109,6 +109,7 @@ function deployYandex() {
     PUBLIC_SITE_DOMAIN: 'https://zerobalanceapp.ru',
     PUBLIC_SITE_LOCALES: MIRROR_LOCALES.join(','),
     PUBLIC_SITE_DEFAULT_LOCALE: 'ru',
+    MARKDOWN_DIST_DIR: outDir,
   });
 
   // Keep only the mirror's locales (ru + en); drop any other locale directory a

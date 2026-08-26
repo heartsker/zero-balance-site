@@ -47,6 +47,8 @@ const helpLinks = [
 ];
 
 const legalLinks = [
+  { label: lang === 'ru' ? 'О приложении' : 'About', href: localizedPath(lang, 'about') },
+  { label: lang === 'ru' ? 'Контакты' : 'Contact', href: localizedPath(lang, 'contact') },
   { label: t.nav.privacy, href: localizedPath(lang, 'privacy') },
   { label: t.nav.support, href: localizedPath(lang, 'support') },
 ];

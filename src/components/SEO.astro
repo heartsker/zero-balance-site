@@ -48,6 +48,11 @@ const {
 
 const normalizedPath = path.startsWith('/') ? path : `/${path}`;
 const canonicalUrl = `${DOMAIN}${normalizedPath}`;
+const markdownPath = normalizedPath === '/404/'
+  ? '/404.md'
+  : normalizedPath.endsWith('/')
+    ? `${normalizedPath}index.md`
+    : normalizedPath.replace(/\.html$/, '.md');
 const ogImageUrl = image.startsWith('http') ? image : `${DOMAIN}${image}`;
 const localePath = stripLocale(normalizedPath);
 const t = getDict(lang);
@@ -62,6 +67,8 @@ const keywordsString = keywords?.length
 <meta name="description" content={description} />
 {keywordsString && <meta name="keywords" content={keywordsString} />}
 <link rel="canonical" href={canonicalUrl} />
+<link rel="alternate" type="text/markdown" href={`${DOMAIN}${markdownPath}`} />
+<link rel="describedby" href={`${DOMAIN}/llms.txt`} />
 {noindex ? <meta name="robots" content="noindex,nofollow" /> : <meta name="robots" content="index,follow,max-image-preview:large,max-snippet:-1" />}
 
 <meta name="application-name" content="Zero Balance" />

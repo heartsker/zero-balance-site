@@ -17,6 +17,15 @@ interface Env {
   ASSETS: { fetch(request: Request): Promise<Response> };
 }
 
+export type Representation = 'html' | 'markdown';
+
+interface MediaRange {
+  type: string;
+  subtype: string;
+  quality: number;
+  position: number;
+}
+
 type Locale =
   | 'en'
   | 'ru'
@@ -46,6 +55,7 @@ const LOCALES: readonly Locale[] = [
   'tr',
 ];
 const DEFAULT_LOCALE: Locale = 'en';
+const CONTENT_SIGNAL = 'search=yes, ai-input=yes, ai-train=yes, use=full';
 
 const COUNTRY_TO_LOCALE: Record<string, Locale> = {
   RU: 'ru', BY: 'ru', KZ: 'ru', KG: 'ru', UA: 'ru',
@@ -99,8 +109,122 @@ function pickFromAcceptLanguage(header: string | null): Locale | null {
   return null;
 }
 
+function parseAccept(header: string): MediaRange[] {
+  return header
+    .split(',')
+    .map((part, position) => {
+      const [mediaType, ...parameters] = part.trim().split(';');
+      const [type = '', subtype = ''] = mediaType.toLowerCase().split('/');
+      const qualityParameter = parameters.find((parameter) =>
+        parameter.trim().toLowerCase().startsWith('q='),
+      );
+      const parsedQuality = qualityParameter
+        ? Number.parseFloat(qualityParameter.split('=')[1] ?? '')
+        : 1;
+      const quality = Number.isFinite(parsedQuality)
+        ? Math.min(1, Math.max(0, parsedQuality))
+        : 0;
+      return { type, subtype, quality, position };
+    })
+    .filter((range) => range.type && range.subtype);
+}
+
+function preferenceFor(
+  ranges: MediaRange[],
+  candidate: 'text/html' | 'text/markdown',
+) {
+  const [type, subtype] = candidate.split('/');
+  const matches = ranges
+    .map((range) => {
+      const typeMatches = range.type === '*' || range.type === type;
+      const subtypeMatches = range.subtype === '*' || range.subtype === subtype;
+      if (!typeMatches || !subtypeMatches) return null;
+      const specificity = range.type === '*'
+        ? 0
+        : range.subtype === '*'
+          ? 1
+          : 2;
+      return { ...range, specificity };
+    })
+    .filter((range): range is MediaRange & { specificity: number } => range !== null)
+    .sort((a, b) =>
+      b.specificity - a.specificity ||
+      b.quality - a.quality ||
+      a.position - b.position,
+    );
+
+  return matches[0] ?? null;
+}
+
+/** Select the representation preferred by RFC-style Accept ranges and q-values. */
+export function negotiateRepresentation(acceptHeader: string | null): Representation | null {
+  if (!acceptHeader?.trim()) return 'html';
+  const ranges = parseAccept(acceptHeader);
+  const html = preferenceFor(ranges, 'text/html');
+  const markdown = preferenceFor(ranges, 'text/markdown');
+
+  const htmlQuality = html?.quality ?? 0;
+  const markdownQuality = markdown?.quality ?? 0;
+  if (htmlQuality === 0 && markdownQuality === 0) return null;
+  if (markdownQuality > htmlQuality) return 'markdown';
+  if (htmlQuality > markdownQuality) return 'html';
+  if (markdown && html && markdown.position < html.position) return 'markdown';
+  return 'html';
+}
+
+export function markdownPathFor(pathname: string): string {
+  if (pathname === '/404/' || pathname === '/404.html') return '/404.md';
+  if (pathname.endsWith('/')) return `${pathname}index.md`;
+  if (pathname.endsWith('.html')) return pathname.replace(/\.html$/, '.md');
+  return `${pathname}.md`;
+}
+
+function mergeVary(headers: Headers) {
+  const values = new Set(
+    (headers.get('Vary') ?? '')
+      .split(',')
+      .map((value) => value.trim())
+      .filter(Boolean),
+  );
+  values.add('Accept');
+  values.add('Accept-Encoding');
+  headers.set('Vary', [...values].join(', '));
+}
+
+function representationHeaders(
+  source: Headers,
+  markdownPath: string,
+  contentType: 'text/html' | 'text/markdown',
+) {
+  const headers = new Headers(source);
+  headers.set('Content-Type', `${contentType}; charset=utf-8`);
+  headers.set('Content-Signal', CONTENT_SIGNAL);
+  headers.set(
+    'Link',
+    `<${markdownPath}>; rel="alternate"; type="text/markdown", </llms.txt>; rel="describedby"`,
+  );
+  headers.delete('Content-Length');
+  headers.delete('Content-Encoding');
+  headers.delete('ETag');
+  headers.delete('Last-Modified');
+  mergeVary(headers);
+  return headers;
+}
+
+async function responseWithBody(
+  source: Response,
+  headers: Headers,
+  method: string,
+  status = source.status,
+) {
+  return new Response(method === 'HEAD' ? null : await source.arrayBuffer(), {
+    status,
+    headers,
+  });
+}
+
 export default {
-  fetch(request: Request, env: Env): Response | Promise<Response> {
+  async fetch(request: Request, env: Env): Promise<Response> {
     const url = new URL(request.url);
 
     // Only the bare root is dynamic; everything else is a static asset.
@@ -127,6 +251,62 @@ export default {
       });
     }
 
-    return env.ASSETS.fetch(request);
+    const assetResponse = await env.ASSETS.fetch(request);
+    if (request.method !== 'GET' && request.method !== 'HEAD') return assetResponse;
+    if (!assetResponse.headers.get('Content-Type')?.toLowerCase().includes('text/html')) {
+      return assetResponse;
+    }
+
+    const representation = negotiateRepresentation(request.headers.get('Accept'));
+    const markdownPath = assetResponse.status === 404
+      ? '/404.md'
+      : markdownPathFor(url.pathname);
+
+    if (representation === null) {
+      const headers = representationHeaders(
+        new Headers({ 'Cache-Control': 'no-store' }),
+        markdownPath,
+        'text/markdown',
+      );
+      return new Response(
+        request.method === 'HEAD'
+          ? null
+          : 'Not acceptable. Request text/html or text/markdown.\n',
+        { status: 406, headers },
+      );
+    }
+
+    if (representation === 'html') {
+      return responseWithBody(
+        assetResponse,
+        representationHeaders(assetResponse.headers, markdownPath, 'text/html'),
+        request.method,
+      );
+    }
+
+    const markdownUrl = new URL(markdownPath, url);
+    const markdownRequest = new Request(markdownUrl, {
+      method: request.method,
+      headers: { Accept: 'text/markdown' },
+    });
+    const markdownResponse = await env.ASSETS.fetch(markdownRequest);
+    if (markdownResponse.status !== 200) {
+      const headers = representationHeaders(
+        new Headers({ 'Cache-Control': 'no-store' }),
+        markdownPath,
+        'text/markdown',
+      );
+      return new Response(
+        request.method === 'HEAD' ? null : 'Markdown representation unavailable.\n',
+        { status: 406, headers },
+      );
+    }
+
+    return responseWithBody(
+      markdownResponse,
+      representationHeaders(markdownResponse.headers, markdownPath, 'text/markdown'),
+      request.method,
+      assetResponse.status,
+    );
   },
 };

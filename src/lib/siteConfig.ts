@@ -17,6 +17,10 @@ export const APP_STORE_URL = `https://apps.apple.com/app/apple-store/id676191298
   IS_RU_SITE ? 'zerobalanceapp-ru-site' : 'zerobalance-pro-site'
 }&mt=8`;
 
+// Stable identity URL for schema, agent instructions, and other places where
+// campaign parameters would weaken entity matching.
+export const APP_STORE_IDENTITY_URL = 'https://apps.apple.com/app/id6761912988';
+
 export const SUPPORT_EMAIL = 'developer.ios.dp@gmail.com';
 export const ACCENT = '#7A4DE6';
 

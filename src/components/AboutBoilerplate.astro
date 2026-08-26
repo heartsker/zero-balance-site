@@ -23,12 +23,12 @@ const compact = variant === 'compact';
   <Container class={compact ? 'py-8 md:py-10' : 'py-12 md:py-16'}>
     <div class="mx-auto grid max-w-5xl gap-6 md:grid-cols-[1fr_auto] md:items-center md:gap-10">
       <div>
-        <p
+        <h2
           id="about-zero-balance"
           class="text-xs font-semibold uppercase tracking-wide text-[var(--brand-strong)]"
         >
           {t.about.label}
-        </p>
+        </h2>
         <p
           class:list={[
             'mt-2 text-pretty text-[var(--fg)]',

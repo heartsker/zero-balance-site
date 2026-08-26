@@ -7,7 +7,9 @@
   "scripts": {
     "dev": "astro dev",
     "start": "astro dev",
-    "build": "astro check && astro build",
+    "build": "node scripts/build.mjs",
+    "test": "npm run build && vitest run",
+    "verify:agents": "node scripts/verify-agent-readiness.mjs",
     "preview": "astro preview",
     "deploy": "npm run build && npx wrangler deploy",
     "deploy:cloudflare": "node scripts/deploy.mjs cloudflare",
@@ -32,5 +34,11 @@
     "qrcode": "^1.5.4",
     "tailwindcss": "^4.0.0",
     "typescript": "^5.7.2"
+  },
+  "devDependencies": {
+    "@types/turndown": "^5.0.6",
+    "cheerio": "^1.2.0",
+    "turndown": "^7.2.4",
+    "vitest": "^4.1.11"
   }
 }

@@ -1,0 +1,82 @@
+---
+import PageLayout from '../../layouts/PageLayout.astro';
+import PageHeader from '../../components/PageHeader.astro';
+import Container from '../../components/Container.astro';
+import Section from '../../components/Section.astro';
+import Reveal from '../../components/Reveal.astro';
+import { getDict, LOCALES, type Locale, localizedPath } from '../../i18n';
+import { SUPPORT_EMAIL } from '../../lib/siteConfig';
+import { breadcrumbSchema } from '../../lib/schema';
+
+export function getStaticPaths() {
+  return LOCALES.map((lang) => ({ params: { lang } }));
+}
+
+const lang = Astro.params.lang as Locale;
+const t = getDict(lang);
+const path = `/${lang}/contact/`;
+
+const copy = lang === 'ru'
+  ? {
+      title: 'Связаться с Zero Balance',
+      description: 'Контакты Zero Balance по вопросам приложения для планирования остатка баланса Apple Account, приватности и поддержки.',
+      eyebrow: 'Контакты',
+      sections: [
+        { h: 'Единственный официальный канал', paragraphs: [`Напишите Daniel Pustotin на ${SUPPORT_EMAIL}. Обычно ответ приходит в течение одного рабочего дня. Этот адрес подходит для вопросов о работе Zero Balance, доступности сайта, приватности и исправлении ошибок.`] },
+        { h: 'Что указать в письме', paragraphs: ['Назовите модель устройства, версию iOS, экран приложения и валюту Apple Account. Опишите ожидаемый и фактический результат. Можно приложить скриншот, но сначала скройте имя, email, сведения об оплате, номера операций и любую другую личную информацию.', 'Если вопрос связан с расчётом, укажите введённую сумму и итоговый план. Не присылайте пароль Apple Account, коды подтверждения, данные карты или резервные коды. Разработчик никогда не запрашивает эти сведения.'] },
+        { h: 'Покупки и возвраты', paragraphs: ['Apple обрабатывает платежи и хранит платёжные записи App Store. Разработчик Zero Balance не может завершить покупку, вернуть деньги или изменить баланс Apple Account. Для таких случаев используйте reportaproblem.apple.com или Apple Support.', 'Перед покупкой проверьте итог в системном окне Apple. Если вы только выбираете способ потратить остаток, сначала прочитайте инструкцию и ответы на частые вопросы.'] },
+        { h: 'Приватность и деловые запросы', paragraphs: ['Вопросы о данных, безопасности сайта, ссылках для прессы и упоминаниях продукта можно отправлять на тот же email. Почтовый адрес и телефон не публикуются и не используются как каналы поддержки. Политика конфиденциальности подробно объясняет, какие данные приложение не собирает и где хранится пользовательский инвентарь.'] },
+      ],
+    }
+  : {
+      title: 'Contact Zero Balance',
+      description: 'Contact Zero Balance about the Apple Account balance planning app, product support, privacy, or website accessibility.',
+      eyebrow: 'Contact',
+      sections: [
+        { h: 'The only official contact channel', paragraphs: [`Email Daniel Pustotin at ${SUPPORT_EMAIL}. A reply normally arrives within one business day. Use this address for questions about how Zero Balance works, website accessibility, privacy, or a reproducible problem in the app.`] },
+        { h: 'What to include', paragraphs: ['Include your device model, iOS version, the screen you were using, and your Apple Account currency. Explain what you expected and what happened instead. A screenshot can help, but first hide your name, email, payment information, transaction identifiers, and any other personal details.', 'For a planning question, include the amount you entered and the plan shown. Never send an Apple Account password, verification code, card details, recovery key, or remote-access invitation. The developer will never request those secrets.'] },
+        { h: 'Purchases, charges, and refunds', paragraphs: ['Apple processes payments and owns App Store billing records. The Zero Balance developer cannot complete a purchase, issue a refund, or change an Apple Account balance. Use reportaproblem.apple.com or Apple Support for those requests.', 'Review every total in the Apple system confirmation before buying. If you are still deciding how to use a leftover balance, read the help guide and frequently asked questions before contacting support.'] },
+        { h: 'Privacy and business enquiries', paragraphs: ['Questions about data handling, website security, press references, or product listings can use the same email address. A postal address and phone number are not published or used for customer support. The privacy policy explains what the app does not collect and how inventory stays in a private iCloud container.'] },
+      ],
+    };
+
+const schema = breadcrumbSchema([
+  { name: t.nav.home, url: localizedPath(lang, '') },
+  { name: copy.title, url: path },
+]);
+---
+
+<PageLayout
+  title={`${copy.title} - Apple Account balance app support`}
+  description={copy.description}
+  {lang}
+  {path}
+  {schema}
+  keywords={[...t.keywords.support, ...t.keywords.site, 'Zero Balance contact']}
+>
+  <PageHeader eyebrow={copy.eyebrow} title={copy.title} description={copy.description} />
+
+  <Section>
+    <Container>
+      <div class="mx-auto max-w-3xl space-y-10 prose-zb">
+        {copy.sections.map((section, i) => (
+          <Reveal delay={i * 40}>
+            <h2>{section.h}</h2>
+            {section.paragraphs.map((paragraph) => <p>{paragraph}</p>)}
+          </Reveal>
+        ))}
+        <Reveal>
+          <h2>{lang === 'ru' ? 'Следующий шаг' : 'Next step'}</h2>
+          <p><a href={`mailto:${SUPPORT_EMAIL}`}>{SUPPORT_EMAIL}</a></p>
+          <p>
+            <a href={localizedPath(lang, 'help')}>{lang === 'ru' ? 'Открыть инструкцию' : 'Open the help guide'}</a>
+            {' | '}
+            <a href={localizedPath(lang, 'faq')}>{lang === 'ru' ? 'Открыть FAQ' : 'Open the FAQ'}</a>
+            {' | '}
+            <a href={localizedPath(lang, 'privacy')}>{lang === 'ru' ? 'Политика конфиденциальности' : 'Privacy policy'}</a>
+          </p>
+        </Reveal>
+      </div>
+    </Container>
+  </Section>
+</PageLayout>

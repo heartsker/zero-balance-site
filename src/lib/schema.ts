@@ -1,4 +1,5 @@
 import {
+  APP_STORE_IDENTITY_URL,
   APP_STORE_URL,
   DOMAIN,
   APP_NAME,
@@ -6,16 +7,23 @@ import {
   APP_RATING,
   APP_RATING_COUNT,
   LOCALES,
+  SOCIAL,
   FAQ_PUBLISHED_DATE,
   type Locale,
 } from './siteConfig';
 import { stripInlineLinks } from './prose';
 
+const PERSON_ID = `${DOMAIN}/#developer`;
+const ORGANIZATION_ID = `${DOMAIN}/#org`;
+
 const PUBLISHER = {
   '@type': 'Person',
+  '@id': PERSON_ID,
   name: 'Daniel Pustotin',
-  url: DOMAIN,
+  url: `${DOMAIN}/en/about/`,
 };
+
+const ORGANIZATION_REFERENCE = { '@id': ORGANIZATION_ID };
 
 export function softwareApplicationSchema(opts: {
   description: string;
@@ -36,7 +44,7 @@ export function softwareApplicationSchema(opts: {
     description: opts.description,
     inLanguage: opts.lang,
     url: DOMAIN,
-    sameAs: [APP_STORE_URL],
+    sameAs: [APP_STORE_IDENTITY_URL],
     image: `${DOMAIN}/icon.png`,
     softwareVersion: '1.0',
     isAccessibleForFree: true,
@@ -47,8 +55,9 @@ export function softwareApplicationSchema(opts: {
       url: APP_STORE_URL,
       availability: 'https://schema.org/InStock',
     },
-    publisher: PUBLISHER,
+    publisher: ORGANIZATION_REFERENCE,
     author: PUBLISHER,
+    brand: ORGANIZATION_REFERENCE,
     featureList: opts.featureList ?? [
       'Manual target helper for any leftover Apple Account balance',
       'Plan review with total, overage and confirmation count',
@@ -69,7 +78,7 @@ export function websiteSchema(opts: { lang: Locale }) {
     alternateName: 'zerobalance.pro',
     url: DOMAIN,
     inLanguage: opts.lang,
-    publisher: PUBLISHER,
+    publisher: ORGANIZATION_REFERENCE,
   };
 }
 
@@ -112,12 +121,14 @@ export function organizationSchema() {
   return {
     '@context': 'https://schema.org',
     '@type': 'Organization',
-    '@id': `${DOMAIN}/#org`,
+    '@id': ORGANIZATION_ID,
     name: APP_NAME,
+    alternateName: 'Zero Balance: Spend Credit',
+    description: 'Zero Balance helps people plan how to spend a small leftover Apple Account balance through App Store in-app purchases.',
     url: DOMAIN,
     logo: `${DOMAIN}/icon.png`,
     email: SUPPORT_EMAIL,
-    sameAs: [APP_STORE_URL],
+    sameAs: [APP_STORE_IDENTITY_URL, SOCIAL.github],
     founder: PUBLISHER,
     contactPoint: {
       '@type': 'ContactPoint',
@@ -137,6 +148,7 @@ export function aggregateRatingSchema() {
     operatingSystem: 'iOS 26',
     applicationCategory: 'UtilitiesApplication',
     url: APP_STORE_URL,
+    publisher: ORGANIZATION_REFERENCE,
     offers: {
       '@type': 'Offer',
       price: '0',
@@ -188,15 +200,7 @@ export function articleSchema(opts: {
     datePublished: opts.datePublished,
     dateModified: opts.dateModified ?? opts.datePublished,
     author: PUBLISHER,
-    publisher: {
-      '@type': 'Organization',
-      name: APP_NAME,
-      url: DOMAIN,
-      logo: {
-        '@type': 'ImageObject',
-        url: `${DOMAIN}/icon.png`,
-      },
-    },
+    publisher: ORGANIZATION_REFERENCE,
     image: `${DOMAIN}/cover.png`,
   };
 }

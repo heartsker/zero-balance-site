@@ -1,0 +1,103 @@
+---
+import PageLayout from '../../layouts/PageLayout.astro';
+import PageHeader from '../../components/PageHeader.astro';
+import Container from '../../components/Container.astro';
+import Section from '../../components/Section.astro';
+import Reveal from '../../components/Reveal.astro';
+import { getDict, LOCALES, type Locale, localizedPath } from '../../i18n';
+import { APP_STORE_IDENTITY_URL, SUPPORT_EMAIL } from '../../lib/siteConfig';
+import { breadcrumbSchema } from '../../lib/schema';
+
+export function getStaticPaths() {
+  return LOCALES.map((lang) => ({ params: { lang } }));
+}
+
+const lang = Astro.params.lang as Locale;
+const t = getDict(lang);
+const path = `/${lang}/about/`;
+
+const copy = lang === 'ru'
+  ? {
+      title: 'О Zero Balance',
+      description: 'Узнайте, как Zero Balance помогает составить план для остатка баланса Apple Account и безопасно провести покупки через App Store.',
+      eyebrow: 'О приложении',
+      sections: [
+        {
+          h: 'Что делает Zero Balance',
+          paragraphs: [t.about.long, 'Вы вручную вводите сумму, которую хотите потратить. Приложение подбирает комбинацию собственных покупок внутри приложения, показывает общую стоимость, возможное превышение и число подтверждений до начала операции.'],
+        },
+        {
+          h: 'Кто отвечает за продукт',
+          paragraphs: [`Zero Balance разработан и поддерживается независимым разработчиком Daniel Pustotin. Для вопросов о приложении и сайте используется только email ${SUPPORT_EMAIL}.`, 'Это независимый продукт. Он не принадлежит Apple и не представляет Apple. Все покупки, списания и возвраты обрабатываются Apple по правилам App Store.'],
+        },
+        {
+          h: 'Границы и безопасность',
+          paragraphs: ['Zero Balance не читает баланс Apple Account автоматически, не входит в ваш Apple Account и не меняет страну или регион учётной записи. Приложение никогда не просит пароль Apple Account, код двухфакторной аутентификации, данные банковской карты или удалённый доступ к устройству.', 'План остаётся рекомендацией: перед каждым подтверждением проверяйте сумму в системном окне Apple. Если покупка не проходит или нужен возврат, обращайтесь в Apple Support.'],
+        },
+        {
+          h: 'Приватность и бизнес-модель',
+          paragraphs: ['Приложение бесплатно, без рекламы и подписок. История и инвентарь хранятся в приватном контейнере iCloud пользователя. На глобальном сайте нет идентифицирующей аналитики. Подробности опубликованы в политике конфиденциальности.'],
+        },
+      ],
+    }
+  : {
+      title: 'About Zero Balance',
+      description: 'Learn how Zero Balance helps plan spending a leftover Apple Account balance safely through App Store in-app purchases.',
+      eyebrow: 'About',
+      sections: [
+        {
+          h: 'What Zero Balance does',
+          paragraphs: [t.about.long, 'You enter the amount you want to spend manually. The app finds a combination of its own in-app purchase tiers, then shows the total cost, possible overage, and number of confirmations before you begin. This makes a small Apple Account balance easier to reason about without pretending that the app can see your account.'],
+        },
+        {
+          h: 'Who is responsible for the product',
+          paragraphs: [`Zero Balance is built and maintained by independent developer Daniel Pustotin. Questions about the app or website are handled only by email at ${SUPPORT_EMAIL}.`, 'Zero Balance is an independent product. It is not owned by, affiliated with, or endorsed by Apple. Apple processes App Store purchases, charges, and refund requests under its own terms.'],
+        },
+        {
+          h: 'Limits and account safety',
+          paragraphs: ['Zero Balance cannot read your Apple Account balance automatically, sign into your Apple Account, remove credit directly, or change your country or region. It never needs your Apple Account password, two-factor authentication code, card details, or remote access to your device.', 'The generated plan is guidance. Review the amount in every Apple system confirmation before approving it. If a purchase fails or you need a refund, contact Apple Support because the developer cannot modify Apple billing records.'],
+        },
+        {
+          h: 'Privacy and business model',
+          paragraphs: ['The app is free, with no ads and no subscriptions. Purchase history and inventory stay in the user\'s private iCloud container. The global website has no identifying analytics. Read the privacy policy for the full data-handling explanation.'],
+        },
+      ],
+    };
+
+const schema = breadcrumbSchema([
+  { name: t.nav.home, url: localizedPath(lang, '') },
+  { name: copy.title, url: path },
+]);
+---
+
+<PageLayout
+  title={`${copy.title} - Apple Account balance planner`}
+  description={copy.description}
+  {lang}
+  {path}
+  {schema}
+  keywords={[...t.keywords.site, 'Zero Balance', 'Apple Account balance']}
+>
+  <PageHeader eyebrow={copy.eyebrow} title={copy.title} description={copy.description} />
+
+  <Section>
+    <Container>
+      <div class="mx-auto max-w-3xl space-y-10 prose-zb">
+        {copy.sections.map((section, i) => (
+          <Reveal delay={i * 40}>
+            <h2>{section.h}</h2>
+            {section.paragraphs.map((paragraph) => <p>{paragraph}</p>)}
+          </Reveal>
+        ))}
+        <Reveal>
+          <h2>{lang === 'ru' ? 'Проверенные ссылки' : 'Verified destinations'}</h2>
+          <ul>
+            <li><a href={APP_STORE_IDENTITY_URL}>{lang === 'ru' ? 'Zero Balance в App Store' : 'Zero Balance on the App Store'}</a></li>
+            <li><a href={localizedPath(lang, 'contact')}>{lang === 'ru' ? 'Связаться с разработчиком' : 'Contact the developer'}</a></li>
+            <li><a href={localizedPath(lang, 'privacy')}>{lang === 'ru' ? 'Политика конфиденциальности' : 'Privacy policy'}</a></li>
+          </ul>
+        </Reveal>
+      </div>
+    </Container>
+  </Section>
+</PageLayout>
