@@ -129,15 +129,20 @@ for (const [accept, expectedType, expectedStatus] of [
   check(response?.headers.get('content-type')?.includes(expectedType), `${accept}: expected ${expectedType}`);
 }
 
-const missingPath = `/agent-readiness-missing-${Date.now()}/`;
-for (const [accept, type] of [['text/html', 'text/html'], ['text/markdown', 'text/markdown']]) {
-  const response = await fetchChecked(missingPath, { headers: { Accept: accept } });
-  check(response?.status === 404, `${missingPath} ${accept}: must preserve 404`);
-  check(response?.headers.get('content-type')?.includes(type), `${missingPath} ${accept}: wrong content type`);
-  if (response) {
-    const body = await response.text();
-    check(body.includes('llms.txt'), `${missingPath} ${accept}: llms.txt recovery link missing`);
-    check(body.includes('sitemap-index.xml'), `${missingPath} ${accept}: sitemap recovery link missing`);
+const missingPath = `/agent-readiness-missing-${Date.now()}`;
+for (const path of [missingPath, `${missingPath}/`]) {
+  for (const [accept, type] of [
+    ['text/html', 'text/html'],
+    ['text/markdown, text/plain;q=0.9, text/html;q=0.8', 'text/markdown'],
+  ]) {
+    const response = await fetchChecked(path, { headers: { Accept: accept } });
+    check(response?.status === 404, `${path} ${accept}: must preserve 404`);
+    check(response?.headers.get('content-type')?.includes(type), `${path} ${accept}: wrong content type`);
+    if (response) {
+      const body = await response.text();
+      check(body.includes('llms.txt'), `${path} ${accept}: llms.txt recovery link missing`);
+      check(body.includes('sitemap-index.xml'), `${path} ${accept}: sitemap recovery link missing`);
+    }
   }
 }
 

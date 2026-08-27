@@ -14,10 +14,10 @@ directory = "./dist"
 binding = "ASSETS"
 # Serve dist/404.html for unknown paths instead of an empty 404.
 not_found_handling = "404-page"
-# Run the Worker before HTML document routes so it can negotiate HTML and
-# Markdown representations. Hashed assets and machine-readable files continue
-# to use the faster asset-first path.
-run_worker_first = ["/", "/*/", "/*.html"]
+# Run the Worker before every path so extensionless misses such as `/not-found`
+# receive the same negotiated 404 contract as `/not-found/`. The Worker passes
+# non-HTML assets through unchanged after the binding lookup.
+run_worker_first = ["/*"]
 
 # Keep Workers Logs on (matches the project's prior remote setting).
 [observability]

@@ -9,6 +9,10 @@ import {
   LOCALES,
   SOCIAL,
   FAQ_PUBLISHED_DATE,
+  BUSINESS_LEGAL_NAME,
+  BUSINESS_COUNTRY_CODE,
+  BUSINESS_IDENTITY_URL,
+  IS_RU_SITE,
   type Locale,
 } from './siteConfig';
 import { stripInlineLinks } from './prose';
@@ -79,6 +83,7 @@ export function websiteSchema(opts: { lang: Locale }) {
     url: DOMAIN,
     inLanguage: opts.lang,
     publisher: ORGANIZATION_REFERENCE,
+    sameAs: [APP_STORE_IDENTITY_URL, SOCIAL.github, BUSINESS_IDENTITY_URL],
   };
 }
 
@@ -123,12 +128,12 @@ export function organizationSchema() {
     '@type': 'Organization',
     '@id': ORGANIZATION_ID,
     name: APP_NAME,
-    alternateName: 'Zero Balance: Spend Credit',
+    alternateName: ['Zero Balance: Spend Credit', 'Zero Balance app', 'zerobalance.pro'],
     description: 'Zero Balance helps people plan how to spend a small leftover Apple Account balance through App Store in-app purchases.',
     url: DOMAIN,
     logo: `${DOMAIN}/icon.png`,
     email: SUPPORT_EMAIL,
-    sameAs: [APP_STORE_IDENTITY_URL, SOCIAL.github],
+    sameAs: [APP_STORE_IDENTITY_URL, SOCIAL.github, BUSINESS_IDENTITY_URL],
     founder: PUBLISHER,
     contactPoint: {
       '@type': 'ContactPoint',
@@ -136,6 +141,15 @@ export function organizationSchema() {
       email: SUPPORT_EMAIL,
       availableLanguage: [...LOCALES],
     },
+    // The public operator page identifies the legal publisher and country of
+    // registration. Keep this country-level: no street/locality is invented.
+    ...(!IS_RU_SITE ? {
+      legalName: BUSINESS_LEGAL_NAME,
+      address: {
+        '@type': 'PostalAddress',
+        addressCountry: BUSINESS_COUNTRY_CODE,
+      },
+    } : {}),
   };
 }
 

@@ -224,6 +224,35 @@ describe('Yandex agent router', () => {
 });
 
 describe('built agent surfaces', () => {
+  it('runs the Worker before extensionless routes so every 404 can negotiate Markdown', async () => {
+    const wrangler = await readFile(join(process.cwd(), 'wrangler.toml'), 'utf8');
+    expect(wrangler).toMatch(/run_worker_first\s*=\s*\["\/\*"\]/);
+  });
+
+  it('keeps server-rendered content visible when JavaScript is unavailable', async () => {
+    const html = await readFile(join(DIST, 'en/index.html'), 'utf8');
+    const $ = load(html);
+    const headScripts = $('head script').map((_, script) => $(script).text()).get().join('\n');
+    const styles = await readFile(join(process.cwd(), 'src/styles/globals.css'), 'utf8');
+    const defaultRevealRule = styles.match(/\/\* Scroll-reveal \*\/\s*\.reveal\s*\{([^}]*)\}/s)?.[1] ?? '';
+
+    expect($('html').hasClass('js')).toBe(false);
+    expect(headScripts).toContain("document.documentElement.classList.add('js')");
+    expect(defaultRevealRule).not.toContain('opacity: 0');
+    expect(styles).toMatch(/\.js \.reveal\s*\{[^}]*opacity:\s*0/s);
+  });
+
+  it('publishes HTML and Markdown 404 recovery guides', async () => {
+    const $ = load(await readFile(join(DIST, '404.html'), 'utf8'));
+    const markdown = await readFile(join(DIST, '404.md'), 'utf8');
+
+    expect($('a[href="/404.md"]')).toHaveLength(1);
+    expect($('a[href="/sitemap-index.xml"]')).toHaveLength(1);
+    expect($('a[href="/llms.txt"]')).toHaveLength(1);
+    expect(markdown).toContain('sitemap-index.xml');
+    expect(markdown).toContain('llms.txt');
+  });
+
   it('generates a direct noindex Markdown alternative for every content page', async () => {
     const files = await walk(DIST);
     const htmlFiles = files.filter((file) => file.endsWith('.html'));
@@ -308,7 +337,7 @@ describe('built agent surfaces', () => {
     }
   });
 
-  it('publishes canonical discovery metadata and an email-only entity graph', async () => {
+  it('publishes canonical discovery metadata and a verifiable entity graph', async () => {
     const $ = load(await readFile(join(DIST, 'en/about/index.html'), 'utf8'));
     expect($('link[rel="canonical"]').attr('href')).toBe('https://zerobalance.pro/en/about/');
     expect($('link[rel="alternate"][type="text/markdown"]').attr('href')).toBe('https://zerobalance.pro/en/about/index.md');
@@ -324,14 +353,17 @@ describe('built agent surfaces', () => {
     expect(organization).toMatchObject({
       '@id': 'https://zerobalance.pro/#org',
       name: 'Zero Balance',
-      alternateName: 'Zero Balance: Spend Credit',
+      alternateName: ['Zero Balance: Spend Credit', 'Zero Balance app', 'zerobalance.pro'],
+      legalName: 'ALEKSANDR PUSTOTIN, IE',
       email: 'developer.ios.dp@gmail.com',
       contactPoint: { contactType: 'customer support', email: 'developer.ios.dp@gmail.com' },
+      address: { '@type': 'PostalAddress', addressCountry: 'AM' },
     });
-    expect(organization).not.toHaveProperty('address');
+    expect(organization?.['sameAs']).toContain('https://ie.pustotin.com/');
     expect(organization).not.toHaveProperty('telephone');
     expect(organization?.['contactPoint']).not.toHaveProperty('telephone');
     expect(website?.['publisher']).toEqual({ '@id': 'https://zerobalance.pro/#org' });
+    expect(website?.['sameAs']).toContain('https://apps.apple.com/app/id6761912988');
   });
 });
 

@@ -4,6 +4,14 @@
   "version": "0.1.0",
   "private": true,
   "description": "Marketing site for the ZeroBalance iOS app (zerobalance.pro).",
+  "homepage": "https://zerobalance.pro/",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/heartsker/zero-balance-site.git"
+  },
+  "bugs": {
+    "url": "https://zerobalance.pro/en/contact/"
+  },
   "scripts": {
     "dev": "astro dev",
     "start": "astro dev",

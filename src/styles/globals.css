@@ -176,13 +176,20 @@ a {
 
 /* Scroll-reveal */
 .reveal {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Hide reveal targets only after JavaScript has opted into the animation.
+   Without JavaScript, the server-rendered content remains fully visible. */
+.js .reveal {
   opacity: 0;
   transform: translateY(16px);
   transition: opacity .7s ease-out, transform .7s ease-out;
   will-change: opacity, transform;
 }
 
-.reveal--visible {
+.js .reveal--visible {
   opacity: 1;
   transform: translateY(0);
 }

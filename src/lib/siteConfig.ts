@@ -22,6 +22,9 @@ export const APP_STORE_URL = `https://apps.apple.com/app/apple-store/id676191298
 export const APP_STORE_IDENTITY_URL = 'https://apps.apple.com/app/id6761912988';
 
 export const SUPPORT_EMAIL = 'developer.ios.dp@gmail.com';
+export const BUSINESS_LEGAL_NAME = 'ALEKSANDR PUSTOTIN, IE';
+export const BUSINESS_COUNTRY_CODE = 'AM';
+export const BUSINESS_IDENTITY_URL = 'https://ie.pustotin.com/';
 export const ACCENT = '#7A4DE6';
 
 // Yandex Metrika counter ID. Set to null to disable the counter entirely.
