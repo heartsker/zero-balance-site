@@ -88,8 +88,7 @@ function responseHeaders({ contentType, info, markdownPath, negotiated = false, 
   if (markdownPath) {
     headers.Link = `<${markdownPath}>; rel="alternate"; type="text/markdown", </llms.txt>; rel="describedby"`;
   }
-  // API Gateway appends Accept-Encoding to Vary at the public edge.
-  if (negotiated) headers.Vary = 'Accept';
+  if (negotiated) headers.Vary = 'Accept, Accept-Encoding';
   if (directMarkdown) headers['X-Robots-Tag'] = 'noindex, nofollow';
   return headers;
 }
