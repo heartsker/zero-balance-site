@@ -1,0 +1,117 @@
+openapi: 3.0.0
+info:
+  title: Zero Balance Russian site
+  version: 1.0.0
+
+x-yc-apigateway:
+  service_account_id: __SERVICE_ACCOUNT_ID__
+  ignoreTrailingSlashes: false
+
+paths:
+  /:
+    x-yc-apigateway-any-method:
+      operationId: root
+      x-yc-apigateway-integration:
+        type: cloud_functions
+        function_id: __FUNCTION_ID__
+        tag: "$latest"
+        service_account_id: __SERVICE_ACCOUNT_ID__
+        payload_format_version: "1.0"
+
+  /_astro/{file+}:
+    parameters:
+      - name: file
+        in: path
+        required: true
+        schema:
+          type: string
+    get:
+      operationId: staticAssetGet
+      x-yc-apigateway-integration:
+        type: object_storage
+        bucket: __BUCKET__
+        object: "_astro/{file}"
+        error_object:
+          object: 404.html
+          statusCode: 404
+        service_account_id: __SERVICE_ACCOUNT_ID__
+    head:
+      operationId: staticAssetHead
+      x-yc-apigateway-integration:
+        type: object_storage
+        bucket: __BUCKET__
+        object: "_astro/{file}"
+        error_object:
+          object: 404.html
+          statusCode: 404
+        service_account_id: __SERVICE_ACCOUNT_ID__
+
+  /apple-touch-icon.png:
+    get:
+      operationId: appleTouchIcon
+      x-yc-apigateway-integration:
+        type: object_storage
+        bucket: __BUCKET__
+        object: apple-touch-icon.png
+        service_account_id: __SERVICE_ACCOUNT_ID__
+
+  /favicon-192.png:
+    get:
+      operationId: favicon192
+      x-yc-apigateway-integration:
+        type: object_storage
+        bucket: __BUCKET__
+        object: favicon-192.png
+        service_account_id: __SERVICE_ACCOUNT_ID__
+
+  /favicon-512.png:
+    get:
+      operationId: favicon512
+      x-yc-apigateway-integration:
+        type: object_storage
+        bucket: __BUCKET__
+        object: favicon-512.png
+        service_account_id: __SERVICE_ACCOUNT_ID__
+
+  /favicon.ico:
+    get:
+      operationId: faviconIco
+      x-yc-apigateway-integration:
+        type: object_storage
+        bucket: __BUCKET__
+        object: favicon.ico
+        service_account_id: __SERVICE_ACCOUNT_ID__
+
+  /icon.png:
+    get:
+      operationId: appIcon
+      x-yc-apigateway-integration:
+        type: object_storage
+        bucket: __BUCKET__
+        object: icon.png
+        service_account_id: __SERVICE_ACCOUNT_ID__
+
+  /og-image.png:
+    get:
+      operationId: openGraphImage
+      x-yc-apigateway-integration:
+        type: object_storage
+        bucket: __BUCKET__
+        object: og-image.png
+        service_account_id: __SERVICE_ACCOUNT_ID__
+
+  /{proxy+}:
+    x-yc-apigateway-any-method:
+      operationId: siteRoute
+      parameters:
+        - name: proxy
+          in: path
+          required: true
+          schema:
+            type: string
+      x-yc-apigateway-integration:
+        type: cloud_functions
+        function_id: __FUNCTION_ID__
+        tag: "$latest"
+        service_account_id: __SERVICE_ACCOUNT_ID__
+        payload_format_version: "1.0"

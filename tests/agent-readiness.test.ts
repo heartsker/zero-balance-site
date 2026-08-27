@@ -1,11 +1,27 @@
-import { readFile, readdir } from 'node:fs/promises';
+import { mkdir, mkdtemp, readFile, readdir, rm, writeFile } from 'node:fs/promises';
 import { join, relative } from 'node:path';
+import { createRequire } from 'node:module';
+import { tmpdir } from 'node:os';
 import { load } from 'cheerio';
-import { describe, expect, it } from 'vitest';
+import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 import worker, { markdownPathFor, negotiateRepresentation } from '../worker/index';
 
 const DIST = join(process.cwd(), 'dist');
+const RU_DIST = join(process.cwd(), 'dist-test-ru');
 const CONTENT_SIGNAL = 'search=yes, ai-input=yes, ai-train=yes, use=full';
+const require = createRequire(import.meta.url);
+
+interface RouterResponse {
+  statusCode: number;
+  headers: Record<string, string>;
+  body: string;
+  isBase64Encoded: boolean;
+}
+
+const { createHandler } = require('../serverless/yandex-agent-router/function/index.js') as {
+  createHandler(options: { siteRoot: string }):
+    (event: Record<string, unknown>) => Promise<RouterResponse>;
+};
 
 async function walk(directory: string): Promise<string[]> {
   const entries = await readdir(directory, { withFileTypes: true });
@@ -124,6 +140,89 @@ describe('Worker representations', () => {
   });
 });
 
+describe('Yandex agent router', () => {
+  let fixture: string;
+  let route: (event: Record<string, unknown>) => Promise<RouterResponse>;
+
+  beforeAll(async () => {
+    fixture = await mkdtemp(join(tmpdir(), 'zero-balance-agent-router-'));
+    await mkdir(join(fixture, 'about'), { recursive: true });
+    await mkdir(join(fixture, 'api'), { recursive: true });
+    await writeFile(join(fixture, 'index.html'), '<main><h1>Zero Balance RU</h1><p>HTML</p></main>');
+    await writeFile(join(fixture, 'index.md'), '# Zero Balance RU\n\nMarkdown\n');
+    await writeFile(join(fixture, 'about', 'index.html'), '<main><h1>About</h1></main>');
+    await writeFile(join(fixture, 'about', 'index.md'), '# About\n');
+    await writeFile(join(fixture, '404.html'), '<main><h1>Page not found</h1><a href="/sitemap-index.xml">Sitemap</a><a href="/llms.txt">Agent instructions</a></main>');
+    await writeFile(join(fixture, '404.md'), '# Page not found\n\n- [Sitemap](/sitemap-index.xml)\n- [Agent instructions](/llms.txt)\n');
+    await writeFile(join(fixture, 'api', 'feature_flags.json'), '{"enabled":true}\n');
+    route = createHandler({ siteRoot: fixture });
+  });
+
+  afterAll(async () => {
+    await rm(fixture, { recursive: true, force: true });
+  });
+
+  const request = (path: string, accept = 'text/html', method = 'GET') => ({
+    path,
+    httpMethod: method,
+    headers: { Accept: accept },
+  });
+
+  it('serves HTML and negotiated Markdown with the shared contract', async () => {
+    const html = await route(request('/'));
+    expect(html.statusCode).toBe(200);
+    expect(html.headers['Content-Type']).toContain('text/html');
+    expect(html.headers.Vary).toBe('Accept, Accept-Encoding');
+    expect(html.headers.Link).toContain('/index.md');
+    expect(html.headers['Content-Signal']).toBe(CONTENT_SIGNAL);
+    expect(html.body).toContain('Zero Balance RU');
+
+    const markdown = await route(request('/', 'text/markdown'));
+    expect(markdown.statusCode).toBe(200);
+    expect(markdown.headers['Content-Type']).toContain('text/markdown');
+    expect(markdown.headers['X-Robots-Tag']).toContain('noindex');
+    expect(markdown.body).toContain('# Zero Balance RU');
+  });
+
+  it('returns negotiated recovery bodies with a real 404 status', async () => {
+    const html = await route(request('/missing/'));
+    expect(html.statusCode).toBe(404);
+    expect(html.headers['Content-Type']).toContain('text/html');
+    expect(html.body).toContain('llms.txt');
+
+    const markdown = await route(request('/missing/', 'text/markdown'));
+    expect(markdown.statusCode).toBe(404);
+    expect(markdown.headers['Content-Type']).toContain('text/markdown');
+    expect(markdown.body).toContain('sitemap-index.xml');
+  });
+
+  it('supports HEAD, canonical slash redirects, aliases, and 406 responses', async () => {
+    const head = await route(request('/', 'text/markdown', 'HEAD'));
+    expect(head.statusCode).toBe(200);
+    expect(head.body).toBe('');
+
+    const redirect = await route(request('/about'));
+    expect(redirect.statusCode).toBe(308);
+    expect(redirect.headers.Location).toBe('/about/');
+
+    const flags = await route(request('/api/feature_flags', 'application/json'));
+    expect(flags.statusCode).toBe(200);
+    expect(flags.headers['Content-Type']).toContain('application/json');
+    expect(JSON.parse(flags.body)).toEqual({ enabled: true });
+
+    const unacceptable = await route(request('/', 'application/json'));
+    expect(unacceptable.statusCode).toBe(406);
+    expect(unacceptable.body).toContain('text/html or text/markdown');
+  });
+
+  it('rejects traversal and methods outside the public contract', async () => {
+    expect((await route(request('/%2e%2e/secret'))).statusCode).toBe(400);
+    const post = await route(request('/', 'text/html', 'POST'));
+    expect(post.statusCode).toBe(405);
+    expect(post.headers.Allow).toBe('GET, HEAD');
+  });
+});
+
 describe('built agent surfaces', () => {
   it('generates a direct noindex Markdown alternative for every content page', async () => {
     const files = await walk(DIST);
@@ -233,5 +332,66 @@ describe('built agent surfaces', () => {
     expect(organization).not.toHaveProperty('telephone');
     expect(organization?.['contactPoint']).not.toHaveProperty('telephone');
     expect(website?.['publisher']).toEqual({ '@id': 'https://zerobalance.pro/#org' });
+  });
+});
+
+describe('flattened Russian mirror', () => {
+  it('serves Russian at the root and preserves English under /en', async () => {
+    const rootHtml = await readFile(join(RU_DIST, 'index.html'), 'utf8');
+    const $ = load(rootHtml);
+    expect($('html').attr('lang')).toBe('ru');
+    expect($('link[rel="canonical"]').attr('href')).toBe('https://zerobalanceapp.ru/');
+    expect($('link[rel="alternate"][type="text/markdown"]').attr('href')).toBe('https://zerobalanceapp.ru/index.md');
+    expect(rootHtml).not.toMatch(/zerobalanceapp\.ru\/ru\//);
+    await expect(readFile(join(RU_DIST, 'en/index.html'), 'utf8')).resolves.toContain('lang="en"');
+    await expect(readFile(join(RU_DIST, 'ru/index.html'), 'utf8')).rejects.toThrow();
+  });
+
+  it('publishes root Markdown, agent instructions, and canonical sitemap URLs', async () => {
+    const rootMarkdown = await readFile(join(RU_DIST, 'index.md'), 'utf8');
+    expect(rootMarkdown).toMatch(/^---\n/);
+    expect(rootMarkdown).toContain('\n# ');
+
+    const llms = await readFile(join(RU_DIST, 'llms.txt'), 'utf8');
+    expect(llms).toContain('**When to use Zero Balance**');
+    expect(llms).toContain('Zero Balance has no public API');
+    expect(llms).not.toContain('zerobalanceapp.ru/ru/');
+    const links = [...llms.matchAll(/\]\((https:\/\/zerobalanceapp\.ru\/[^)]+\.md)\)/g)];
+    expect(links.length).toBeGreaterThanOrEqual(6);
+    for (const [, link] of links) {
+      await expect(readFile(join(RU_DIST, new URL(link).pathname), 'utf8')).resolves.toContain('---');
+    }
+
+    const sitemap = await readFile(join(RU_DIST, 'sitemap-0.xml'), 'utf8');
+    expect(sitemap).toContain('<loc>https://zerobalanceapp.ru/</loc>');
+    expect(sitemap).toContain('<loc>https://zerobalanceapp.ru/about/</loc>');
+    expect(sitemap).toContain('<loc>https://zerobalanceapp.ru/en/</loc>');
+    expect(sitemap).not.toContain('zerobalanceapp.ru/ru/');
+  });
+
+  it.each(['about/index.html', 'contact/index.html', 'privacy/index.html']) (
+    '%s is a substantial Russian trust page',
+    async (path) => {
+      const $ = load(await readFile(join(RU_DIST, path), 'utf8'));
+      expect($('html').attr('lang')).toBe('ru');
+      expect($('h1')).toHaveLength(1);
+      expect($('h2').length).toBeGreaterThan(0);
+      expect($('main#main').text().replace(/\s+/g, ' ').trim().length).toBeGreaterThan(500);
+    },
+  );
+
+  it('keeps the Russian entity graph email-only', async () => {
+    const $ = load(await readFile(join(RU_DIST, 'about/index.html'), 'utf8'));
+    const schemas = $('script[type="application/ld+json"]').map((_, element) =>
+      JSON.parse($(element).text()) as Record<string, unknown>
+    ).get() as Array<Record<string, unknown>>;
+    const organization = schemas.find((schema) => schema['@type'] === 'Organization');
+    expect(organization).toMatchObject({
+      '@id': 'https://zerobalanceapp.ru/#org',
+      email: 'developer.ios.dp@gmail.com',
+      contactPoint: { email: 'developer.ios.dp@gmail.com' },
+    });
+    expect(organization).not.toHaveProperty('address');
+    expect(organization).not.toHaveProperty('telephone');
   });
 });

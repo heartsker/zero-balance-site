@@ -2,7 +2,11 @@
 import { readdir } from 'node:fs/promises';
 import { join } from 'node:path';
 
-const ORIGIN = (process.argv[2] || process.env.AGENT_VERIFY_ORIGIN || 'https://zerobalance.pro').replace(/\/$/, '');
+const FETCH_ORIGIN = (process.argv[2] || process.env.AGENT_VERIFY_ORIGIN || 'https://zerobalance.pro').replace(/\/$/, '');
+const CANONICAL_ORIGIN = (process.env.AGENT_VERIFY_CANONICAL_ORIGIN || FETCH_ORIGIN).replace(/\/$/, '');
+const IS_RU_SITE = CANONICAL_ORIGIN.includes('zerobalanceapp.ru');
+const HOME_PATH = process.env.AGENT_VERIFY_HOME_PATH || (IS_RU_SITE ? '/' : '/en/');
+const MIN_URLS = Number(process.env.AGENT_VERIFY_MIN_URLS || (IS_RU_SITE ? 40 : 600));
 const CONTENT_SIGNAL = 'search=yes, ai-input=yes, ai-train=yes, use=full';
 const CRAWLERS = [
   'ChatGPT-User',
@@ -24,11 +28,17 @@ function check(condition, message) {
 }
 
 async function fetchChecked(pathOrUrl, init = {}) {
-  const url = pathOrUrl.startsWith('http') ? pathOrUrl : `${ORIGIN}${pathOrUrl}`;
+  const logicalUrl = new URL(pathOrUrl, CANONICAL_ORIGIN);
+  const fetchUrl = logicalUrl.origin === CANONICAL_ORIGIN
+    ? new URL(`${logicalUrl.pathname}${logicalUrl.search}`, FETCH_ORIGIN)
+    : logicalUrl;
   try {
-    return await fetch(url, { redirect: 'follow', ...init });
+    return await fetch(fetchUrl, { redirect: 'follow', ...init });
   } catch (error) {
-    failures.push(`${url}: request failed (${error.message})`);
+    const route = fetchUrl.href === logicalUrl.href
+      ? logicalUrl.href
+      : `${logicalUrl.href} via ${fetchUrl.href}`;
+    failures.push(`${route}: request failed (${error.message})`);
     return null;
   }
 }
@@ -68,13 +78,20 @@ for (const sitemapUrl of sitemapUrls) {
   if (response) pageUrls.push(...locations(await response.text()));
 }
 const canonicalUrls = [...new Set(pageUrls)];
-check(canonicalUrls.length > 600, `expected more than 600 sitemap URLs, received ${canonicalUrls.length}`);
-console.log(`production: checking ${canonicalUrls.length} canonical URLs as HTML, negotiated Markdown, and direct Markdown`);
+check(canonicalUrls.length >= MIN_URLS, `expected at least ${MIN_URLS} sitemap URLs, received ${canonicalUrls.length}`);
+for (const pageUrl of canonicalUrls) {
+  check(new URL(pageUrl).origin === CANONICAL_ORIGIN, `${pageUrl}: canonical URL uses the wrong origin`);
+}
+console.log(`production: checking ${canonicalUrls.length} canonical URLs through ${FETCH_ORIGIN}`);
 
 await runPool(canonicalUrls, 8, async (pageUrl, index) => {
   const html = await fetchChecked(pageUrl, { headers: { Accept: 'text/html' } });
   check(html?.status === 200, `${pageUrl}: HTML status ${html?.status ?? 'request failed'}`);
   check(html?.headers.get('content-type')?.includes('text/html'), `${pageUrl}: HTML content type missing`);
+  check(html?.headers.get('content-signal') === CONTENT_SIGNAL, `${pageUrl}: Content-Signal missing`);
+  const htmlVary = html?.headers.get('vary')?.toLowerCase() ?? '';
+  check(htmlVary.includes('accept'), `${pageUrl}: HTML Vary is missing Accept`);
+  check(htmlVary.includes('accept-encoding'), `${pageUrl}: HTML Vary is missing Accept-Encoding`);
   if (html) {
     const body = await html.text();
     check(body.includes('<h1'), `${pageUrl}: raw HTML has no H1`);
@@ -89,7 +106,7 @@ await runPool(canonicalUrls, 8, async (pageUrl, index) => {
   check(vary.includes('accept-encoding'), `${pageUrl}: Vary is missing Accept-Encoding`);
   if (markdown) check((await markdown.text()).includes('\n# '), `${pageUrl}: negotiated Markdown has no H1`);
 
-  const directUrl = new URL(markdownPath(new URL(pageUrl).pathname), ORIGIN);
+  const directUrl = new URL(markdownPath(new URL(pageUrl).pathname), CANONICAL_ORIGIN);
   const direct = await fetchChecked(directUrl.href, { headers: { Accept: 'text/markdown' } });
   check(direct?.status === 200, `${directUrl.href}: direct Markdown status ${direct?.status ?? 'request failed'}`);
   check(direct?.headers.get('content-type')?.includes('text/markdown'), `${directUrl.href}: direct Markdown content type missing`);
@@ -97,9 +114,8 @@ await runPool(canonicalUrls, 8, async (pageUrl, index) => {
   if ((index + 1) % 100 === 0) console.log(`production: checked ${index + 1}/${canonicalUrls.length} URLs`);
 });
 
-const homePath = '/en/';
 for (const crawler of CRAWLERS) {
-  const response = await fetchChecked(homePath, { headers: { 'User-Agent': crawler, Accept: 'text/html' } });
+  const response = await fetchChecked(HOME_PATH, { headers: { 'User-Agent': crawler, Accept: 'text/html' } });
   check(response?.status === 200, `${crawler}: homepage status ${response?.status ?? 'request failed'}`);
 }
 
@@ -108,7 +124,7 @@ for (const [accept, expectedType, expectedStatus] of [
   ['text/markdown, text/html;q=0.5', 'text/markdown', 200],
   ['application/json', 'text/markdown', 406],
 ]) {
-  const response = await fetchChecked(homePath, { headers: { Accept: accept } });
+  const response = await fetchChecked(HOME_PATH, { headers: { Accept: accept } });
   check(response?.status === expectedStatus, `${accept}: expected ${expectedStatus}, received ${response?.status}`);
   check(response?.headers.get('content-type')?.includes(expectedType), `${accept}: expected ${expectedType}`);
 }
@@ -148,6 +164,30 @@ const rootMarkdownBody = rootMarkdown ? await rootMarkdown.text() : '';
 check(rootMarkdown?.status === 200, '/index.md must return 200');
 check(rootMarkdown?.headers.get('content-type')?.includes('text/markdown'), '/index.md must be text/markdown');
 check(rootMarkdownBody.includes('\n# '), '/index.md must contain a Markdown H1');
+
+for (const path of IS_RU_SITE
+  ? ['/about/', '/contact/', '/privacy/']
+  : ['/en/about/', '/en/contact/', '/en/privacy/']) {
+  const response = await fetchChecked(path, { headers: { Accept: 'text/html' } });
+  check(response?.status === 200, `${path}: trust page must return 200`);
+  if (response) {
+    const body = await response.text();
+    check(body.includes('<h1'), `${path}: trust page has no H1`);
+    check(body.replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim().length > 500, `${path}: trust page is too short`);
+  }
+}
+
+const home = await fetchChecked(HOME_PATH, { headers: { Accept: 'text/html' } });
+if (home) {
+  const body = await home.text();
+  const assetPath = body.match(/(?:src|href)="(\/_astro\/[^"?#]+)"/)?.[1];
+  check(Boolean(assetPath), `${HOME_PATH}: no static asset reference found`);
+  if (assetPath) {
+    const asset = await fetchChecked(assetPath);
+    check(asset?.status === 200, `${assetPath}: static asset must return 200`);
+    check(!(asset?.headers.get('content-type') ?? '').includes('text/html'), `${assetPath}: static asset returned HTML`);
+  }
+}
 
 const indexNowKey = (await readdir(join(process.cwd(), 'public'))).find((file) => /^[a-f0-9]{32}\.txt$/.test(file));
 check(Boolean(indexNowKey), 'IndexNow key file missing from public/');

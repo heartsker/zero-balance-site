@@ -6,7 +6,8 @@ The global site `zerobalance.pro` runs on Cloudflare Workers. Since June 2025
 Roskomnadzor has had Russian ISPs throttle Cloudflare-protected sites to the first
 ~16 KB of every asset, so the site is effectively unreachable in Russia without a
 VPN. Most of the app's users are in Russia, so we serve them a separate mirror,
-`zerobalanceapp.ru`, hosted **inside Russia** (Yandex Object Storage + CDN), which
+`zerobalanceapp.ru`, hosted **inside Russia** (Yandex Object Storage, Cloud Functions,
+and API Gateway), which
 is not throttled.
 
 Nothing about the Cloudflare deployment changes. `zerobalance.pro` stays on the
@@ -21,18 +22,17 @@ The domain and locale set are env-driven (`src/lib/siteConfig.ts` and
 | | Global build (Cloudflare) | Russian mirror (Yandex) |
 |---|---|---|
 | `PUBLIC_SITE_DOMAIN` | unset -> `https://zerobalance.pro` | `https://zerobalanceapp.ru` |
-| `PUBLIC_SITE_LOCALES` | unset -> all 12 | `ru` |
+| `PUBLIC_SITE_LOCALES` | unset -> all 12 | `ru,en` |
 | `PUBLIC_SITE_DEFAULT_LOCALE` | unset -> `en` | `ru` |
-| Output dir | `dist/` (served by `wrangler.toml`) | `dist-ru/` |
+| Output dir | `dist/` (served by `wrangler.toml`) | `dist-ru/` (served through API Gateway) |
 | Analytics | none | Yandex Metrika (consent-gated) |
 
 Cross-build details handled in code:
-- **Russian only.** Standard pages build ru-only because their `getStaticPaths()`
-  maps over the env-filtered `LOCALES`. The en+ru blog hardcodes its locales, so its
-  `/en/` pages are pruned from `dist-ru/` by the deploy script. The sitemap `filter`
-  in `astro.config.mjs` drops non-ru URLs.
-- **Served at the root, no `/ru/` prefix.** The mirror is single-language, so after
-  the build `scripts/deploy.mjs` **flattens** `dist-ru/ru/*` up to `dist-ru/*` and
+- **Russian at the root, English under `/en/`.** The Yandex build includes only these
+  two locales. `scripts/prepare-yandex-build.mjs` removes any other locale output,
+  while preserving the English mirror for crawler and user parity.
+- **No `/ru/` prefix.** After the build, `scripts/prepare-yandex-build.mjs`
+  **flattens** `dist-ru/ru/*` up to `dist-ru/*` and
   rewrites every `/ru/` reference (links, canonical, OG, sitemap, JSON-LD, prose) to
   `/`. So pages live at `zerobalanceapp.ru/`, `/faq/`, `/blog/...` - not `/ru/...`.
   (Asset paths like `/screenshots/ru/*.png` are intentionally preserved.) `src/pages/index.astro`
@@ -53,14 +53,20 @@ Cross-build details handled in code:
 
 1. **Domain.** Register `zerobalanceapp.ru` with an accredited registrar
    (reg.ru / RU-CENTER); `.ru` requires passport/ID verification.
-2. **Yandex Cloud.**
+2. **Yandex Cloud.** The deploy script creates or updates the runtime resources:
    - Object Storage bucket named `zerobalanceapp.ru`, with **static website hosting**
      enabled (index document `index.html`).
-   - A **CDN** resource fronting the bucket; attach the `zerobalanceapp.ru` domain and
-     issue a Let's Encrypt certificate in Certificate Manager.
-   - A service account + static access key (S3 credentials) scoped to the bucket.
-   - Optionally set cache + security response headers on the CDN (the `_headers` /
-     `_redirects` files are Cloudflare-only and are not read by Yandex S3).
+   - A private Node.js 22 Cloud Function named `zerobalance-ru-agent-router` with a
+     read-only bucket mount and a dedicated service account that has only
+     `storage.viewer` plus permission to invoke the function.
+   - API Gateway `zerobalance-ru-site`. Page requests go through the function so HTML,
+     Markdown negotiation, HEAD, 406, and 404 share the Cloudflare HTTP contract.
+     `/_astro/*` is served directly from Object Storage.
+   - An issued Certificate Manager certificate named `zerobalanceapp-ru`, attached to
+     the gateway custom domain. The apex DNS ANAME points to the gateway domain.
+   - The former CDN resource is retained unchanged as a rollback reference.
+   - A separate deployment service account + static access key (S3 credentials) scoped
+     to the bucket for uploads.
 3. **Local tooling.** Install the AWS CLI (`aws`) - the Yandex lane uses it for the
    S3-compatible sync.
 4. **Secrets.** Create a gitignored `.env` in the repo root:
@@ -82,11 +88,14 @@ Cross-build details handled in code:
 
 ```sh
 npm run deploy:cloudflare   # build + ship the global site (zerobalance.pro)
-npm run deploy:yandex       # build ru-only, prune, sync to the Yandex bucket
+npm run deploy:yandex       # build RU+EN, sync, deploy router/gateway, verify, cut over
 npm run deploy:all          # both, sequentially
 ```
 
-All three are thin wrappers over `scripts/deploy.mjs`. Each lane ends with a
+All three are thin wrappers over `scripts/deploy.mjs`. The Yandex lane builds the
+flattened mirror, syncs Object Storage, idempotently deploys the function and gateway,
+verifies the gateway service domain, attaches the certificate, replaces the apex ANAME,
+and runs the production verifier. Each lane ends with a
 best-effort **IndexNow** ping (`scripts/indexnow.mjs`) that submits the URLs whose
 content hash changed in that build - `zerobalanceapp.ru` from `dist-ru/` for the
 Yandex lane, `zerobalance.pro` from `dist/` for the Cloudflare lane. IndexNow is a
@@ -99,13 +108,19 @@ the ping never fails the deploy since the build has already shipped by then.
 - `dist-ru/` is served at the **root**: `index.html` is the real Russian home (not a
   redirect), pages sit at `/faq/`, `/blog/...` etc. (no `/ru/`), with self-hosted fonts
   (no `fonts.googleapis.com`), Metrika + consent banner, and canonical/OG on
-  `zerobalanceapp.ru`. The only surviving `/ru/` is `/screenshots/ru/*.png`.
+  `zerobalanceapp.ru`. English pages remain under `/en/`. The only other surviving
+  `/ru/` path is `/screenshots/ru/*.png`.
+- `npm run verify:agents -- https://zerobalanceapp.ru` checks the sitemap URLs,
+  negotiated HTML and Markdown, direct Markdown aliases, 404/406 behavior,
+  machine-readable endpoints, static assets, and eight crawler user agents.
 - `dist/` (global) has all 12 locales, no Metrika, and canonical/OG on `zerobalance.pro`.
 - Decisive check: load `https://zerobalanceapp.ru/` from inside Russia - it must load
   fully and fast, not stall at ~16 KB.
 
 ## Rollback
 
-The mirror is additive: it does not touch Cloudflare. To pause it, stop running
-`deploy:yandex` (and optionally point the `.ru` DNS away). The global site is
-unaffected at all times.
+The mirror is additive and does not touch Cloudflare. The previous Yandex CDN resource
+is deliberately not deleted. To roll back, replace the apex ANAME with its previous CDN
+target and confirm TLS plus the root page. Stop running `deploy:yandex` while the legacy
+route is active because that command intentionally restores the API Gateway cutover.
+The global site is unaffected at all times.
