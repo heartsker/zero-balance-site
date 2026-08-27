@@ -54,7 +54,10 @@ function run(args, options = {}) {
 }
 
 function hasBinding(bindings, role, serviceAccountId) {
-  return (bindings?.access_bindings || bindings?.accessBindings || []).some((binding) =>
+  const entries = Array.isArray(bindings)
+    ? bindings
+    : bindings?.access_bindings || bindings?.accessBindings || [];
+  return entries.some((binding) =>
     (binding.role_id || binding.roleId) === role
       && binding.subject?.type === 'serviceAccount'
       && binding.subject?.id === serviceAccountId,
@@ -122,6 +125,11 @@ function renderedGatewaySpec(functionId, serviceAccountId, bucket) {
     .replaceAll('__BUCKET__', bucket);
   if (/__[A-Z_]+__/.test(spec)) throw new Error('Unresolved API Gateway template value.');
   return spec;
+}
+
+function gatewayDescription(specification) {
+  const digest = createHash('sha256').update(specification).digest('hex').slice(0, 16);
+  return `Agent-ready Russian mirror for Zero Balance; spec-${digest}`;
 }
 
 function normalizeGatewayDomain(gateway) {
@@ -216,9 +224,11 @@ ensureFunctionVersion(cloudFunction.id, serviceAccount.id, bucket);
 const temporaryDirectory = mkdtempSync(join(tmpdir(), 'zero-balance-gateway-'));
 const specificationPath = join(temporaryDirectory, 'openapi.yaml');
 try {
+  const specification = renderedGatewaySpec(cloudFunction.id, serviceAccount.id, bucket);
+  const description = gatewayDescription(specification);
   writeFileSync(
     specificationPath,
-    renderedGatewaySpec(cloudFunction.id, serviceAccount.id, bucket),
+    specification,
     'utf8',
   );
   const gateways = json(['serverless', 'api-gateway', 'list', '--folder-id', folderId]) || [];
@@ -227,16 +237,20 @@ try {
     gateway = json([
       'serverless', 'api-gateway', 'create',
       '--name', GATEWAY_NAME,
-      '--description', 'Agent-ready Russian mirror for Zero Balance',
+      '--description', description,
       '--spec', specificationPath,
       '--execution-timeout', '10s',
     ]);
-  } else {
+  } else if (gateway.description !== description || gateway.execution_timeout !== '10s') {
     run([
       'serverless', 'api-gateway', 'update', gateway.id,
+      '--description', description,
       '--spec', specificationPath,
       '--execution-timeout', '10s',
     ]);
+    gateway = json(['serverless', 'api-gateway', 'get', gateway.id]);
+  } else {
+    console.log(`gateway: specification already deployed as ${description}`);
     gateway = json(['serverless', 'api-gateway', 'get', gateway.id]);
   }
 

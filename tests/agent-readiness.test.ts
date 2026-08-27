@@ -172,7 +172,7 @@ describe('Yandex agent router', () => {
     const html = await route(request('/'));
     expect(html.statusCode).toBe(200);
     expect(html.headers['Content-Type']).toContain('text/html');
-    expect(html.headers.Vary).toBe('Accept, Accept-Encoding');
+    expect(html.headers.Vary).toBe('Accept');
     expect(html.headers.Link).toContain('/index.md');
     expect(html.headers['Content-Signal']).toBe(CONTENT_SIGNAL);
     expect(html.body).toContain('Zero Balance RU');

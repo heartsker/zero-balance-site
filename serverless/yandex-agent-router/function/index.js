@@ -83,13 +83,13 @@ function responseHeaders({ contentType, info, markdownPath, negotiated = false, 
     'Content-Type': contentType,
     'Permissions-Policy': 'geolocation=(), camera=(), microphone=(), interest-cohort=()',
     'Referrer-Policy': 'strict-origin-when-cross-origin',
-    'Strict-Transport-Security': 'max-age=31536000; includeSubDomains; preload',
   };
   if (info) headers['Last-Modified'] = info.mtime.toUTCString();
   if (markdownPath) {
     headers.Link = `<${markdownPath}>; rel="alternate"; type="text/markdown", </llms.txt>; rel="describedby"`;
   }
-  if (negotiated) headers.Vary = 'Accept, Accept-Encoding';
+  // API Gateway appends Accept-Encoding to Vary at the public edge.
+  if (negotiated) headers.Vary = 'Accept';
   if (directMarkdown) headers['X-Robots-Tag'] = 'noindex, nofollow';
   return headers;
 }
