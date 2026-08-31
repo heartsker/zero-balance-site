@@ -1,5 +1,5 @@
 ---
-import { DOMAIN, ALL_LOCALES, LOCALES, IS_RU_SITE, GLOBAL_SITE, RU_SITE, LOCALE_OG_TAG } from '../lib/siteConfig';
+import { CREATOR_NAME, DOMAIN, ALL_LOCALES, LOCALES, IS_RU_SITE, GLOBAL_SITE, RU_SITE, LOCALE_OG_TAG } from '../lib/siteConfig';
 import { localizedPath, stripLocale, getDict, type Locale } from '../i18n';
 
 // Where each language version actually lives, regardless of which build renders
@@ -75,7 +75,7 @@ const keywordsString = keywords?.length
 <meta name="apple-mobile-web-app-title" content="Zero Balance" />
 <meta name="apple-mobile-web-app-capable" content="yes" />
 <meta name="format-detection" content="telephone=no" />
-<meta name="author" content="Daniel Pustotin" />
+<meta name="author" content={CREATOR_NAME} />
 <meta name="generator" content="Astro" />
 <meta name="referrer" content="strict-origin-when-cross-origin" />
 <meta name="theme-color" content="#7A4DE6" />

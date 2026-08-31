@@ -72,7 +72,7 @@ const tr: Dict = {
       'geliştiriciyle iletişim',
       'App Store iade kalan bakiye',
       'iOS uygulama yardım',
-      'Daniel Pustotin destek',
+      'Dapustim Studio destek',
     ],
     spend: [
       'Apple Account bakiyesi harcama',

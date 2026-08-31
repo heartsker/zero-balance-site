@@ -72,7 +72,7 @@ const ptBR: Dict = {
       'contato com desenvolvedor',
       'reembolso App Store saldo restante',
       'ajuda app iOS',
-      'suporte Daniel Pustotin',
+      'suporte Dapustim Studio',
     ],
     spend: [
       'gastar saldo Apple Account',

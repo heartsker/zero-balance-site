@@ -92,6 +92,6 @@ Individual FAQ entries, each with its own URL so you can deep-link to the exact 
 
 ---
 
-## About the developer
+## About the creator
 
-Zero Balance is built by Daniel Pustotin, an independent iOS developer. The app is free, has no subscriptions, and exists to solve one specific irritation that Apple has not solved itself. For anything else, see the support pages linked above.
+Zero Balance is built by Dapustim Studio. The app is free, has no subscriptions, and exists to solve one specific irritation that Apple has not solved itself. For anything else, see the support pages linked above.

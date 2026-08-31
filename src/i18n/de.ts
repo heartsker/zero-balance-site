@@ -72,7 +72,7 @@ const de: Dict = {
       'Entwickler kontaktieren',
       'App Store Rückerstattung Restguthaben',
       'iOS App Hilfe',
-      'Daniel Pustotin Support',
+      'Dapustim Studio Support',
     ],
     spend: [
       'Apple Account Guthaben ausgeben',

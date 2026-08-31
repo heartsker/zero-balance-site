@@ -72,7 +72,7 @@ const ko: Dict = {
       '개발자 문의',
       'App Store 환불 잔액',
       'iOS 앱 도움말',
-      'Daniel Pustotin 지원',
+      'Dapustim Studio 지원',
     ],
     spend: [
       'Apple Account 잔액 사용',

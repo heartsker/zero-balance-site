@@ -64,7 +64,7 @@ const ru: Dict = {
       'связаться с разработчиком',
       'возврат App Store',
       'iOS приложение помощь',
-      'Daniel Pustotin поддержка',
+      'Dapustim Studio поддержка',
     ],
     spend: [
       'потратить баланс Apple Account',

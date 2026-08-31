@@ -72,7 +72,7 @@ const ja: Dict = {
       '開発者に連絡',
       'App Store 返金 残高',
       'iOS アプリのヘルプ',
-      'Daniel Pustotin サポート',
+      'Dapustim Studio サポート',
     ],
     spend: [
       'Apple Account 残高を使う',

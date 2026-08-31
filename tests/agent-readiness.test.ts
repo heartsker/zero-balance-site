@@ -355,8 +355,8 @@ describe('built agent surfaces', () => {
       name: 'Zero Balance',
       alternateName: ['Zero Balance: Spend Credit', 'Zero Balance app', 'zerobalance.pro'],
       legalName: 'ALEKSANDR PUSTOTIN, IE',
-      email: 'developer.ios.dp@gmail.com',
-      contactPoint: { contactType: 'customer support', email: 'developer.ios.dp@gmail.com' },
+      email: 'support@zerobalance.pro',
+      contactPoint: { contactType: 'customer support', email: 'support@zerobalance.pro' },
       address: { '@type': 'PostalAddress', addressCountry: 'AM' },
     });
     expect(organization?.['sameAs']).toContain('https://ie.pustotin.com/');
@@ -420,8 +420,8 @@ describe('flattened Russian mirror', () => {
     const organization = schemas.find((schema) => schema['@type'] === 'Organization');
     expect(organization).toMatchObject({
       '@id': 'https://zerobalanceapp.ru/#org',
-      email: 'developer.ios.dp@gmail.com',
-      contactPoint: { email: 'developer.ios.dp@gmail.com' },
+      email: 'support@zerobalance.pro',
+      contactPoint: { email: 'support@zerobalance.pro' },
     });
     expect(organization).not.toHaveProperty('address');
     expect(organization).not.toHaveProperty('telephone');

@@ -72,7 +72,7 @@ const ar: Dict = {
       'الاتصال بالمطور',
       'استرداد App Store للرصيد المتبقي',
       'مساعدة تطبيق iOS',
-      'دعم Daniel Pustotin',
+      'دعم Dapustim Studio',
     ],
     spend: [
       'إنفاق رصيد حساب Apple',

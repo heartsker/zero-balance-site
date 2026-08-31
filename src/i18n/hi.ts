@@ -72,7 +72,7 @@ const hi: Dict = {
       'डेवलपर से संपर्क',
       'बचे बैलेंस के लिए App Store रिफ़ंड',
       'iOS ऐप मदद',
-      'Daniel Pustotin सहायता',
+      'Dapustim Studio सहायता',
     ],
     spend: [
       'Apple Account बैलेंस खर्च',

@@ -5,7 +5,7 @@ import Container from '../../components/Container.astro';
 import Section from '../../components/Section.astro';
 import Reveal from '../../components/Reveal.astro';
 import { getDict, LOCALES, type Locale, localizedPath } from '../../i18n';
-import { APP_STORE_IDENTITY_URL, SUPPORT_EMAIL } from '../../lib/siteConfig';
+import { APP_STORE_IDENTITY_URL, CREATOR_NAME, SUPPORT_EMAIL } from '../../lib/siteConfig';
 import { breadcrumbSchema } from '../../lib/schema';
 
 export function getStaticPaths() {
@@ -28,7 +28,7 @@ const copy = lang === 'ru'
         },
         {
           h: 'Кто отвечает за продукт',
-          paragraphs: [`Zero Balance разработан и поддерживается независимым разработчиком Daniel Pustotin. Для вопросов о приложении и сайте используется только email ${SUPPORT_EMAIL}.`, 'Это независимый продукт. Он не принадлежит Apple и не представляет Apple. Все покупки, списания и возвраты обрабатываются Apple по правилам App Store.'],
+          paragraphs: [`Zero Balance разработан и поддерживается студией ${CREATOR_NAME}. Для вопросов о приложении и сайте используется только email ${SUPPORT_EMAIL}.`, 'Это независимый продукт. Он не принадлежит Apple и не представляет Apple. Все покупки, списания и возвраты обрабатываются Apple по правилам App Store.'],
         },
         {
           h: 'Границы и безопасность',
@@ -51,7 +51,7 @@ const copy = lang === 'ru'
         },
         {
           h: 'Who is responsible for the product',
-          paragraphs: [`Zero Balance is built and maintained by independent developer Daniel Pustotin. Questions about the app or website are handled only by email at ${SUPPORT_EMAIL}.`, 'Zero Balance is an independent product. It is not owned by, affiliated with, or endorsed by Apple. Apple processes App Store purchases, charges, and refund requests under its own terms.'],
+          paragraphs: [`Zero Balance is built and maintained by ${CREATOR_NAME}. Questions about the app or website are handled only by email at ${SUPPORT_EMAIL}.`, 'Zero Balance is an independent product. It is not owned by, affiliated with, or endorsed by Apple. Apple processes App Store purchases, charges, and refund requests under its own terms.'],
         },
         {
           h: 'Limits and account safety',
@@ -93,7 +93,7 @@ const schema = breadcrumbSchema([
           <h2>{lang === 'ru' ? 'Проверенные ссылки' : 'Verified destinations'}</h2>
           <ul>
             <li><a href={APP_STORE_IDENTITY_URL}>{lang === 'ru' ? 'Zero Balance в App Store' : 'Zero Balance on the App Store'}</a></li>
-            <li><a href={localizedPath(lang, 'contact')}>{lang === 'ru' ? 'Связаться с разработчиком' : 'Contact the developer'}</a></li>
+            <li><a href={localizedPath(lang, 'contact')}>{lang === 'ru' ? `Связаться с ${CREATOR_NAME}` : `Contact ${CREATOR_NAME}`}</a></li>
             <li><a href={localizedPath(lang, 'privacy')}>{lang === 'ru' ? 'Политика конфиденциальности' : 'Privacy policy'}</a></li>
           </ul>
         </Reveal>

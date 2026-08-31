@@ -72,7 +72,7 @@ const es: Dict = {
       'contactar al desarrollador',
       'reembolso App Store saldo restante',
       'ayuda app iOS',
-      'soporte Daniel Pustotin',
+      'soporte Dapustim Studio',
     ],
     spend: [
       'gastar saldo Apple Account',

@@ -70,7 +70,7 @@ const en = {
       'contact developer',
       'App Store refund leftover balance',
       'iOS app help',
-      'Daniel Pustotin support',
+      'Dapustim Studio support',
     ],
     spend: [
       'spend Apple Account balance',

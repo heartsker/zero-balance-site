@@ -21,7 +21,9 @@ export const APP_STORE_URL = `https://apps.apple.com/app/apple-store/id676191298
 // campaign parameters would weaken entity matching.
 export const APP_STORE_IDENTITY_URL = 'https://apps.apple.com/app/id6761912988';
 
-export const SUPPORT_EMAIL = 'developer.ios.dp@gmail.com';
+export const SUPPORT_EMAIL = 'support@zerobalance.pro';
+export const CREATOR_NAME = 'Dapustim Studio';
+export const CREATOR_URL = 'https://dapustim.com/';
 export const BUSINESS_LEGAL_NAME = 'ALEKSANDR PUSTOTIN, IE';
 export const BUSINESS_COUNTRY_CODE = 'AM';
 export const BUSINESS_IDENTITY_URL = 'https://ie.pustotin.com/';

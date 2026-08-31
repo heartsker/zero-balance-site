@@ -4,6 +4,8 @@ import {
   DOMAIN,
   APP_NAME,
   SUPPORT_EMAIL,
+  CREATOR_NAME,
+  CREATOR_URL,
   APP_RATING,
   APP_RATING_COUNT,
   LOCALES,
@@ -17,14 +19,14 @@ import {
 } from './siteConfig';
 import { stripInlineLinks } from './prose';
 
-const PERSON_ID = `${DOMAIN}/#developer`;
+const CREATOR_ID = `${DOMAIN}/#creator`;
 const ORGANIZATION_ID = `${DOMAIN}/#org`;
 
 const PUBLISHER = {
-  '@type': 'Person',
-  '@id': PERSON_ID,
-  name: 'Daniel Pustotin',
-  url: `${DOMAIN}/en/about/`,
+  '@type': 'Organization',
+  '@id': CREATOR_ID,
+  name: CREATOR_NAME,
+  url: CREATOR_URL,
 };
 
 const ORGANIZATION_REFERENCE = { '@id': ORGANIZATION_ID };

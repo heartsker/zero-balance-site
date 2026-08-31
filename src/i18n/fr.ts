@@ -72,7 +72,7 @@ const fr: Dict = {
       'contacter le développeur',
       'remboursement App Store solde restant',
       'aide app iOS',
-      'support Daniel Pustotin',
+      'support Dapustim Studio',
     ],
     spend: [
       'dépenser solde compte Apple',

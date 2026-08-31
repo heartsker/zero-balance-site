@@ -2,7 +2,7 @@
 import { Image } from 'astro:assets';
 import icon from '../assets/icon.png';
 import { getDict, localizedPath, type Locale } from '../i18n';
-import { SUPPORT_EMAIL } from '../lib/siteConfig';
+import { CREATOR_NAME, SUPPORT_EMAIL } from '../lib/siteConfig';
 import LangSwitcher from './LangSwitcher.astro';
 import AboutBoilerplate from './AboutBoilerplate.astro';
 
@@ -147,7 +147,7 @@ const legalLinks = [
     </div>
 
     <div class="mt-12 border-t border-[var(--border)] pt-6 text-xs text-[var(--muted)]">
-      <p>&copy; {year} Daniel Pustotin. {t.footer.rights}</p>
+      <p>&copy; {year} {CREATOR_NAME}. {t.footer.rights}</p>
     </div>
   </div>
 </footer>
