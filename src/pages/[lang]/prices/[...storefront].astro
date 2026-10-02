@@ -1,0 +1,111 @@
+---
+import PageLayout from '../../../layouts/PageLayout.astro';
+import Container from '../../../components/Container.astro';
+import AppStoreButton from '../../../components/AppStoreButton.astro';
+import { catalog, pricesFor, money, currencyDigits, type CatalogLocale } from '../../../lib/iapCatalog';
+import names from '../../../data/storefront-names.json';
+import { LOCALES, localizedPath } from '../../../i18n';
+export function getStaticPaths() {
+  return (['en', 'ru'] as const).filter(lang => LOCALES.includes(lang)).flatMap(lang => [
+    { params: { lang, storefront: undefined } },
+    ...catalog.storefronts.map(s => ({ params: { lang, storefront: s.code.toLowerCase() } })),
+  ]);
+}
+const lang = Astro.params.lang as CatalogLocale;
+const ru = lang === 'ru';
+const code = Astro.params.storefront?.toUpperCase() ?? (ru ? 'RUS' : 'USA');
+const store = catalog.storefronts.find(s => s.code === code)!;
+const label = (code: string) => names[code as keyof typeof names][lang];
+const prices = pricesFor(store);
+const currency = store.currency;
+const digits = currencyDigits(currency);
+const title = ru ? `Цены Zero Balance: ${label(code)}` : `Zero Balance prices: ${label(code)}`;
+const description = ru ? 'Проверьте остаток Apple Account по ценам 21 встроенной покупки. Каталог 175 магазинов App Store, проверен 2 октября 2026 года.' : 'Check your Apple Account balance against 21 in-app purchase prices. Catalog of 175 App Store storefronts, verified October 2, 2026.';
+const path = localizedPath(lang, `prices/${Astro.params.storefront ?? ''}`);
+const products = prices.map(p => ({ ...p, name: catalog.products.find(item => item.id === p.id)!.name[lang] }));
+const sortedStores = [...catalog.storefronts].sort((a, b) => label(a.code).localeCompare(label(b.code), lang));
+const payload = { products, currency, digits, lang };
+---
+<PageLayout {title} {description} {lang} {path} locales={['en', 'ru']}>
+  <Container>
+    <div class="catalog-page">
+      <header class="catalog-intro">
+        <p class="text-[var(--muted)]">{ru ? 'Цены проверены' : 'Prices verified'} <time datetime={catalog.date}>{ru ? '2 октября 2026' : 'October 2, 2026'}</time></p>
+        <h1 class="h1">{ru ? 'Проверить остаток Apple Account' : 'Check your Apple Account balance'}</h1>
+        <p class="lead">{ru ? 'Подберём покупки по ценам вашего App Store.' : 'Find purchases that add up to your balance.'}</p>
+      </header>
+      <div class="catalog-grid">
+        <section class="balance-checker" aria-labelledby="checker-title" data-checker data-payload={JSON.stringify(payload)}>
+          <h2 id="checker-title" class="sr-only">{ru ? 'Страна и сумма' : 'Country and amount'}</h2>
+          <form data-balance-form novalidate>
+            <label for="storefront">{ru ? 'Страна Apple Account' : 'Apple Account country or region'}</label>
+            <select id="storefront" name="storefront" data-storefront>
+              {sortedStores.map(s => <option value={localizedPath(lang, `prices/${s.code.toLowerCase()}`)} selected={s.code === code}>{label(s.code)} ({s.currency})</option>)}
+            </select>
+            <label for="balance">{ru ? 'Остаток' : 'Remaining balance'} ({currency})</label>
+            <input id="balance" name="balance" type="text" inputmode={digits === 0 ? 'numeric' : 'decimal'} autocomplete="off" placeholder={digits === 0 ? (ru ? 'Например, 50' : 'For example, 50') : (ru ? 'Например, 21' : 'For example, 0.67')} aria-describedby="balance-error" required />
+            <p id="balance-error" class="error" role="alert"></p>
+            <button class="cta" type="submit" disabled>{ru ? 'Проверить' : 'Check balance'}</button>
+          </form>
+          <noscript><p>{ru ? 'Для расчёта нужен JavaScript. Все цены и ссылки на страны доступны ниже.' : 'Enable JavaScript for the checker. All prices and country links remain available below.'}</p></noscript>
+          <div class="check-result" role="status" aria-live="polite" aria-atomic="true" data-result hidden></div>
+          <p class="checkout-note">{ru ? 'Налог может увеличить сумму. Проверьте итог в App Store: если баланса не хватит, Apple может списать разницу другим способом оплаты.' : 'Tax may increase the total. Check the App Store confirmation: Apple may charge any shortfall to another payment method.'}</p>
+          <p class="support-note">{ru ? 'Небольшой остаток мешает сменить страну? ' : 'A small balance blocking a country change? '}<a class="support-link" href="https://support.apple.com/118283">{ru ? 'Обратитесь в Apple бесплатно' : 'Get free help from Apple'}</a>.</p>
+        </section>
+        <section aria-labelledby="prices-title" class="price-list">
+          <h2 id="prices-title" class="h2">{ru ? `Цены · ${label(code)}` : `Prices · ${label(code)}`}</h2>
+          <p>{ru ? '21 товар, каждый можно покупать повторно. От' : '21 items you can buy again. From'} <strong>{money(prices[0].minor, currency, lang)}</strong>.</p>
+          <table>
+            <caption class="sr-only">{title}, {catalog.date}</caption>
+            <thead><tr><th scope="col">{ru ? 'Товар' : 'Item'}</th><th scope="col">{ru ? 'За единицу' : 'Unit price'}</th></tr></thead>
+            <tbody>{products.map(p => <tr><td>{p.name}</td><td>{money(p.minor, currency, lang)}</td></tr>)}</tbody>
+          </table>
+          <p class="field-hint">{ru ? 'Источник: App Store Connect. Цены могут измениться — актуальную сумму покажет App Store.' : 'Source: App Store Connect. Prices may change; the App Store shows the current amount.'}</p>
+          <a class="support-link" href="/data/iap-prices-2026-10-02.csv" download>{ru ? 'Все цены в CSV' : 'All prices as CSV'}</a>
+          <div class="mt-6"><AppStoreButton label={ru ? 'Открыть в App Store' : 'View on the App Store'} /></div>
+        </section>
+      </div>
+      <details class="store-directory">
+        <summary>{ru ? 'Цены в других странах (175)' : 'Prices in other countries (175)'}</summary>
+        <ul>{sortedStores.map(s => <li><a href={localizedPath(lang, `prices/${s.code.toLowerCase()}`)}>{label(s.code)} <span class="text-[var(--muted)]">{s.currency}</span></a></li>)}</ul>
+      </details>
+    </div>
+  </Container>
+</PageLayout>
+<script>
+  import '../../../scripts/balanceChecker';
+</script>
+<style>
+.catalog-page { padding: 3rem 0 5rem; }
+.catalog-intro { max-width: 50rem; margin-bottom: 2.5rem; }
+.catalog-intro h1 { margin: .8rem 0 1rem; font-size:clamp(2rem, 4vw, 3rem); line-height:1.15; }
+.catalog-grid { display:grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.15fr); gap:3rem; align-items:start; }
+.balance-checker { background:var(--surface); border:1px solid var(--border); border-radius:1.25rem; padding:1.5rem; }
+label { display:block; margin:1.25rem 0 .5rem; font-weight:600; }
+label:first-child { margin-top:0; }
+.cta { width:100%; justify-content:center; }
+input, select { width:100%; min-height:48px; padding:.65rem .75rem; background:var(--bg); border:1px solid var(--muted); border-radius:.6rem; color:var(--fg); font:inherit; }
+input:focus-visible, select:focus-visible, button:focus-visible, a:focus-visible, summary:focus-visible { outline:3px solid var(--brand); outline-offset:3px; }
+.field-hint { font-size:.875rem; line-height:1.6; color:var(--muted); margin-top:.5rem; }
+.cta:disabled { opacity:.6; cursor:wait; }
+.error { color:#b42335; margin:.75rem 0; }
+.error:empty { margin:1.25rem 0 0; }
+.check-result :global(li) { margin-top:.4rem; overflow-wrap:anywhere; }
+.check-result { border-top:2px solid var(--brand); padding-top:1rem; margin-top:1.5rem; line-height:1.7; }
+.check-result :global(h3) { font-weight:700; }
+.check-result :global(ul) { margin:.75rem 0; }
+.checkout-note, .support-note { font-size:.875rem; line-height:1.6; }
+.checkout-note { margin:1.25rem 0 .75rem; color:var(--muted); }
+.support-link { font-weight:600; color:var(--brand-strong); text-decoration:underline; text-underline-offset:3px; }
+.price-list > p { margin:1rem 0; line-height:1.6; }
+table { width:100%; border-collapse:collapse; margin:1.5rem 0; }
+th, td { padding:.8rem .2rem; border-bottom:1px solid var(--border); text-align:left; vertical-align:top; }
+th:last-child, td:last-child { text-align:right; white-space:nowrap; padding-left:.75rem; font-variant-numeric:tabular-nums; }
+summary { cursor:pointer; font-weight:600; width:fit-content; padding:.75rem 0; }
+.store-directory { margin-top:3rem; border-top:1px solid var(--border); padding-top:1rem; }
+.store-directory ul { margin-top:1.5rem; display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:.35rem 1.5rem; }
+.store-directory a { display:block; padding:.5rem 0; text-decoration:underline; text-underline-offset:3px; }
+@media(max-width:760px) { .catalog-grid { grid-template-columns:1fr; gap:2.5rem; } .catalog-page { padding-top:2rem; } .store-directory ul { grid-template-columns:repeat(2,minmax(0,1fr)); } }
+@media(prefers-color-scheme:dark) { .support-link { color:#bba6f7; } .cta:disabled { opacity:.6; cursor:wait; }
+.error { color:#ffb4bc; } }
+</style>

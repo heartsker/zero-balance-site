@@ -332,8 +332,8 @@ describe('built agent surfaces', () => {
     const sitemapFiles = (await walk(DIST)).filter((file) => /sitemap-\d+\.xml$/.test(file));
     const sitemap = (await Promise.all(sitemapFiles.map((file) => readFile(file, 'utf8')))).join('\n');
     for (const locale of ['en', 'ru', 'ar', 'de', 'es', 'fr', 'hi', 'it', 'ja', 'ko', 'pt-BR', 'tr']) {
-      expect(sitemap).toContain(`https://zerobalance.pro/${locale}/about/`);
-      expect(sitemap).toContain(`https://zerobalance.pro/${locale}/contact/`);
+      if (locale !== 'ru') expect(sitemap).toContain(`https://zerobalance.pro/${locale}/about/`);
+      if (locale !== 'ru') expect(sitemap).toContain(`https://zerobalance.pro/${locale}/contact/`);
     }
   });
 
@@ -397,7 +397,7 @@ describe('flattened Russian mirror', () => {
     const sitemap = await readFile(join(RU_DIST, 'sitemap-0.xml'), 'utf8');
     expect(sitemap).toContain('<loc>https://zerobalanceapp.ru/</loc>');
     expect(sitemap).toContain('<loc>https://zerobalanceapp.ru/about/</loc>');
-    expect(sitemap).toContain('<loc>https://zerobalanceapp.ru/en/</loc>');
+    expect(sitemap).not.toContain('<loc>https://zerobalanceapp.ru/en/</loc>');
     expect(sitemap).not.toContain('zerobalanceapp.ru/ru/');
   });
 

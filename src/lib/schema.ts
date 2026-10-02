@@ -65,9 +65,9 @@ export function softwareApplicationSchema(opts: {
     author: PUBLISHER,
     brand: ORGANIZATION_REFERENCE,
     featureList: opts.featureList ?? [
-      'Manual target helper for any leftover Apple Account balance',
+      'Manual balance entry and listed-price combination check',
       'Plan review with total, overage and confirmation count',
-      'Eight in-app price tiers for precise matching',
+      '21 repeatable consumables; exact matching depends on storefront prices and tax',
       'Private iCloud-synced inventory',
       'No ads, no tracking, no subscriptions',
     ],

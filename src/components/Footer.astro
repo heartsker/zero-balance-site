@@ -23,7 +23,8 @@ const productLinks = [
   { label: t.nav.help, href: localizedPath(lang, 'help') },
   // The blog ships only in en + ru, so link it only where the index exists.
   ...(lang === 'en' || lang === 'ru'
-    ? [{ label: lang === 'ru' ? 'Блог' : 'Blog', href: localizedPath(lang, 'blog') }]
+    ? [{ label: lang === 'ru' ? 'Цены и расчёт' : 'Prices & checker', href: localizedPath(lang, 'prices') },
+       { label: lang === 'ru' ? 'Блог' : 'Blog', href: localizedPath(lang, 'blog') }]
     : []),
 ];
 

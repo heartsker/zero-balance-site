@@ -11,6 +11,7 @@ const ba = t.beforeAfter;
 ---
 
 <div class="mx-auto mt-10 max-w-xl md:mt-14">
+  {(lang === 'en' || lang === 'ru') && <p class="mb-3 text-center text-xs text-[var(--muted)]">{lang === 'ru' ? 'Пример: 45 ₽ = 3 × 15 ₽. При неизменной цене, без дополнительного налога. Другие ограничения смены страны проверяет Apple.' : 'Example: $0.78 = 2 × $0.39. Assumes unchanged prices and no added tax. Apple checks other country-change restrictions.'}</p>}
   <div class="flex flex-col items-stretch gap-2.5 rounded-[1.4rem] bg-[#0F0C1B] p-2.5 shadow-[0_18px_40px_-20px_rgba(122,77,230,0.55)] sm:flex-row sm:items-stretch sm:gap-2">
     <!-- Before: balance present, region locked -->
     <div class="flex-1 rounded-[1.1rem] bg-[#1B1730] px-4 py-3.5">

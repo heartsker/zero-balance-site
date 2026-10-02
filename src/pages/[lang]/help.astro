@@ -4,6 +4,7 @@ import PageHeader from '../../components/PageHeader.astro';
 import Container from '../../components/Container.astro';
 import Section from '../../components/Section.astro';
 import Reveal from '../../components/Reveal.astro';
+import PriceCheckLink from '../../components/PriceCheckLink.astro';
 import FinalCta from '../../components/FinalCta.astro';
 import { getDict, LOCALES, type Locale } from '../../i18n';
 import { howToSchema } from '../../lib/schema';
@@ -37,6 +38,7 @@ const schema = howToSchema({
     description={t.help.intro}
   />
 
+  <PriceCheckLink {lang} />
   <Section>
     <Container>
       <ol class="mx-auto max-w-3xl space-y-5 md:space-y-7">

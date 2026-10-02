@@ -64,6 +64,7 @@ export default defineConfig({
       filter: (page) => {
         const path = new URL(page).pathname;
         if (path === '/open_app/') return false;
+        if (IS_RU_SITE ? !path.startsWith('/ru/') : path.startsWith('/ru/')) return false;
         return LOCALES.length > 1
           ? path !== '/'
           : LOCALES.some((l) => page.includes(`/${l}/`));
@@ -72,7 +73,15 @@ export default defineConfig({
       // otherwise the build time. Helps Yandex and Google prioritise recrawls.
       serialize(item) {
         const slug = item.url.match(/\/blog\/([^/]+)\/?$/)?.[1];
-        item.lastmod = (slug && BLOG_DATES[slug]) || BUILD_DATE;
+        item.lastmod = item.url.includes('/prices/') ? '2026-10-02' : (slug && BLOG_DATES[slug]) || BUILD_DATE;
+        // Keep cross-domain alternates consistent with SEO.astro after RU flattening.
+        if (item.links) item.links = item.links.map(link => {
+          const url = new URL(link.url);
+          const route = url.pathname.replace(/^\/(?:en|ru|ar|de|es|fr|hi|it|ja|ko|pt-BR|tr)(?=\/)/, '');
+          return { ...link, url: link.lang === 'ru'
+            ? `https://zerobalanceapp.ru${route}`
+            : `https://zerobalance.pro/${link.lang}${route}` };
+        });
         return item;
       },
     }),

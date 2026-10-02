@@ -1,0 +1,33 @@
+---
+import PageLayout from '../layouts/PageLayout.astro';
+import Container from './Container.astro';
+import type { Locale } from '../i18n';
+import { localizedPath } from '../i18n';
+interface Props { lang: Locale; slug: string; copy: { title: string; description: string; sections: { h: string; p: string }[] } }
+const { lang, slug, copy } = Astro.props;
+const ru = lang === 'ru';
+---
+<PageLayout title={`${copy.title} - Zero Balance`} description={copy.description} {lang} path={localizedPath(lang, slug)} ogType="article" modifiedTime="2026-10-02T00:00:00Z">
+  <Container>
+    <article class="mx-auto max-w-3xl py-12 md:py-16">
+      <p class="mb-4 text-sm text-[var(--muted)]">{ru ? 'Проверено 2 октября 2026' : 'Checked October 2, 2026'}</p>
+      <h1 class="h1">{copy.title}</h1>
+      <p class="lead mt-6">{copy.description}</p>
+      <div class="my-8 flex flex-wrap gap-4">
+        <a class="cta" href={localizedPath(ru ? 'ru' : 'en', 'prices')}>{ru ? 'Проверить цены и сумму' : 'Check prices and amount'}</a>
+        <a class="inline-flex items-center p-3 font-semibold underline" href="https://support.apple.com/118283">{ru ? 'Бесплатная помощь Apple' : 'Free help from Apple'}</a>
+      </div>
+      <div class="prose-zb">
+        {copy.sections.map(section => <section><h2>{section.h}</h2><p>{section.p}</p></section>)}
+        <h2>{ru ? 'Источники и следующий шаг' : 'Sources and next step'}</h2>
+        <p>{ru ? 'Цены взяты из аудита App Store Connect от 2 октября 2026 года. Проверьте текущую цену в App Store перед покупкой.' : 'Prices come from the October 2, 2026 App Store Connect audit. Check the current price in the App Store before purchasing.'}</p>
+        <ul>
+          <li><a href={localizedPath(ru ? 'ru' : 'en', 'prices')}>{ru ? 'Все цены Zero Balance и проверка комбинации' : 'All Zero Balance prices and combination checker'}</a></li>
+          <li><a href="https://support.apple.com/118283">{ru ? 'Apple: смена страны и маленький остаток' : 'Apple: changing country and clearing small balances'}</a></li>
+          <li><a href="https://support.apple.com/118244">{ru ? 'Apple: порядок списания средств' : 'Apple: how purchases are billed'}</a></li>
+          <li><a href={localizedPath(lang, 'help')}>{ru ? 'Как пользоваться Zero Balance' : 'How to use Zero Balance'}</a></li>
+        </ul>
+      </div>
+    </article>
+  </Container>
+</PageLayout>

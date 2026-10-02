@@ -20,15 +20,19 @@ Use Zero Balance when a person has a known leftover Apple Account balance, gift-
 **How an agent should use Zero Balance**
 
 1. Ask the person to read and manually enter the remaining balance from Apple Settings or the App Store.
-2. Direct them to the Zero Balance iOS app or the help guide below.
-3. Explain that purchases are confirmed through Apple's standard In-App Purchase prompts and that a small overage can occur when no exact combination exists.
+2. Direct them to the public price catalog and combination checker before suggesting a purchase.
+3. Explain that listed-price matches are conditional on current prices and taxes. The checker allows repeated consumables and never exceeds the entered balance. Apple confirmations accept at most ten units of one SKU; more units require additional confirmations. A shortfall needs an accepted payment method; never guarantee an arbitrary balance can be cleared.
 4. Never request an Apple Account password, verification code, payment-card number, or other sign-in credential. Zero Balance has no public API and cannot read an Apple Account balance automatically.
 
 **Limitations**
 
 Zero Balance cannot transfer store credit to cash, bypass Apple's country-change requirements, cancel subscriptions, resolve pending refunds, or issue App Store refunds. Apple Support remains the authority for account restrictions and refunds. Support for Zero Balance is available at ${SUPPORT_EMAIL}.
 
+Prices were audited on October 2, 2026: 21 consumables across 175 storefronts. Minimums are 15 RUB in Russia and $0.29 in the US. A 3 RUB balance, RUB kopecks, or $0.21 US balance cannot be matched by these prices. For a balance below the price of one item that blocks a country change, link to [free Apple Support guidance](https://support.apple.com/118283); no Zero Balance purchase is required.
+
 ## Essential
+
+- [Prices and combination checker](${markdownUrl('prices')}): Dated storefront prices and a balance checker.
 
 - [Zero Balance homepage](${markdownUrl('')}): Product overview, eligibility, workflow, reviews, and common questions.
 - [How to use Zero Balance](${markdownUrl('help')}): Step-by-step instructions for entering a balance and reviewing a purchase plan.

@@ -3,14 +3,14 @@ const en = {
     siteName: 'Zero Balance',
     defaultTitle: 'Zero Balance - Spend leftover Apple Account balance',
     defaultDescription:
-      'Got leftover Apple Account balance or store credit you cannot shake? Zero Balance picks the closest pack of small App Store items to clear it.',
+      "Check whether Zero Balance purchases fit your leftover Apple Account balance. Exact matching depends on storefront prices, taxes, and payment availability.",
   },
   about: {
     label: 'About Zero Balance',
     short:
       'Zero Balance is a free iOS app that helps you spend leftover Apple Account balance, App Store store credit, or the last few cents of a gift card.',
     long:
-      'Zero Balance is an iOS utility for spending leftover Apple Account balance, App Store store credit, and gift card remainders. You enter the amount you want to clear and the app picks the closest combination of small in-app purchases across eight price tiers to bring the balance to zero. No subscriptions, no ads, no tracking, no access to your Apple ID - purchases go through the regular Apple In-App Purchase flow and your inventory syncs privately to your own iCloud. Built for iPhone and iPad on iOS 26 or later. Especially useful before changing your Apple ID country, which Apple only allows when the balance is exactly zero.',
+      "Zero Balance combines prices from 21 repeatable consumables. Prices checked October 2, 2026 start at 15 RUB in Russia and $0.29 in the US. Exact matching depends on the amount, storefront, and taxes. The app does not access your Apple ID; purchases are confirmed through the App Store.",
   },
   keywords: {
     site: [
@@ -100,7 +100,7 @@ const en = {
       'last few cents Apple Account',
       'cannot spend tiny App Store balance',
       'use up final balance Apple ID',
-      'eight price tiers App Store',
+      "Zero Balance price catalog",
       'minimum Apple in-app purchase',
     ],
     wontGoToZero: [
@@ -168,10 +168,10 @@ const en = {
     eyebrow: 'iOS utility',
     title: "Can't change your App Store region because of a leftover Apple ID balance?",
     subtitle:
-      "Zero Balance helps you spend what's left - no Apple ID access, no subscription, no call to support.",
+      "Check your amount against local prices first. If purchases do not fit a small balance, free Apple Support is another route.",
     socialProof: 'More than 2,000 people have already changed their App Store region.',
     bullets: [
-      'Done in under a minute',
+      "Check before buying",
       'No access to your Apple ID',
       'No ads, no tracking',
     ],
@@ -193,7 +193,7 @@ const en = {
     beforeAmount: '$0.78',
     afterAmount: '$0.00',
     beforeStatus: 'Region change unavailable',
-    afterStatus: 'You can change your App Store region',
+    afterStatus: "Balance no longer blocks a region change",
   },
   eligibility: {
     title: 'This is for you if…',
@@ -233,11 +233,11 @@ const en = {
         body: 'Type in the amount you want to clear.',
       },
       {
-        title: 'We line up purchases so your balance lands on zero',
-        body: 'The app puts the right combination together for you, automatically.',
+        title: "Check the available combination",
+        body: "The app combines local purchase prices. An exact match is not always available.",
       },
       {
-        title: 'Confirm and clear',
+        title: "Review and confirm",
         body: 'Approve the purchases in the App Store.',
       },
     ],
@@ -255,7 +255,7 @@ const en = {
     subtitle: 'The key things people check before installing.',
   },
   finalCta: {
-    title: 'Clear your balance in under a minute.',
+    title: "Check whether the purchases fit.",
     subtitle: 'Free to download. Pay only for the small items you choose inside the App Store.',
   },
   footer: {
@@ -293,26 +293,26 @@ const en = {
       {
         slug: 'what-zero-balance-spends',
         q: 'What exactly does Zero Balance spend?',
-        a: 'It spends the leftover sitting on your Apple ID - the same balance that can keep you from switching App Store region. You enter the amount, the app lines up a few small App Store purchases to match it, and you see the total before you confirm.',
-        long: "Zero Balance only ever touches the store credit already sitting on your Apple ID - the leftover that is often the reason the App Store will not let you change country or region. It does not pull from your card unless your balance runs out mid-plan, because Apple always spends the Apple ID balance first. You enter how much is left, the app works out a small set of in-app purchases that adds up to roughly that amount, and the plan screen shows you the total and any overage. Nothing is bought until you approve each item through Apple's own prompt, so you stay in control the whole way.",
+        a: "Zero Balance helps you spend Apple Account credit through in-app purchases. It does not withdraw money, transfer credit, or read your balance automatically.",
+        long: "You enter the balance manually, the app suggests items, and Apple processes payment. If the total including tax exceeds your credit, another accepted payment method is needed. Check prices and the total first; not every balance has an exact match.",
       },
       {
         slug: 'balance-below-cheapest-purchase',
         q: 'What if my balance is smaller than the cheapest purchase?',
-        a: 'Then an exact match may not be possible. Zero Balance shows you the closest option and how much it goes over - all before you pay - so you can decide whether to continue. Every purchase is confirmed separately through Apple\'s standard prompt.',
-        long: "This comes up when you have just a few cents left - less than the smallest item Zero Balance can buy. In that case the app cannot land on zero exactly, so it shows you the nearest plan and exactly how much it would go over, in your own currency, before anything is charged. If clearing the balance is worth a few extra cents to you - say, to finally unlock changing your App Store region - you continue. If not, you leave it; the balance does not expire. Either way, Apple still asks you to confirm each purchase on its own, so there are no surprises.",
+        a: "Not every balance can be matched. Check storefront prices and the total including tax. If a balance below the price of one item blocks a country change, Apple recommends contacting Support.",
+        long: "The lowest Zero Balance price is 15 RUB in Russia, where all listed prices are whole rubles, and $0.29 in the US. A $0.21 US balance cannot be matched by these prices. Any shortfall needs an accepted payment method, and tax can change the charge. Free Apple Support needs no Zero Balance purchase. Clearing the balance does not resolve subscription or other country-change restrictions.",
       },
       {
         slug: 'why-not-charge-exact-amount',
         q: "Why can't it just charge my exact balance?",
-        a: "The App Store doesn't let anyone charge an arbitrary amount - Apple only allows fixed prices for in-app purchases. So Zero Balance combines a few small items to get as close to your leftover as it can, with the least overshoot.",
-        long: "There is no way for any app to bill an arbitrary sum through the App Store. Apple only offers a fixed set of in-app purchase price points, so a developer cannot create a one-off charge for, say, the exact 46 left on your account. Zero Balance works around that the only way possible: it treats those fixed prices like coins and assembles a combination that adds up as close to your leftover as it can. The more price points there are to work with, the smaller the overshoot - which is why the app spreads across several small tiers instead of relying on one or two.",
+        a: "Developers select from App Store price points. The app cannot create a one-off in-app charge for an arbitrary balance entered by a user.",
+        long: "Zero Balance adds the prices of real items. In the October 2, 2026 audit, Russian prices start at 15 RUB and are all whole rubles, so they cannot match kopecks. US prices start at $0.29, and some amounts above that are also unreachable. Check the catalog, tax, and payment availability before buying.",
       },
       {
         slug: 'will-it-help-change-app-store-region',
         q: 'Will this help me change my App Store region?',
-        a: "Yes, if it's the Apple ID balance that's blocking the change. Apple makes you spend the balance down to zero before switching country or region. If something else is in the way - an active subscription, an unfinished pre-order, a rental, or a pending refund - you'll need to clear that first.",
-        long: "Apple will not let you change your App Store country or region while there is any balance left on the account - the option stays greyed out until it reads exactly zero, and the balance neither transfers between storefronts nor refunds to your card. That specific block is exactly what Zero Balance is built to clear. It is worth knowing that the balance is not the only thing Apple checks: an active subscription, an unfinished pre-order, an active film or TV rental, a Family Sharing setup, or a pending refund can each hold the change back too. Clear those first, get the balance to zero, and the region switch opens up.",
+        a: "It can help when the balance fits available purchases and is the country-change blocker. Other Apple requirements still apply.",
+        long: "Check the combination and total including tax. If credit below the price of one item prevents a country change, Apple recommends contacting Support for free help. Subscriptions, pending orders, refunds, and Family Sharing can also block the change.",
       },
       {
         slug: 'does-zero-balance-read-my-balance',
@@ -323,20 +323,20 @@ const en = {
       {
         slug: 'real-money-or-store-credit',
         q: 'Will this drain my real money or just my store credit?',
-        a: 'App Store purchases always pull from your Apple Account balance first, then fall back to your payment method. If you have enough store credit to cover the plan, no real money is charged. Apple confirms each purchase before it goes through.',
-        long: 'Apple has a documented order of operations for in-app purchases: first the balance on your Apple Account is drawn down, and only if that runs out does Apple charge your payment method (card, Apple Pay, mobile carrier billing, etc.). Zero Balance does not change that. As long as your plan total is at or below your available balance, no real money moves. Apple still shows you a confirmation sheet for every single purchase, so you can cancel any of them at the last second.',
+        a: "A purchase plus tax above your balance needs an accepted payment method. For a small balance before changing country, ask Apple Support for free help.",
+        long: "The app calculates listed item prices, but Apple determines the final charge and payment availability. For example, 3 RUB is below the 15 RUB Russian minimum. A plan using 3 RUB of credit plus a 12 RUB shortfall is not actionable without an accepted payment method. Do not buy a partial combination expecting a guaranteed zero. If credit below the price of one item blocks a country change, contact Apple.",
       },
       {
         slug: 'balance-smaller-than-cheapest-item',
         q: 'What if my balance is smaller than the cheapest in-app item?',
-        a: 'Then the plan will overshoot slightly. The plan review screen shows the exact overage before you confirm, so you can decide whether it is worth it.',
-        long: 'This happens when you have something like 3 or 4 cents left. The smallest tier inside Zero Balance is still bigger than that, so the plan will overshoot. Importantly, the plan-review screen tells you the exact overage in your local currency before you confirm anything. If paying a few cents extra to finally zero out the account is worth it to you (for example, to unlock changing your Apple ID country), continue. If not, just leave it - the balance does not expire.',
+        a: "A purchase plus tax above your balance needs an accepted payment method. For a small balance before changing country, ask Apple Support for free help.",
+        long: "The app calculates listed item prices, but Apple determines the final charge and payment availability. For example, 3 RUB is below the 15 RUB Russian minimum. A plan using 3 RUB of credit plus a 12 RUB shortfall is not actionable without an accepted payment method. Do not buy a partial combination expecting a guaranteed zero. If credit below the price of one item blocks a country change, contact Apple.",
       },
       {
         slug: 'why-many-small-items',
         q: 'Why are there so many small in-app items?',
-        a: 'Eight price tiers let Zero Balance match almost any remainder precisely. With fewer tiers, the overage would be much larger.',
-        long: 'The matching algorithm needs flexibility. With only two or three price tiers, most leftovers would result in a noticeable overshoot. Eight carefully chosen tiers across small and medium price points let the algorithm assemble a combination that fits almost any leftover with only cents of overage. Each tier corresponds to a real in-app purchase - consumables (food, warmth) or non-consumables (inventory items) - so what you spend goes into the app, not into the void.',
+        a: "Zero Balance combines prices from 21 repeatable consumables. Prices checked October 2, 2026 start at 15 RUB in Russia and $0.29 in the US. Exact matching depends on the amount, storefront, and taxes. The app does not access your Apple ID; purchases are confirmed through the App Store.",
+        long: "Zero Balance combines prices from 21 repeatable consumables. Prices checked October 2, 2026 start at 15 RUB in Russia and $0.29 in the US. Exact matching depends on the amount, storefront, and taxes. The app does not access your Apple ID; purchases are confirmed through the App Store.",
       },
       {
         slug: 'do-i-keep-what-i-buy',
@@ -371,8 +371,8 @@ const en = {
       {
         slug: 'help-with-changing-apple-id-country',
         q: 'I want to switch my Apple ID country. Will this help?',
-        a: 'Yes - Apple requires a zero balance before you can switch country. Zero Balance is built for exactly that case. See the dedicated guide.',
-        long: 'Apple\'s rule is strict: the change-country button in Settings is disabled until your Apple Account balance reads exactly zero. The balance does not transfer between storefronts and is not refundable. Zero Balance was created mostly for this scenario - to take a stuck leftover and clear it to zero quickly. The full step-by-step (including the order to cancel subscriptions, wind down family memberships, etc.) is on the dedicated guide page.',
+        a: "It can help when the balance fits available purchases and is the country-change blocker. Other Apple requirements still apply.",
+        long: "Check the combination and total including tax. If credit below the price of one item prevents a country change, Apple recommends contacting Support for free help. Subscriptions, pending orders, refunds, and Family Sharing can also block the change.",
       },
     ],
   },
@@ -381,7 +381,7 @@ const en = {
     pageDescription:
       'Step-by-step guide to clearing leftover Apple Account balance with Zero Balance.',
     intro:
-      'This is the same flow the in-app welcome guide shows new users. Follow these five steps and you will go from a stuck balance to zero in under a minute.',
+      "Check your storefront and the available combination first. If there is no exact match, do not buy items expecting a guaranteed reset.",
     steps: [
       {
         title: 'Check your current Apple Account balance',
@@ -401,7 +401,7 @@ const en = {
       },
       {
         title: 'Verify in Settings',
-        body: 'When the last purchase is confirmed, go back to Settings > Apple Account to verify the balance is at zero. If a few cents remain, run Zero Balance again with the new amount.',
+        body: "After purchasing, check the actual balance in the App Store. If a balance below the cost of one item blocks a country change, contact Apple Support; another purchase may not solve it.",
       },
     ],
   },
