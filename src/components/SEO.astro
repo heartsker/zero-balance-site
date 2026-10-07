@@ -55,6 +55,9 @@ const markdownPath = normalizedPath === '/404/'
     : normalizedPath.replace(/\.html$/, '.md');
 const ogImageUrl = image.startsWith('http') ? image : `${DOMAIN}${image}`;
 const localePath = stripLocale(normalizedPath);
+const defaultAlternateUrl = locales.includes('en')
+  ? `${GLOBAL_SITE}${localizedPath('en', localePath)}`
+  : hrefFor(locales[0] ?? lang, localePath);
 const t = getDict(lang);
 const ogImageAlt = t.hero.screenshotAlt;
 
@@ -86,7 +89,7 @@ const keywordsString = keywords?.length
     <link rel="alternate" hreflang={l} href={hrefFor(l, localePath)} />
   ))
 }
-<link rel="alternate" hreflang="x-default" href={`${GLOBAL_SITE}${localizedPath('en', localePath)}`} />
+<link rel="alternate" hreflang="x-default" href={defaultAlternateUrl} />
 
 <meta property="og:type" content={ogType} />
 <meta property="og:site_name" content="Zero Balance" />

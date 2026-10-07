@@ -1,30 +1,129 @@
 ---
-import document from '../../../content/app-store-russia-usa.html?raw';
-import { LOCALES, RU_SITE, CREATOR_NAME, CREATOR_URL } from '../../../lib/siteConfig';
+import PageLayout from '../../../layouts/PageLayout.astro';
+import PageHeader from '../../../components/PageHeader.astro';
+import Container from '../../../components/Container.astro';
+import Section from '../../../components/Section.astro';
+import FAQ from '../../../components/FAQ.astro';
+import Reveal from '../../../components/Reveal.astro';
+import FinalCta from '../../../components/FinalCta.astro';
+import { articleSchema, faqSchema, breadcrumbSchema } from '../../../lib/schema';
+import { LOCALES, DOMAIN } from '../../../lib/siteConfig';
 
 export function getStaticPaths() {
   return LOCALES.includes('ru') ? [{ params: { lang: 'ru' } }] : [];
 }
 
+const lang = 'ru';
 const slug = 'app-store-russia-usa';
+const path = `/${lang}/blog/${slug}/`;
 const published = '2026-10-07T00:00:00Z';
-const canonical = `${RU_SITE}/blog/${slug}/`;
-const title = 'Как сменить регион App Store с России на США и обратно';
-const description = 'Как сменить регион App Store на США, скачать ChatGPT, Claude и другие приложения и вернуться в Россию. Подготовка, оплата и остаток баланса.';
-const schema = {
-  '@context': 'https://schema.org',
-  '@type': 'Article',
-  headline: title,
-  description,
-  url: canonical,
-  inLanguage: 'ru',
-  datePublished: published,
-  publisher: { '@type': 'Organization', name: CREATOR_NAME, url: CREATOR_URL },
-};
-const metadata = `<link rel="canonical" href="${canonical}"><meta property="og:type" content="article"><meta property="og:title" content="${title}"><meta property="og:description" content="${description}"><meta property="og:url" content="${canonical}"><script type="application/ld+json">${JSON.stringify(schema)}</script>`;
-const html = document
-  .replace('<main>', '<main id="main">')
-  .replace('</head>', `${metadata}</head>`);
+const title = "Как сменить регион App Store с России на США и обратно";
+const description = "Как сменить регион App Store на США, скачать ChatGPT, Claude и другие приложения и вернуться в Россию. Подготовка, оплата и остаток баланса.";
+const faqItems = [
+  {
+    "q": "Можно ли сменить регион на США без карты?",
+    "a": "Если в способах оплаты доступен пункт «Нет» (None), выберите его. Когда такого пункта нет, Apple может потребовать подходящий способ оплаты."
+  },
+  {
+    "q": "Можно ли сразу вернуться в Россию?",
+    "a": "После скачивания нужных приложений можно перейти к обратной смене региона. Если появились остаток денег или подписки, блокирующие переход, сначала нужно разобраться с ними."
+  },
+  {
+    "q": "Правда ли, что нужно ждать 90 дней?",
+    "a": "В справке Apple срок до 90 дней относится к возможному ожиданию при привязке устройства к другому Аккаунту Apple для покупок. Это не общее правило частоты смены страны одного аккаунта."
+  },
+  {
+    "q": "Что будет с приложениями и подписками?",
+    "a": "Каталог и доступность сервисов зависят от страны. Перед переходом проверьте нужный контент: наличие приложения в одном магазине не гарантирует его наличие в другом."
+  },
+  {
+    "q": "Поможет ли Zero Balance, если денег на аккаунте уже нет?",
+    "a": "Если причина ошибки связана с другим условием, покупать что-либо ради смены региона не нужно. Найдите причину в сообщении Apple и разберите её по соответствующей инструкции."
+  }
+];
 ---
 
-<Fragment set:html={html} />
+<PageLayout
+  title={`${title} - Zero Balance`}
+  {description}
+  {lang}
+  {path}
+  locales={['ru']}
+  ogType="article"
+  publishedTime={published}
+  modifiedTime={published}
+  schema={[
+    articleSchema({ title, description, slug, lang, datePublished: published }),
+    faqSchema(faqItems),
+    breadcrumbSchema([
+      { name: 'Главная', url: `${DOMAIN}/${lang}/` },
+      { name: 'Блог', url: `${DOMAIN}/${lang}/blog/` },
+      { name: title, url: `${DOMAIN}${path}` },
+    ]),
+  ]}
+>
+  <PageHeader eyebrow="Смена страны" {title} {description} />
+
+  <Section>
+    <Container>
+      <Reveal as="article" class="mx-auto max-w-3xl prose-zb">
+        <div class="mb-8 text-sm text-[var(--muted)]">Проверено по открытым источникам: <time datetime="2026-09-25">25 сентября 2026 года</time></div>
+        <p>Страна App Store меняется в настройках Аккаунта Apple, в разделе «Медиаматериалы и покупки». Американский магазин позволяет скачать приложения, которых нет в российском, в том числе ChatGPT и Claude.</p>
+        <p>Разберём, как переключиться на США, скачать нужные приложения и вернуть российский регион. Сначала проверим, что может помешать смене страны.</p>
+        <h2 id="before" class="scroll-mt-28">Что проверить перед сменой страны</h2>
+        <h3>Баланс должен быть нулевым</h3>
+        <p>Пока на аккаунте остаются деньги, сменить регион App Store не получится — даже если это несколько рублей или центов. Сначала остаток нужно потратить.</p>
+        <p>Чтобы посмотреть сумму, откройте App Store и нажмите на фотографию профиля: остаток указан под именем. Если подобрать покупку на него не получается, переходите к <a href="#balance">разделу про обнуление баланса</a>.</p>
+        <h3>Какие действия ещё не завершены</h3>
+        <p>Проверьте подписки, предзаказы, прокат фильмов и ожидающие возвраты. Подписки, блокирующие переход, нужно отменить и дождаться окончания оплаченного периода. Отмена автопродления сама по себе не означает, что этот период уже закончился.</p>
+        <h3>Семейный доступ может мешать смене региона</h3>
+        <p>Если вы состоите в семейной группе, Apple может не разрешить изменить страну аккаунта. В таком случае перед переходом придётся выйти из группы.</p>
+        <p>Взрослый участник может сделать это на iPhone: «Настройки» → «Семья» → своё имя → «Прекратить семейный доступ». После выхода пропадёт доступ к общим подпискам и покупкам других участников, например к семейному Apple Music или общему хранилищу iCloud+.</p>
+        <p>Если вы организатор, роспуск группы затронет всех её участников. Семью с маленьким ребёнком нельзя просто распустить: сначала потребуется решить вопрос с его аккаунтом, например перенести его в другую семейную группу. Для детских аккаунтов действуют возрастные ограничения.</p>
+        <h2 id="to-usa" class="scroll-mt-28">Как сменить регион App Store с России на США</h2>
+        <p>На iPhone:</p>
+        <ol>
+        <li>Откройте «Настройки» и нажмите своё имя.</li>
+        <li>Перейдите в «Медиаматериалы и покупки».</li>
+        <li>Откройте «Страна/регион». При необходимости выполните вход.</li>
+        <li>Выберите США и нажмите «Продолжить».</li>
+        <li>Ознакомьтесь с условиями и примите их.</li>
+        <li>Заполните запрошенные платёжные данные и адрес выставления счетов, затем завершите изменение.</li>
+        </ol>
+        <p>Ориентируйтесь также на подсказки своей версии iOS.</p>
+        <h3>Что выбрать, если нет карты США</h3>
+        <p>Если у вас нет карты, подходящей для американского App Store, выберите «Нет» (None) в способах оплаты, если этот пункт отображается. Затем заполните поля платёжного адреса. Привязывать карту при выборе «Нет» не нужно.</p>
+        <p>Если пункта «Нет» на вашем экране нет, этот вариант недоступен для текущего состояния аккаунта: Apple может потребовать действительный способ оплаты новой страны. В таком случае обратитесь в поддержку, чтобы уточнить причину.</p>
+        <h3>Если планируете использовать подарочную карту</h3>
+        <p>До покупки проверьте её регион. Подарочные карты Apple нельзя погасить в магазине другой страны: американская карта не подходит для российского магазина.</p>
+        <p>Если вы собираетесь позднее возвращаться в Россию, заранее подумайте, на что потратите пополнение. Лишние средства придётся снова расходовать перед переходом.</p>
+        <h2 id="apps" class="scroll-mt-28">Какие приложения скачать в американском App Store</h2>
+        <p>После смены региона откройте App Store и скачайте приложения, ради которых переходили на США. Вот несколько популярных вариантов, которые на 25 сентября 2026 года есть в американском магазине и отсутствуют в российском:</p>
+        <div class="overflow-x-auto rounded-2xl border border-[var(--border)]"><table class="w-full text-left text-sm"><thead class="bg-[var(--surface)] text-[var(--muted)]"><tr><th scope="col" class="px-4 py-3 font-semibold">Приложение</th><th scope="col" class="px-4 py-3 font-semibold">Для чего пригодится</th></tr></thead><tbody>
+        <tr><td class="border-t border-[var(--border)] px-4 py-4 align-top"><a href="https://apps.apple.com/us/app/chatgpt/id6448311069">ChatGPT — OpenAI</a></td><td class="border-t border-[var(--border)] px-4 py-4 align-top">Задавать вопросы, работать с текстом и изображениями, общаться голосом</td></tr>
+        <tr><td class="border-t border-[var(--border)] px-4 py-4 align-top"><a href="https://apps.apple.com/us/app/claude-by-anthropic/id6473753684">Claude — Anthropic</a></td><td class="border-t border-[var(--border)] px-4 py-4 align-top">Писать и редактировать тексты, разбирать документы, работать с кодом</td></tr>
+        <tr><td class="border-t border-[var(--border)] px-4 py-4 align-top"><a href="https://apps.apple.com/us/app/google-gemini/id6477489729">Google Gemini</a></td><td class="border-t border-[var(--border)] px-4 py-4 align-top">Пользоваться ИИ-помощником Google</td></tr>
+        <tr><td class="border-t border-[var(--border)] px-4 py-4 align-top"><a href="https://apps.apple.com/us/app/spotify-music-and-podcasts/id324684580">Spotify</a></td><td class="border-t border-[var(--border)] px-4 py-4 align-top">Слушать музыку и подкасты</td></tr>
+        </tbody></table></div>
+        <p>Ссылки ведут на официальные приложения. Установка из американского App Store сама по себе не снимает ограничения сервиса по стране использования: доступ к аккаунту и подписке зависит от правил разработчика.</p>
+        <p>Сначала скачайте всё нужное, затем переходите к возвращению российского региона.</p>
+        <h2 id="to-russia" class="scroll-mt-28">Как вернуть регион App Store с США на Россию</h2>
+        <ol>
+        <li>Откройте «Настройки» → своё имя → «Медиаматериалы и покупки».</li>
+        <li>В разделе «Страна/регион» выберите Россию.</li>
+        <li>Примите условия и заполните запрошенные данные.</li>
+        </ol>
+        <p>Перед переходом разберитесь с долларовым остатком.</p>
+        <p>После сохранения снова откройте «Страна/регион» и проверьте, что выбрана Россия. Если Apple не даёт завершить переход, посмотрите сообщение об ошибке: начните с проверки долларового остатка и подписок.</p>
+        <h2 id="balance" class="scroll-mt-28">Как списать остаток через Zero Balance</h2>
+        <p>Когда вы скачали и оплатили всё нужное, оставшиеся деньги можно потратить через <a href="/ru/">Zero Balance</a>. Приложение подберёт комбинацию небольших покупок, чтобы на счёте остался ноль.</p>
+        <p>Если доступные покупки не позволяют списать сумму точно, Zero Balance поможет уменьшить её до минимального возможного остатка. Для оставшихся центов в приложении есть подробная инструкция: как обратиться в поддержку Apple и что написать, чтобы попросить обнулить баланс.</p>
+        <h2 id="faq" class="scroll-mt-28">Частые вопросы</h2>
+        <FAQ items={faqItems} />
+        <p>Больше о денежных остатках — в <a href="/ru/faq/">ответах на вопросы Zero Balance</a>.</p>
+      </Reveal>
+    </Container>
+  </Section>
+
+  <FinalCta {lang} />
+</PageLayout>
