@@ -38,6 +38,14 @@ export const CATEGORY_LABELS: Record<BlogCategory, Partial<Record<Locale, string
 
 export const BLOG_POSTS: BlogPostMeta[] = [
   {
+    slug: 'app-store-russia-usa',
+    date: '2026-10-07T00:00:00Z',
+    category: 'countryChange',
+    locales: ['ru'],
+    title: { ru: 'Как сменить регион App Store с России на США и обратно' },
+    description: { ru: 'Как сменить регион App Store на США, скачать ChatGPT, Claude и другие приложения и вернуться в Россию. Подготовка, оплата и остаток баланса.' },
+  },
+  {
     slug: 'app-store-refund-denied',
     date: '2026-05-19T00:00:00Z',
     category: 'refunds',

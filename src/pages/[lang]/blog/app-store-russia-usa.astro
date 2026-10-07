@@ -1,0 +1,30 @@
+---
+import document from '../../../content/app-store-russia-usa.html?raw';
+import { LOCALES, RU_SITE, CREATOR_NAME, CREATOR_URL } from '../../../lib/siteConfig';
+
+export function getStaticPaths() {
+  return LOCALES.includes('ru') ? [{ params: { lang: 'ru' } }] : [];
+}
+
+const slug = 'app-store-russia-usa';
+const published = '2026-10-07T00:00:00Z';
+const canonical = `${RU_SITE}/blog/${slug}/`;
+const title = 'Как сменить регион App Store с России на США и обратно';
+const description = 'Как сменить регион App Store на США, скачать ChatGPT, Claude и другие приложения и вернуться в Россию. Подготовка, оплата и остаток баланса.';
+const schema = {
+  '@context': 'https://schema.org',
+  '@type': 'Article',
+  headline: title,
+  description,
+  url: canonical,
+  inLanguage: 'ru',
+  datePublished: published,
+  publisher: { '@type': 'Organization', name: CREATOR_NAME, url: CREATOR_URL },
+};
+const metadata = `<link rel="canonical" href="${canonical}"><meta property="og:type" content="article"><meta property="og:title" content="${title}"><meta property="og:description" content="${description}"><meta property="og:url" content="${canonical}"><script type="application/ld+json">${JSON.stringify(schema)}</script>`;
+const html = document
+  .replace('<main>', '<main id="main">')
+  .replace('</head>', `${metadata}</head>`);
+---
+
+<Fragment set:html={html} />
